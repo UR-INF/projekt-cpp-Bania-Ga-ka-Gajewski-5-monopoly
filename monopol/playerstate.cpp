@@ -1,18 +1,18 @@
 class PlayerState {
     private:
         int money;
-        bool isInJail;
-    
-    PlayerState(int money, bool isInJail) {
-        this->setMoney(money);
-        this->setIsInJail(isInJail);
-    }
-
-    ~PlayerState() {
-
-    }
+        bool isInJail;  
 
     public:
+        PlayerState(int money, bool isInJail) {
+            this->setMoney(money);
+            this->setIsInJail(isInJail);
+        }
+
+        ~PlayerState() {
+
+        }
+
         bool getIsInJail() {
             return this->isInJail;
         }
