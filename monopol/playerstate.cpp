@@ -1,31 +1,25 @@
-class PlayerState {
-    private:
-        int money;
-        bool isInJail;  
+#include "playerstate.hpp"
 
-    public:
-        PlayerState(int money, bool isInJail) {
-            this->setMoney(money);
-            this->setIsInJail(isInJail);
-        }
 
-        ~PlayerState() {
+PlayerState::PlayerState(int money, bool isInJail) {
+    this->setMoney(money);
+    this->setIsInJail(isInJail);
+};
 
-        }
+PlayerState::~PlayerState() {};
 
-        bool getIsInJail() {
-            return this->isInJail;
-        }
+bool PlayerState::getIsInJail() {
+    return this->isInJail;
+};
 
-        int getMoney() {
-            return this->money;
-        }
+int PlayerState::getMoney() {
+    return this->money;
+};
 
-        void setMoney(int money) {
-            this->money = money;
-        }
+void PlayerState::setMoney(int money) {
+    this->money = money;
+};
 
-        void setIsInJail(bool isInJail) {
-            this->isInJail = isInJail;
-        }
+void PlayerState::setIsInJail(bool isInJail) {
+    this->isInJail = isInJail;
 };
