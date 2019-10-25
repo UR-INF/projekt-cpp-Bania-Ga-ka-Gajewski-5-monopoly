@@ -4,8 +4,8 @@ class PlayerState {
         bool isInJail;
     
     PlayerState(int money, bool isInJail) {
-        this->money = money;
-        this->isInJail = isInJail;
+        this->setMoney(money);
+        this->setIsInJail(isInJail);
     }
 
     ~PlayerState() {
@@ -19,5 +19,13 @@ class PlayerState {
 
         int getMoney() {
             return this->money;
+        }
+
+        void setMoney(int money) {
+            this->money = money;
+        }
+
+        void setIsInJail(bool isInJail) {
+            this->isInJail = isInJail;
         }
 };
