@@ -5,11 +5,11 @@
 
 class Field {
     private:
-        FieldType* type;
+        FieldType type;
         int fieldNumber;
     
     public:
-        Field(FieldType* type, int fieldNumber);
+        Field(FieldType type, int fieldNumber);
         ~Field();
         FieldType getFieldType();
 };
