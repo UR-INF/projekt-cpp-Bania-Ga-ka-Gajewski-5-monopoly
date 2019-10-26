@@ -3,14 +3,11 @@
 #include <iostream>
 #include <time.h>       /* time */
 #include "player.hpp"
+#include "diceroller.hpp"
 
 using namespace std;
 
 /*
-int throw_bones() {
-	return rand() % 16 + 2;
-}
-
 class Field {
 	int id;
 	int country;
@@ -102,39 +99,18 @@ public:
 
 int main()
 {
-	/*
-	Player player1;
-	player1.set_name = 1;
-	player1.set_money = 1500;
-	player1.set_current_field = 0;
-
-	Player player2;
-	player2.set_name = 2;
-	player2.set_money = 1500;
-	player2.set_current_field = 0;
-	*/
-
-
-	srand(time(NULL));
-	/*
-	for(int i=0; i<10;i++) {
-		std::cout << throw_bones() << " <-- liczba\n";
-	}
-
-	for (int i = 0; i < 10; i++) {
-		chance_card();
-	}
-	*/
-
 	PlayerState* ps = new PlayerState(1500, false);
-	Player* player = new Player("Kamil", ps, 0);
+	Player* player = new Player("Janusz", ps, 0);
 
-	cout << player->getName();
+	cout << player->getName() << endl;
 
-	//Player *player = new Player("Kamil", new PlayerState(1500, false), 0);
+	DiceRoller* dr = new DiceRoller();
+	DiceThrowResult* dtr = dr->rollDices();
 
-	//cout << "Adres zmiennej player: " << player << endl;
-	//cout << "Wartosc zmiennej player: " << player->getName() << endl;
+	cout << "Wynik z pierwszej kostki: " << dtr->firstDice << endl;
+	cout << "Wynik z drugiej kostki: " << dtr->secondDice << endl;
+	cout << "Czy wyrzucono debel: " << dtr->isDouble() << endl;
+	
 	getchar();
     
 }
