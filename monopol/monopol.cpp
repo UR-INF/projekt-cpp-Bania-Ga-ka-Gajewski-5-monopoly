@@ -1,33 +1,15 @@
 ﻿// monopol.cpp : Ten plik zawiera funkcję „main”. W nim rozpoczyna się i kończy wykonywanie programu.
 //
-
 #include <iostream>
 #include <time.h>       /* time */
+#include "player.hpp"
+
+using namespace std;
+
+/*
 int throw_bones() {
 	return rand() % 16 + 2;
 }
-
-class Player {
-	int name;
-	int money;
-	int current_field;
-
-public:
-	int get_name() { return name; }
-	void set_name(int name) {
-		this->name = name;
-	}
-
-	int get_money() { return money; }
-	void set_money(int money) {
-		this->money = money;
-	}
-
-	int get_current_field() { return current_field; }
-	void set_current_field(int current_field){
-		this->current_field = current_field;
-	}
-};
 
 class Field {
 	int id;
@@ -88,37 +70,39 @@ public:
 
 
 };
+*/
 
-void chance_card() {
+// void chance_card() {
 
-	static int move_pawn = 20;	/* - przesunięcie pionka						*/
-	static int payment = 40;	/* - wpłata pieniędzy do banku					*/
-	static int withdrawal = 60; /* - otrzymanie pieniędzy						*/
-	static int jail = 80;		/* - konieczność pójścia do więzienia			*/
-	static int jail_card = 100; /* - możliwość bezpłatnego wyjścia z więzienia  */
+// 	static int move_pawn = 20;	/* - przesunięcie pionka						*/
+// 	static int payment = 40;	/* - wpłata pieniędzy do banku					*/
+// 	static int withdrawal = 60; /* - otrzymanie pieniędzy						*/
+// 	static int jail = 80;		/* - konieczność pójścia do więzienia			*/
+// 	static int jail_card = 100; /* - możliwość bezpłatnego wyjścia z więzienia  */
 
-	int random_card = rand() % 101;
+// 	int random_card = rand() % 101;
 
-	if (random_card <= move_pawn) {
-		std::cout << "przenieś pionek\n";
-	}
-	else if (random_card <= payment) {
-		std::cout << "płacisz x pieniedzy\n";
-	}
-	else if (random_card <= withdrawal) {
-		std::cout << "otrzymujesz x pieniedzy\n";
-	}
-	else if (random_card <= jail) {
-		std::cout << "idziesz do więzienia\n";
-	}
-	else if (random_card <= jail_card) {
-		std::cout << "dostajesz karte wyjscia z wiezienia\n";
-	}
+// 	if (random_card <= move_pawn) {
+// 		std::cout << "przenieś pionek\n";
+// 	}
+// 	else if (random_card <= payment) {
+// 		std::cout << "płacisz x pieniedzy\n";
+// 	}
+// 	else if (random_card <= withdrawal) {
+// 		std::cout << "otrzymujesz x pieniedzy\n";
+// 	}
+// 	else if (random_card <= jail) {
+// 		std::cout << "idziesz do więzienia\n";
+// 	}
+// 	else if (random_card <= jail_card) {
+// 		std::cout << "dostajesz karte wyjscia z wiezienia\n";
+// 	}
 
-}
+// }
 
 int main()
 {
+	/*
 	Player player1;
 	player1.set_name = 1;
 	player1.set_money = 1500;
@@ -128,10 +112,11 @@ int main()
 	player2.set_name = 2;
 	player2.set_money = 1500;
 	player2.set_current_field = 0;
+	*/
 
 
 	srand(time(NULL));
-
+	/*
 	for(int i=0; i<10;i++) {
 		std::cout << throw_bones() << " <-- liczba\n";
 	}
@@ -139,6 +124,18 @@ int main()
 	for (int i = 0; i < 10; i++) {
 		chance_card();
 	}
+	*/
+
+	PlayerState* ps = new PlayerState(1500, false);
+	Player* player = new Player("Kamil", ps, 0);
+
+	cout << player->getName();
+
+	//Player *player = new Player("Kamil", new PlayerState(1500, false), 0);
+
+	//cout << "Adres zmiennej player: " << player << endl;
+	//cout << "Wartosc zmiennej player: " << player->getName() << endl;
+	getchar();
     
 }
 
