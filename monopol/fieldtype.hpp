@@ -1,0 +1,19 @@
+#ifndef FIELDTYPE_H
+#define FIELDTYPE_H
+
+enum FieldType {
+    START,
+    JAIL,
+    GO_TO_JAIL,
+    FREE_PARKING,
+    PROPERTY,
+    RAILWAY,
+    ELECTRICITY,
+    WATER_SUPPLY_NETWORK,
+    INCOME_TAX,
+    BLUE_CHANCE,
+    RED_CHANCE,
+    LUXURY_TAX
+};
+
+#endif
