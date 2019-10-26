@@ -1,6 +1,8 @@
 #include "propertyfield.hpp"
+#include "fieldtype.hpp"
 
-PropertyField::PropertyField(Player* owner, string country, string city, int price, int pricing[], int housingLevel, int upgradeCost, int mortgage, bool isUnderMortgage) {
+PropertyField::PropertyField(Player* owner, string country, string city, int price, int pricing[], int housingLevel, int upgradeCost, int mortgage, bool isUnderMortgage, int fieldNumer)
+                            : Field(PROPERTY, fieldNumer) {
     this->owner = owner;
     this->country = country;
     this->city = city;

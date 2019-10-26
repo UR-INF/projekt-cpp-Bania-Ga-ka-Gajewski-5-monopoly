@@ -21,7 +21,7 @@ class PropertyField : public Field {
         bool isUnderMortgage; // czy pole jest zastawione
     
     public:
-        PropertyField(Player* owner, string country, string city, int price, int pricing[], int housingLevel, int upgradeCost, int mortgage, bool isUnderMortgage);
+        PropertyField(Player* owner, string country, string city, int price, int pricing[], int housingLevel, int upgradeCost, int mortgage, bool isUnderMortgage, int fieldNumber);
         ~PropertyField();
         void setOwner(Player* owner);
         void upgrade(); // kup domek
