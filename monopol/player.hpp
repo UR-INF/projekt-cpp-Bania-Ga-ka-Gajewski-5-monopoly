@@ -1,19 +1,19 @@
+#include "playerstate.hpp"
+#include <string>
+
 #ifndef Player_h
 #define Player_h
-
-#include "playerstate.hpp";
-#include <string>;
 
 using namespace std;
 
 class Player {
     private:
         string name;
-        PlayerState playerState;
+        PlayerState* playerState;
         int position;
     
     public:
-        Player(string name, PlayerState playerState, int position);
+        Player(string name, PlayerState *playerState, int position);
         ~Player();
 
         string getName();
