@@ -1,10 +1,11 @@
-
-#include "player.hpp";
+#include "player.hpp"
 
 using namespace std;
 
-Player::Player(string name, PlayerState playerState, int position) {
-
+Player::Player(string name, PlayerState *playerState, int position) {
+	this->setName(name);
+	this->playerState = playerState;
+	this->setPosition(position);
 };
 
 Player::~Player() {};
@@ -26,13 +27,13 @@ void Player::setPosition(int position) {
 };
 
 bool Player::isInJail() {
-	return this->playerState.getIsInJail();
+	return this->playerState->getIsInJail();
 }
 
 bool Player::isSolvent(int rent) {
 	// narazie jest sprawdzany tylko warunek posiadanych pieniedzy
 	// do tego trzeba dodac czy wartosc majątku > rent
-	if (this->playerState.getMoney() > rent) {
+	if (this->playerState->getMoney() > rent) {
 		return true;
 	}
 	else
