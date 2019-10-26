@@ -15,19 +15,22 @@ class GameController {
         int numberOfActivePlayers; // liczba graczy która jest w rozgrywce, nie-bankruci
         std::vector<Player> players;
         Player* currentPlayer;
-        std::map<int, Player*> orderOfMoves;
-        int playerPositions[];       
+        std::map<int, Player*> orderOfMoves;   
 
     
     public:
         GameController(Board* board, DiceRoller* diceRoller, int numberOfPlayers);
         ~GameController();
+        void init();
         void start();
         void setPlayersOnStart();
         void nextPlayer();
         bool doesSomeoneWin();
         void performAction();
-        std::map<int, Player*> setPlayersMoveOrder(); 
+        void setPlayersMoveOrder();
+        void renderPlayersMoveOrder();
+        void renderPlayersPositions(); 
+        void renderCurrentPlayer();
 
 };
 
