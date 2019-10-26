@@ -1,31 +1,33 @@
 #include "player.hpp"
 #include "diceroller.hpp"
+#include "board.hpp"
 #include <vector>
+#include <map>
 
 #ifndef GAMECONTROLLER_H
 #define GAMECONTROLLER_H
 
 class GameController {
     private:
-        int board; // tu bedzie obiekt planszy
+        Board* board; // tu bedzie obiekt planszy
         DiceRoller* diceRoller;
         int numberOfPlayers;
         int numberOfActivePlayers; // liczba graczy która jest w rozgrywce, nie-bankruci
         std::vector<Player> players;
         Player* currentPlayer;
-        int playerPositions[];
-
+        std::map<int, Player*> orderOfMoves;
+        int playerPositions[];       
 
     
     public:
-        GameController();
+        GameController(Board* board, DiceRoller* diceRoller, int numberOfPlayers);
         ~GameController();
         void start();
         void setPlayersOnStart();
         void nextPlayer();
         bool doesSomeoneWin();
         void performAction();
-        std::vector<Player> setPlayersOrder(); 
+        std::map<int, Player*> setPlayersMoveOrder(); 
 
 };
 
