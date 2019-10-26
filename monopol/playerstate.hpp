@@ -1,5 +1,5 @@
-#ifndef PlayerState_h
-#define PlayerState_h
+#ifndef PLAYERSTATE_H
+#define PLAYERSTATE_H
 
 class PlayerState {
     private:
