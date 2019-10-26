@@ -1,4 +1,5 @@
 #include "board.hpp"
+#include "field.hpp"
 #include <iostream>
 
 Board::Board() {
