@@ -1,6 +1,17 @@
 #include "gamecontroller.hpp"
 #include <string>
 #include <iostream>
+#include <utility>
+#include <algorithm>
+
+using namespace std;
+
+// struktura odpowiada za procedure porownania par <Player, int> w celu posortowania wektora z kolejnoscia graczy
+struct moveOrder {
+    inline bool operator() (const pair<Player, int>& firstPair, const pair<Player, int>& secondPair) {
+        return (firstPair.second > secondPair.second);
+    }
+};
 
 GameController::GameController(Board* board, DiceRoller* diceRoller, int numberOfPlayers) {
     this->board = board;
@@ -8,7 +19,7 @@ GameController::GameController(Board* board, DiceRoller* diceRoller, int numberO
     this->numberOfPlayers = numberOfPlayers;
     this->numberOfActivePlayers = numberOfPlayers;
 
-    std::string names[] = {"Kamil", "Wojciech", "Adrian", "Pawel"};
+    string names[] = {"Kamil", "Wojciech", "Adrian", "Pawel"};
 
     for(int i = 0; i < this->numberOfPlayers; i++) {
         Player* player = new Player(names[i], new PlayerState(1500, false), 0);
@@ -16,7 +27,7 @@ GameController::GameController(Board* board, DiceRoller* diceRoller, int numberO
         this->players.push_back(*player);
     }
 
-    this->currentPlayer = &players[0];
+    this->currentPlayer = &this->players[0];
 }
 
 GameController::~GameController() {
@@ -24,7 +35,12 @@ GameController::~GameController() {
 }
 
 void GameController::start() {
-
+    this->renderCurrentPlayer();
+    this->renderPlayersPositions();
+    this->setPlayersMoveOrder();    
+    this->renderCurrentPlayer();
+	this->renderPlayersMoveOrder();
+	this->renderCurrentPlayer();
 }
 
 void GameController::setPlayersOnStart() {
@@ -43,40 +59,55 @@ void GameController::performAction() {
 
 }
 
+// kazdy z graczy rzuca kostkami, na podstawie wynikow ustalana jest kolejnosc wykonywania ruchow
+// na koncu nastepuje ustawienie wskaznika na pierwszego gracza ktory bedzie wykonywal ruch
 void GameController::setPlayersMoveOrder() {
-    std::map<int, Player*> playersOrderOfMoves;
+    vector<pair<Player, int>> playerRolls;
+
+    this->currentPlayer = &this->players[0];
 
     for(int i = 0; i < this->players.size(); i++) {
         DiceThrowResult* dtr = this->diceRoller->rollDices();
         int rolledNumber = dtr->firstDice + dtr->secondDice;
-        playersOrderOfMoves[rolledNumber] = this->currentPlayer;
+        pair<Player, int> currentRoll (*this->currentPlayer, rolledNumber);
+        playerRolls.push_back(currentRoll);
         this->currentPlayer++;
     }
-    
-    this->orderOfMoves = playersOrderOfMoves;
-    this->currentPlayer = this->orderOfMoves.begin()->second;
+
+    sort(playerRolls.begin(), playerRolls.end(), moveOrder());
+
+    for(vector<pair<Player, int>>::iterator it = playerRolls.begin();
+        it != playerRolls.end(); 
+        ++it) {
+            this->orderOfMoves.push_back(it->first);
+    }
+
+    this->currentPlayer = &this->orderOfMoves[0];
 }
 
 void GameController::renderPlayersMoveOrder() {
-    std::cout << "Gracze wykonuja ruch w kolejnosci: " << endl;
-    for(std::map<int, Player*>::iterator it = this->orderOfMoves.begin();
-        it != this->orderOfMoves.end(); 
-        ++it) {
-            std::cout << it->second->getName() << endl;
+    cout << "Gracze wykonuja ruch w kolejnosci: " << endl;
+   
+    for(vector<Player>::iterator it = this->orderOfMoves.begin(); it != this->orderOfMoves.end(); ++it) {
+        cout << it->getName() << endl;
     }
+
+    cout << endl;
 }
 
 // wypisuje na konsole aktualna pozycje kazdego z graczy
 void GameController::renderPlayersPositions() {
-    for(std::vector<Player>::iterator it = this->players.begin();
-        it != this->players.end(); 
-        ++it) {
-            std::cout << "Gracz " << it->getName() 
-                      << " jest na polu " << it->getPosition() 
-                      << endl;
+    for(vector<Player>::iterator it = this->players.begin(); it != this->players.end(); ++it) {
+        cout << "Gracz " << it->getName() 
+             << " jest na polu " << it->getPosition() 
+             << endl;
     }
+    
+    cout << endl;
 }
 
 void GameController::renderCurrentPlayer() {
-    std::cout << "Ruch gracza: " << this->currentPlayer->getName() << endl;
+    cout << "Ruch gracza: " << this->currentPlayer->getName() << endl;
+    cout << endl;
 }
+
