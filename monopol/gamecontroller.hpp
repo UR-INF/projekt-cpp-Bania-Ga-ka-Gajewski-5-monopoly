@@ -2,7 +2,6 @@
 #include "diceroller.hpp"
 #include "board.hpp"
 #include <vector>
-#include <map>
 
 #ifndef GAMECONTROLLER_H
 #define GAMECONTROLLER_H
@@ -15,7 +14,7 @@ class GameController {
         int numberOfActivePlayers; // liczba graczy która jest w rozgrywce, nie-bankruci
         std::vector<Player> players;
         Player* currentPlayer;
-        std::map<int, Player*> orderOfMoves;   
+        std::vector<Player> orderOfMoves;   
 
     
     public:
