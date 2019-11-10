@@ -22,7 +22,9 @@ GameController::GameController(Board* board, DiceRoller* diceRoller, int numberO
     string names[] = {"Kamil", "Wojciech", "Adrian", "Pawel"};
 
     for(int i = 0; i < this->numberOfPlayers; i++) {
-        Player* player = new Player(names[i], new PlayerState(1500, false), 0);
+        bool isComputer = i == 0 ? false : true; // przy 1 obiegu petli i == 0 zatem 1 utworzony gracz to gracz, reszta to komputery
+
+        Player* player = new Player(names[i], isComputer, new PlayerState(1500, false), 0);
 
         this->players.push_back(*player);
     }
@@ -41,6 +43,50 @@ void GameController::start() {
     this->renderCurrentPlayer();
 	this->renderPlayersMoveOrder();
 	this->renderCurrentPlayer();
+
+    bool isPlaying = true;
+
+    while(isPlaying) {
+
+       if (this->currentPlayer->isInJail()) {
+           // NASTEPNY GRACZ
+       }
+
+       if(this->currentPlayer->isComputer()) {
+           cout << "KOMPUTER WYKONUJE RUCH" << endl;
+       }
+       else {
+           cout << "GRACZ WYKONUJE RUCH" << endl;
+       }
+       
+       this->renderCurrentPlayer();
+
+       // wybranie akcji gracza
+       while(true) {
+            char playerChoseChar = '0';
+            int playerChose = 0;
+		
+            cout << "Podaj 1 aby przesunąć gracza lub 0 aby zakończyc rozgrywke:" << endl;
+		    cin >> playerChoseChar;
+
+		    if (!isdigit(playerChoseChar)) {
+			    cout << "Nie podano cyfry!" << endl;
+			    continue;			
+		    }
+
+		    playerChose = (int) playerChoseChar;
+		    playerChose = playerChose - 48;
+
+		    if (playerChose == 0) {
+			    isPlaying = false;
+			    break;
+		    }
+		    else if (playerChose == 1) {
+                this->renderMessage("To gramy dalej");
+                break;
+            }
+	    }
+    }
 }
 
 void GameController::setPlayersOnStart() {
@@ -109,5 +155,9 @@ void GameController::renderPlayersPositions() {
 void GameController::renderCurrentPlayer() {
     cout << "Ruch gracza: " << this->currentPlayer->getName() << endl;
     cout << endl;
+}
+
+void GameController::renderMessage(string message) {
+    cout << message << endl;
 }
 

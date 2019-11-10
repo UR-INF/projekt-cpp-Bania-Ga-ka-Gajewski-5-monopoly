@@ -30,6 +30,7 @@ class GameController {
         void renderPlayersMoveOrder();
         void renderPlayersPositions(); 
         void renderCurrentPlayer();
+        void renderMessage(string message);
 
 };
 
