@@ -33,7 +33,12 @@ GameController::GameController(Board* board, DiceRoller* diceRoller, int numberO
 }
 
 GameController::~GameController() {
+    this->renderMessage("Usuwam obiekt GameController");
+    this->players.clear();
+    this->orderOfMoves.clear();
 
+    delete this->board;
+    delete this->diceRoller;    
 }
 
 void GameController::start() {
