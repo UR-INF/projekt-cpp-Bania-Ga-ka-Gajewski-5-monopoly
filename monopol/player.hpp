@@ -9,7 +9,7 @@ using namespace std;
 class Player {
     private:
         string name;
-        bool isComputer;
+        bool computer;
         PlayerState* playerState;
         int position;
     

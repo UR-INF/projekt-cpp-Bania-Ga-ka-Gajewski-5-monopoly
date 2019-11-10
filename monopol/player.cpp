@@ -16,7 +16,7 @@ string Player::getName() {
 };
 
 bool Player::isComputer() {
-	return this->isComputer;
+	return this->computer;
 }
 
 void Player::setName(string name) {
