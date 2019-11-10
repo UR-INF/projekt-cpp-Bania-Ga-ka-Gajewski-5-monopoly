@@ -9,14 +9,16 @@ using namespace std;
 class Player {
     private:
         string name;
+        bool isComputer;
         PlayerState* playerState;
         int position;
     
     public:
-        Player(string name, PlayerState *playerState, int position);
+        Player(string name, bool isComputer, PlayerState *playerState, int position);
         ~Player();
 
         string getName();
+        bool isComputer();
         void setName(string name);
         int getPosition();
         void setPosition(int position);

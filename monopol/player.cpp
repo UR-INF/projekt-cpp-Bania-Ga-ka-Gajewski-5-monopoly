@@ -2,8 +2,9 @@
 
 using namespace std;
 
-Player::Player(string name, PlayerState *playerState, int position) {
+Player::Player(string name, bool isComputer, PlayerState *playerState, int position) {
 	this->setName(name);
+	this->isComputer = isComputer;
 	this->playerState = playerState;
 	this->setPosition(position);
 };
@@ -13,6 +14,10 @@ Player::~Player() {};
 string Player::getName() {
 	return this->name;
 };
+
+bool Player::isComputer() {
+	return this->isComputer;
+}
 
 void Player::setName(string name) {
 	this->name = name;
@@ -36,9 +41,8 @@ bool Player::isSolvent(int rent) {
 	if (this->playerState->getMoney() > rent) {
 		return true;
 	}
-	else
-	{
+	else {
 		return false;
 	}
-	
+
 }
