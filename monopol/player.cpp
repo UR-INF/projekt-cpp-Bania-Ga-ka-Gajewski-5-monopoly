@@ -4,7 +4,7 @@ using namespace std;
 
 Player::Player(string name, bool isComputer, PlayerState *playerState, int position) {
 	this->setName(name);
-	this->isComputer = isComputer;
+	this->computer = isComputer;
 	this->playerState = playerState;
 	this->setPosition(position);
 };
