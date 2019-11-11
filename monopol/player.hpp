@@ -13,6 +13,7 @@ class Player {
         PlayerState* playerState;
         int position;
         bool activeLoan;
+        int cashGain; // ilosc pieniedzy otrzymywana za przejscie przez pole START
     
     public:
         Player(string name, bool isComputer, PlayerState *playerState, int position);

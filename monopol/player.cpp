@@ -8,6 +8,7 @@ Player::Player(string name, bool isComputer, PlayerState *playerState, int posit
 	this->playerState = playerState;
 	this->setPosition(position);
 	this->activeLoan = false;
+	this->cashGain = 200;
 };
 
 Player::~Player() {};
@@ -79,6 +80,7 @@ void Player::takeLoan() {
 	currentMoney += 500;
 	this->playerState->setMoney(currentMoney);
 	this->activeLoan = true;
+	this->cashGain = 100;
 }
 
 // splata pozyczki
@@ -87,4 +89,5 @@ void Player::payBackLoan() {
 	currentMoney -= 500;
 	this->playerState->setMoney(currentMoney);
 	this->activeLoan = false;
+	this->cashGain = 200;
 }
