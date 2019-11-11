@@ -33,6 +33,16 @@ void Player::setPosition(int position) {
 	this->position = position;
 };
 
+void Player::moveBy(int distance) {
+	if (this->position + distance > 39) {
+		this->setPosition((this->position + distance) % 40);
+	}
+	else {
+		int currentPosition = this->getPosition();
+		this->setPosition(currentPosition + distance);
+	}
+}
+
 bool Player::isInJail() {
 	return this->playerState->getIsInJail();
 }

@@ -11,7 +11,7 @@ class Player {
         string name;
         bool computer;
         PlayerState* playerState;
-        int position;
+        int position; // pozycja na planszy [0 - 39]
         bool activeLoan;
         int cashGain; // ilosc pieniedzy otrzymywana za przejscie przez pole START
     
@@ -24,6 +24,7 @@ class Player {
         void setName(string name);
         int getPosition();
         void setPosition(int position);
+        void moveBy(int distance);
         bool isInJail();
         bool isSolvent(int rent);
         bool isSolvent(int rent, bool onlyCash);
