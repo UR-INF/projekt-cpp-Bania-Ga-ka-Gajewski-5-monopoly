@@ -101,3 +101,12 @@ void Player::payBackLoan() {
 	this->activeLoan = false;
 	this->cashGain = 200;
 }
+
+void Player::goToJail() {
+	this->playerState->setIsInJail(true);
+	this->setPosition(10); // 10 to nr pola z wiezieniem
+}
+
+void Player::getOutOfJail() {
+	this->playerState->setIsInJail(false);
+}

@@ -33,6 +33,8 @@ class Player {
         bool hasActiveLoan();
         void takeLoan();
         void payBackLoan();
+        void goToJail();
+        void getOutOfJail();
 
 };
 
