@@ -5,27 +5,21 @@
 #include <time.h>       /* time */
 #include "player.hpp"
 #include "diceroller.hpp"
+#include "menu.hpp"
 #include "gamecontroller.hpp"
-
+#include "input.hpp"
 
 using namespace std;
 
 int main()
 {
-	char numOfPlayersChar = '0';
+	int numOfPlayersChar = '0';
 	int numOfPlayers = 0;
 
-	while(true) {
+	while(true) {		
 		cout << "Podaj ilosc graczy ktora bedzie grac: " << endl;
-		cin >> numOfPlayersChar;
 
-		if (!isdigit(numOfPlayersChar)) {
-			cout << "Nie podano cyfry!" << endl;
-			continue;			
-		}
-
-		numOfPlayers = (int) numOfPlayersChar;
-		numOfPlayers = numOfPlayers - 48;
+		numOfPlayers = Input::getDigitKey();
 
 		if ((numOfPlayers > 1) && (numOfPlayers < 5)) {
 			cout << "OK! W grze wezmie udzial " << numOfPlayers << " graczy" << endl;
@@ -38,14 +32,16 @@ int main()
 
 	Board* board = new Board();
 	DiceRoller* diceRoller = new DiceRoller();
+	Menu* menu = new Menu();
 
-	GameController* gameController = new GameController(board, diceRoller, numOfPlayers);
+	GameController* gameController = new GameController(board, diceRoller, numOfPlayers, menu);
 
 	gameController->start();
 
+	delete gameController;
+
 	cin >> numOfPlayersChar;
 	getchar();
-    
 }
 
 // Uruchomienie programu: Ctrl + F5 lub menu Debugowanie > Uruchom bez debugowania
