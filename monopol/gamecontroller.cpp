@@ -92,6 +92,7 @@ void GameController::start() {
             else if (playerChose == 0) {
                 // GRACZ WYBRAL RZUT KOSTKAMI
                 this->renderMessage("RZUCAM KOSTKAMI");
+                this->simpleDiceRoll();
                 this->nextPlayer();
             }
             else if (playerChose == 1) {
@@ -104,27 +105,7 @@ void GameController::start() {
             }
             else if (playerChose == 3) {
                 // GRACZ WYBRAL WZIECIE POZYCZKI Z BANKU
-                this->renderMessage("BIORE POZYCZKE");
-                if (this->currentPlayer->hasActiveLoan()) {
-                    this->renderMessage("NIE MOZESZ WZIAC POZYCZKI DO POKI NIE SPLACISZ POPRZEDNIEJ");
-
-                    if (this->currentPlayer->isSolvent(500, true)) {
-                        this->renderMessage("MOZESZ SPLACIC POZYCZKE");
-                        playerChose = Input::getDigitKey();
-
-                        if(playerChose == 0) {
-                            this->currentPlayer->payBackLoan();
-                            this->renderMessage("POZYCZKA SPŁACONA");
-                        }
-                    }
-                    else {
-                        this->renderMessage("NIE STAC CIE NA SPLATE POZYCZKI");
-                    }
-                }
-                else {
-                    this->currentPlayer->takeLoan();
-                    this->renderMessage("WZIETO POZYCZKE");
-                }
+                this->takeLoan(this->currentPlayer);                
             }
             else {
                 this->renderMessage("Niepoprawny symbol");
@@ -161,6 +142,39 @@ void GameController::performAction() {
 
 }
 
+void GameController::takeLoan(Player* player) {
+    this->renderMessage("BIORE POZYCZKE");
+    
+    if (player->hasActiveLoan()) {
+        this->renderMessage("NIE MOZESZ WZIAC POZYCZKI DO POKI NIE SPLACISZ POPRZEDNIEJ");
+
+        if (!player->isSolvent(500, true)) {
+            this->renderMessage("NIE STAC CIE NA SPLATE POZYCZKI");
+            return;            
+        }
+
+        this->renderMessage("MOZESZ SPLACIC POZYCZKE \n 1 - SPLAC \n 2 - ANULUJ");
+        int playerChose = Input::getDigitKey();
+
+        if(playerChose == 1) {
+            player->payBackLoan();
+            this->renderMessage("POZYCZKA SPŁACONA");
+        }
+    }
+    else {
+        player->takeLoan();
+        this->renderMessage("WZIETO POZYCZKE");
+    }
+}
+
+// Prosty rzut kostkami - rzut -> przesunięcie gracza
+void GameController::simpleDiceRoll() {
+    DiceThrowResult* dtr = this->diceRoller->rollDices();
+    int rolledNumber = dtr->firstDice + dtr->secondDice;
+    this->currentPlayer->moveBy(rolledNumber);
+    this->renderPlayersPositions();
+}
+
 void GameController::bankruptPlayer(Player* player) {
     player->setBankrupt(true);
     this->numberOfActivePlayers--;
@@ -176,6 +190,8 @@ void GameController::bankruptPlayer(Player* player) {
 
 // kazdy z graczy rzuca kostkami, na podstawie wynikow ustalana jest kolejnosc wykonywania ruchow
 // na koncu nastepuje ustawienie wskaznika na pierwszego gracza ktory bedzie wykonywal ruch
+// PRZEZ TO ZE SA PRZEKAZYWANE WARTOSCI TO vector orderOfMoves przechowuje inne obiekty niz vetor players
+// DO POPRAWY
 void GameController::setPlayersMoveOrder() {
     vector<pair<Player, int>> playerRolls;
 
@@ -212,7 +228,7 @@ void GameController::renderPlayersMoveOrder() {
 
 // wypisuje na konsole aktualna pozycje kazdego z graczy
 void GameController::renderPlayersPositions() {
-    for(vector<Player>::iterator it = this->players.begin(); it != this->players.end(); ++it) {
+    for(vector<Player>::iterator it = this->orderOfMoves.begin(); it != this->orderOfMoves.end(); ++it) {
         cout << "Gracz " << it->getName() 
              << " jest na polu " << it->getPosition() 
              << endl;
