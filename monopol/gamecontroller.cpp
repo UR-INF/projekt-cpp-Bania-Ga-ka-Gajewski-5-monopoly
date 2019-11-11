@@ -24,7 +24,7 @@ GameController::GameController(Board* board, DiceRoller* diceRoller, int numberO
     for(int i = 0; i < this->numberOfPlayers; i++) {
         bool isComputer = i == 0 ? false : true; // przy 1 obiegu petli i == 0 zatem 1 utworzony gracz to gracz, reszta to komputery
 
-        Player* player = new Player(names[i], isComputer, new PlayerState(1500, false), 0);
+        Player* player = new Player(names[i], isComputer, new PlayerState(1500, false, false), 0);
 
         this->players.push_back(*player);
     }
@@ -42,36 +42,30 @@ GameController::~GameController() {
 }
 
 void GameController::start() {
-    this->renderCurrentPlayer();
-    this->renderPlayersPositions();
     this->setPlayersMoveOrder();    
-    this->renderCurrentPlayer();
 	this->renderPlayersMoveOrder();
-	this->renderCurrentPlayer();
 
     bool isPlaying = true;
 
-    while(isPlaying) {
+    while(isPlaying && this->numberOfActivePlayers > 1) {
+        
+        if (this->currentPlayer->isComputer()) {
+            cout << "KOMPUTER WYKONUJE RUCH" << endl;
+        }
 
-       if (this->currentPlayer->isInJail()) {
-           // NASTEPNY GRACZ
-       }
 
-       if(this->currentPlayer->isComputer()) {
-           cout << "KOMPUTER WYKONUJE RUCH" << endl;
-       }
-       else {
-           cout << "GRACZ WYKONUJE RUCH" << endl;
-       }
+        if (this->currentPlayer->isInJail()) {
+            
+        }
        
-       this->renderCurrentPlayer();
+        this->renderCurrentPlayer();
 
        // wybranie akcji gracza
-       while(true) {
+       while(isPlaying && this->numberOfActivePlayers > 1) {
             char playerChoseChar = '0';
             int playerChose = 0;
 		
-            cout << "Podaj 1 aby przesunąć gracza lub 0 aby zakończyc rozgrywke:" << endl;
+            cout << "Podaj 2 aby usunac gracza, podaj 1 aby przesunac gracza lub 0 aby zakonczyc rozgrywke:" << endl;
 		    cin >> playerChoseChar;
 
 		    if (!isdigit(playerChoseChar)) {
@@ -88,7 +82,25 @@ void GameController::start() {
 		    }
 		    else if (playerChose == 1) {
                 this->renderMessage("To gramy dalej");
+                this->nextPlayer();
                 break;
+            }
+            else if (playerChose == 2) {
+                this->currentPlayer->setBankrupt(true);
+                this->numberOfActivePlayers--;
+                
+                for(int index = 0; index < this->orderOfMoves.size(); index++) {
+                    if (this->currentPlayer == &this->orderOfMoves[index]) {
+                        this->nextPlayer();
+                        this->orderOfMoves.erase(this->orderOfMoves.begin() + index);
+                        break;
+                    }
+                }
+                this->renderPlayersMoveOrder();
+            }
+            else {
+                this->renderMessage("Nie podano poprawnej cyfry!");
+                continue;
             }
 	    }
     }
@@ -99,7 +111,13 @@ void GameController::setPlayersOnStart() {
 }
 
 void GameController::nextPlayer() {
-
+    if (this->currentPlayer == &this->orderOfMoves[this->numberOfActivePlayers - 1]) {
+        this->renderMessage("Ostatni gracz!" + this->currentPlayer->getName());
+        this->currentPlayer = &this->orderOfMoves[0];
+    }
+    else {
+        this->currentPlayer++;
+    }
 }
 
 bool GameController::doesSomeoneWin() {
