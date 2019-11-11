@@ -1,6 +1,7 @@
 #include "player.hpp"
 #include "diceroller.hpp"
 #include "board.hpp"
+#include "menu.hpp"
 #include <vector>
 
 #ifndef GAMECONTROLLER_H
@@ -14,11 +15,12 @@ class GameController {
         int numberOfActivePlayers; // liczba graczy która jest w rozgrywce, nie-bankruci
         std::vector<Player> players;
         Player* currentPlayer;
-        std::vector<Player> orderOfMoves;   
+        std::vector<Player> orderOfMoves;
+        Menu* menu;
 
     
     public:
-        GameController(Board* board, DiceRoller* diceRoller, int numberOfPlayers);
+        GameController(Board* board, DiceRoller* diceRoller, int numberOfPlayers, Menu* menu);
         ~GameController();
         void init();
         void start();

@@ -13,11 +13,12 @@ struct moveOrder {
     }
 };
 
-GameController::GameController(Board* board, DiceRoller* diceRoller, int numberOfPlayers) {
+GameController::GameController(Board* board, DiceRoller* diceRoller, int numberOfPlayers, Menu* menu) {
     this->board = board;
     this->diceRoller = diceRoller;
     this->numberOfPlayers = numberOfPlayers;
     this->numberOfActivePlayers = numberOfPlayers;
+    this->menu = menu;
 
     string names[] = {"Kamil", "Wojciech", "Adrian", "Pawel"};
 
@@ -29,7 +30,7 @@ GameController::GameController(Board* board, DiceRoller* diceRoller, int numberO
         this->players.push_back(*player);
     }
 
-    this->currentPlayer = &this->players[0];
+    // this->currentPlayer = &this->players[0];
 }
 
 GameController::~GameController() {
@@ -44,75 +45,83 @@ GameController::~GameController() {
 void GameController::start() {
     this->setPlayersMoveOrder();    
 	this->renderPlayersMoveOrder();
+    this->setPlayersOnStart();
 
     bool isPlaying = true;
 
     while(isPlaying && this->numberOfActivePlayers > 1) {
         
+        this->renderCurrentPlayer();
+
         if (this->currentPlayer->isComputer()) {
             cout << "KOMPUTER WYKONUJE RUCH" << endl;
         }
 
+        this->menu->render(this->currentPlayer); // wyświetlenie menu
 
         if (this->currentPlayer->isInJail()) {
-            
+            // WYSWIETL MENU AKCJI Z WIEZIENIA
         }
-       
-        this->renderCurrentPlayer();
+        else {            
+            // wybranie akcji gracza
+            while(isPlaying && this->numberOfActivePlayers > 1) {
+                char playerChoseChar = '0';
+                int playerChose = 0;
+            
+                cout << "Podaj 2 aby usunac gracza, podaj 1 aby przesunac gracza lub 0 aby zakonczyc rozgrywke:" << endl;
+                cin >> playerChoseChar;
 
-       // wybranie akcji gracza
-       while(isPlaying && this->numberOfActivePlayers > 1) {
-            char playerChoseChar = '0';
-            int playerChose = 0;
-		
-            cout << "Podaj 2 aby usunac gracza, podaj 1 aby przesunac gracza lub 0 aby zakonczyc rozgrywke:" << endl;
-		    cin >> playerChoseChar;
-
-		    if (!isdigit(playerChoseChar)) {
-			    cout << "Nie podano cyfry!" << endl;
-			    continue;			
-		    }
-
-		    playerChose = (int) playerChoseChar;
-		    playerChose = playerChose - 48;
-
-		    if (playerChose == 0) {
-			    isPlaying = false;
-			    break;
-		    }
-		    else if (playerChose == 1) {
-                this->renderMessage("To gramy dalej");
-                this->nextPlayer();
-                break;
-            }
-            else if (playerChose == 2) {
-                this->currentPlayer->setBankrupt(true);
-                this->numberOfActivePlayers--;
-                
-                for(int index = 0; index < this->orderOfMoves.size(); index++) {
-                    if (this->currentPlayer == &this->orderOfMoves[index]) {
-                        this->nextPlayer();
-                        this->orderOfMoves.erase(this->orderOfMoves.begin() + index);
-                        break;
-                    }
+                if (!isdigit(playerChoseChar)) {
+                    cout << "Nie podano cyfry!" << endl;
+                    continue;			
                 }
-                this->renderPlayersMoveOrder();
+
+                playerChose = (int) playerChoseChar;
+                playerChose = playerChose - 48;
+
+                if (playerChose == 0) {
+                    isPlaying = false;
+                    break;
+                }
+                else if (playerChose == 1) {
+                    this->renderMessage("To gramy dalej");
+                    this->nextPlayer();
+                    break;
+                }
+                else if (playerChose == 2) {
+                    // wyabstrahowac do oddzielnej metody bankruptPlayer
+                    this->currentPlayer->setBankrupt(true);
+                    this->numberOfActivePlayers--;
+                    
+                    for(int index = 0; index < this->orderOfMoves.size(); index++) {
+                        if (this->currentPlayer == &this->orderOfMoves[index]) {
+                            this->nextPlayer();
+                            this->orderOfMoves.erase(this->orderOfMoves.begin() + index);
+                            break;
+                        }
+                    }
+                    this->renderPlayersMoveOrder();
+                }
+                else {
+                    this->renderMessage("Nie podano poprawnej cyfry!");
+                    continue;
+                }
             }
-            else {
-                this->renderMessage("Nie podano poprawnej cyfry!");
-                continue;
-            }
-	    }
+        } 
     }
 }
 
 void GameController::setPlayersOnStart() {
-
+    for (int index = 0; index < this->players.size(); index++) {
+        this->players[index].setPosition(0);
+    }
 }
 
+// metoda przesuwa wskaznik na nastepnego gracza ktory bedzie wykonywal ruch
+// jezeli wskaznik wskazuje na ostatni element vectora orderOfMoves to przesun go na pierwszy element
 void GameController::nextPlayer() {
+
     if (this->currentPlayer == &this->orderOfMoves[this->numberOfActivePlayers - 1]) {
-        this->renderMessage("Ostatni gracz!" + this->currentPlayer->getName());
         this->currentPlayer = &this->orderOfMoves[0];
     }
     else {
@@ -121,6 +130,7 @@ void GameController::nextPlayer() {
 }
 
 bool GameController::doesSomeoneWin() {
+    // tymczasowe implementacja
     return false;
 }
 
@@ -155,10 +165,10 @@ void GameController::setPlayersMoveOrder() {
 }
 
 void GameController::renderPlayersMoveOrder() {
-    cout << "Gracze wykonuja ruch w kolejnosci: " << endl;
+    this->renderMessage("Gracze wykonuja ruch w kolejnosci: ");
    
     for(vector<Player>::iterator it = this->orderOfMoves.begin(); it != this->orderOfMoves.end(); ++it) {
-        cout << it->getName() << endl;
+        this->renderMessage(it->getName());
     }
 
     cout << endl;
@@ -176,7 +186,7 @@ void GameController::renderPlayersPositions() {
 }
 
 void GameController::renderCurrentPlayer() {
-    cout << "Ruch gracza: " << this->currentPlayer->getName() << endl;
+    this->renderMessage("Ruch gracza: " + this->currentPlayer->getName());
     cout << endl;
 }
 
