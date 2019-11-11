@@ -28,6 +28,8 @@ class GameController {
         void nextPlayer();
         bool doesSomeoneWin();
         void performAction();
+        void takeLoan(Player* player);
+        void simpleDiceRoll();
         void setPlayersMoveOrder();
         void bankruptPlayer(Player* player);
         void renderPlayersMoveOrder();
