@@ -1,9 +1,9 @@
 #include "playerstate.hpp"
 
-
-PlayerState::PlayerState(int money, bool isInJail) {
+PlayerState::PlayerState(int money, bool isInJail, bool bankrupt) {
     this->setMoney(money);
     this->setIsInJail(isInJail);
+    this->setBankrupt(bankrupt);
 };
 
 PlayerState::~PlayerState() {};
@@ -23,3 +23,12 @@ void PlayerState::setMoney(int money) {
 void PlayerState::setIsInJail(bool isInJail) {
     this->isInJail = isInJail;
 };
+
+bool PlayerState::isBankrupt() {
+    return this->bankrupt;
+}
+
+void PlayerState::setBankrupt(bool bankrupt) {
+    this->bankrupt = bankrupt;
+}
+

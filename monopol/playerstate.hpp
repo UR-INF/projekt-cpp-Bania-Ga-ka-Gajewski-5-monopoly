@@ -5,9 +5,10 @@ class PlayerState {
     private:
         int money;
         bool isInJail;  
+        bool bankrupt;
 
     public:
-        PlayerState(int money, bool isInJail);
+        PlayerState(int money, bool isInJail, bool bankrupt);
 
         ~PlayerState();
 
@@ -18,6 +19,10 @@ class PlayerState {
         void setMoney(int money);
 
         void setIsInJail(bool isInJail);
+
+        bool isBankrupt();
+
+        void setBankrupt(bool bankrupt);
 };
 
 #endif

@@ -46,3 +46,11 @@ bool Player::isSolvent(int rent) {
 	}
 
 }
+
+bool Player::isBankrupt() {
+	return this->playerState->isBankrupt();
+}
+
+void Player::setBankrupt(bool isBankrupt) {
+	this->playerState->setBankrupt(isBankrupt);
+}

@@ -24,6 +24,8 @@ class Player {
         void setPosition(int position);
         bool isInJail();
         bool isSolvent(int rent);
+        bool isBankrupt();
+        void setBankrupt(bool isBankrupt);
 
 };
 
