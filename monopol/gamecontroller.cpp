@@ -40,7 +40,8 @@ GameController::~GameController() {
     this->orderOfMoves.clear();
 
     delete this->board;
-    delete this->diceRoller;    
+    delete this->diceRoller;  
+    delete this->currentPlayer;  
     delete this->menu;
 }
 

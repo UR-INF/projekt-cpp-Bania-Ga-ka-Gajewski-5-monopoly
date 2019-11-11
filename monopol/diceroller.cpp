@@ -8,7 +8,7 @@ DiceRoller::DiceRoller() {
 }
 
 DiceRoller::~DiceRoller() {
-
+    std::cout << "Usuwam obiekt DiceRoller" << std::endl;
 }
 
 DiceThrowResult* DiceRoller::rollDices() {

@@ -1,4 +1,5 @@
 #include "player.hpp"
+#include <iostream>
 
 using namespace std;
 
@@ -11,7 +12,10 @@ Player::Player(string name, bool isComputer, PlayerState *playerState, int posit
 	this->cashGain = 200;
 };
 
-Player::~Player() {};
+Player::~Player() {
+	cout << "Usuwam obiekt Player" << endl;
+	delete this->playerState;
+};
 
 string Player::getName() {
 	return this->name;

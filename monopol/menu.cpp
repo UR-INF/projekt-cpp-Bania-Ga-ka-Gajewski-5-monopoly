@@ -15,7 +15,9 @@ Menu::Menu() {
 }
 
 Menu::~Menu() {
-
+    std::cout << "Usuwam obiekt Menu" << endl;
+    this->freedomOptions.clear();
+    this->jailOptions.clear();
 }
 
 void Menu::render(Player* player) {
