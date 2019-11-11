@@ -104,6 +104,26 @@ void GameController::start() {
             else if (playerChose == 3) {
                 // GRACZ WYBRAL WZIECIE POZYCZKI Z BANKU
                 this->renderMessage("BIORE POZYCZKE");
+                if (this->currentPlayer->hasActiveLoan()) {
+                    this->renderMessage("NIE MOZESZ WZIAC POZYCZKI DO POKI NIE SPLACISZ POPRZEDNIEJ");
+
+                    if (this->currentPlayer->isSolvent(500, true)) {
+                        this->renderMessage("MOZESZ SPLACIC POZYCZKE");
+                        playerChose = Input::getDigitKey();
+
+                        if(playerChose == 0) {
+                            this->currentPlayer->payBackLoan();
+                            this->renderMessage("POZYCZKA SPŁACONA");
+                        }
+                    }
+                    else {
+                        this->renderMessage("NIE STAC CIE NA SPLATE POZYCZKI");
+                    }
+                }
+                else {
+                    this->currentPlayer->takeLoan();
+                    this->renderMessage("WZIETO POZYCZKE");
+                }
             }
             else {
                 this->renderMessage("Niepoprawny symbol");
