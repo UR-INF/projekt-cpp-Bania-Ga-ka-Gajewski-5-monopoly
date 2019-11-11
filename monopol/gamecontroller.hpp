@@ -29,6 +29,7 @@ class GameController {
         bool doesSomeoneWin();
         void performAction();
         void setPlayersMoveOrder();
+        void bankruptPlayer(Player* player);
         void renderPlayersMoveOrder();
         void renderPlayersPositions(); 
         void renderCurrentPlayer();
