@@ -1,4 +1,5 @@
 #include "gamecontroller.hpp"
+#include "input.hpp"
 #include <string>
 #include <iostream>
 #include <utility>
@@ -58,54 +59,55 @@ void GameController::start() {
         }
 
         this->menu->render(this->currentPlayer); // wyświetlenie menu
+        int playerChose = Input::getDigitKey();
 
         if (this->currentPlayer->isInJail()) {
-            // WYSWIETL MENU AKCJI Z WIEZIENIA
+            if (playerChose == 9) {
+                isPlaying = false;
+                break;
+            }
+            else if (playerChose == 0) {
+                // GRACZ WYBRAL RZUT KOSTKAMI
+                this->renderMessage("RZUCAM KOSTKAMI W WIEZIENIU");
+            }
+            else if (playerChose == 1) {
+                // GRACZ WYBRAL UZYCIE KARTY
+                this->renderMessage("UZYWAM KARTY");
+            }
+            else if (playerChose == 2) {
+                // GRACZ WYBRAL ZAPLATE I RZUT KOSTKAMI
+                this->renderMessage("PLACE I RZUCAM");
+            }
+            else {
+                this->renderMessage("Niepoprawny symbol");
+                continue;
+            }
         }
-        else {            
-            // wybranie akcji gracza
-            while(isPlaying && this->numberOfActivePlayers > 1) {
-                char playerChoseChar = '0';
-                int playerChose = 0;
-            
-                cout << "Podaj 2 aby usunac gracza, podaj 1 aby przesunac gracza lub 0 aby zakonczyc rozgrywke:" << endl;
-                cin >> playerChoseChar;
-
-                if (!isdigit(playerChoseChar)) {
-                    cout << "Nie podano cyfry!" << endl;
-                    continue;			
-                }
-
-                playerChose = (int) playerChoseChar;
-                playerChose = playerChose - 48;
-
-                if (playerChose == 0) {
-                    isPlaying = false;
-                    break;
-                }
-                else if (playerChose == 1) {
-                    this->renderMessage("To gramy dalej");
-                    this->nextPlayer();
-                    break;
-                }
-                else if (playerChose == 2) {
-                    // wyabstrahowac do oddzielnej metody bankruptPlayer
-                    this->currentPlayer->setBankrupt(true);
-                    this->numberOfActivePlayers--;
-                    
-                    for(int index = 0; index < this->orderOfMoves.size(); index++) {
-                        if (this->currentPlayer == &this->orderOfMoves[index]) {
-                            this->nextPlayer();
-                            this->orderOfMoves.erase(this->orderOfMoves.begin() + index);
-                            break;
-                        }
-                    }
-                    this->renderPlayersMoveOrder();
-                }
-                else {
-                    this->renderMessage("Nie podano poprawnej cyfry!");
-                    continue;
-                }
+        else {       
+            if (playerChose == 9) {
+                isPlaying = false;
+                break;
+            }
+            else if (playerChose == 0) {
+                // GRACZ WYBRAL RZUT KOSTKAMI
+                this->renderMessage("RZUCAM KOSTKAMI");
+                this->nextPlayer();
+            }
+            else if (playerChose == 1) {
+                // GRACZ WYBRAL ZAKUP DOMKOW
+                this->renderMessage("KUPUJE DOMKI");
+            }
+            else if (playerChose == 2) {
+                // GRACZ WYBRAL WYMIANE
+                this->renderMessage("WYMIENIAM");
+            }
+            else if (playerChose == 3) {
+                // GRACZ WYBRAL WZIECIE POZYCZKI Z BANKU
+                this->renderMessage("BIORE POZYCZKE");
+            }
+            else {
+                this->renderMessage("Niepoprawny symbol");
+                continue;
             }
         } 
     }
@@ -136,6 +138,19 @@ bool GameController::doesSomeoneWin() {
 
 void GameController::performAction() {
 
+}
+
+void GameController::bankruptPlayer(Player* player) {
+    player->setBankrupt(true);
+    this->numberOfActivePlayers--;
+                    
+    for(int index = 0; index < this->orderOfMoves.size(); index++) {
+        if (player == &this->orderOfMoves[index]) {
+            this->nextPlayer();
+            this->orderOfMoves.erase(this->orderOfMoves.begin() + index);
+            break;
+        }
+    }
 }
 
 // kazdy z graczy rzuca kostkami, na podstawie wynikow ustalana jest kolejnosc wykonywania ruchow
