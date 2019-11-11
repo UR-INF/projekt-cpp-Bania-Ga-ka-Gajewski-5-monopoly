@@ -41,6 +41,7 @@ GameController::~GameController() {
 
     delete this->board;
     delete this->diceRoller;    
+    delete this->menu;
 }
 
 void GameController::start() {
