@@ -7,6 +7,7 @@ Player::Player(string name, bool isComputer, PlayerState *playerState, int posit
 	this->computer = isComputer;
 	this->playerState = playerState;
 	this->setPosition(position);
+	this->activeLoan = false;
 };
 
 Player::~Player() {};
@@ -47,10 +48,43 @@ bool Player::isSolvent(int rent) {
 
 }
 
+bool Player::isSolvent(int rent, bool onlyCash) {
+	if (onlyCash) {
+		if (this->playerState->getMoney() > rent) {
+			return true;
+		}
+
+		return false;
+	}
+
+	return this->isSolvent(rent);
+}
+
 bool Player::isBankrupt() {
 	return this->playerState->isBankrupt();
 }
 
 void Player::setBankrupt(bool isBankrupt) {
 	this->playerState->setBankrupt(isBankrupt);
+}
+
+// czy gracz ma pozyczke do splaty
+bool Player::hasActiveLoan() {
+	return this->activeLoan;
+}
+
+// wziecie pozyczki
+void Player::takeLoan() {
+	int currentMoney = this->playerState->getMoney();
+	currentMoney += 500;
+	this->playerState->setMoney(currentMoney);
+	this->activeLoan = true;
+}
+
+// splata pozyczki
+void Player::payBackLoan() {
+	int currentMoney = this->playerState->getMoney();
+	currentMoney -= 500;
+	this->playerState->setMoney(currentMoney);
+	this->activeLoan = false;
 }

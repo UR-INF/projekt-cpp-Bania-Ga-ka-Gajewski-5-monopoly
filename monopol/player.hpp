@@ -12,6 +12,7 @@ class Player {
         bool computer;
         PlayerState* playerState;
         int position;
+        bool activeLoan;
     
     public:
         Player(string name, bool isComputer, PlayerState *playerState, int position);
@@ -24,8 +25,12 @@ class Player {
         void setPosition(int position);
         bool isInJail();
         bool isSolvent(int rent);
+        bool isSolvent(int rent, bool onlyCash);
         bool isBankrupt();
         void setBankrupt(bool isBankrupt);
+        bool hasActiveLoan();
+        void takeLoan();
+        void payBackLoan();
 
 };
 
