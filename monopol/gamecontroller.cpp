@@ -70,6 +70,9 @@ void GameController::start() {
             else if (playerChose == 0) {
                 // GRACZ WYBRAL RZUT KOSTKAMI
                 this->renderMessage("RZUCAM KOSTKAMI W WIEZIENIU");
+                this->getOutFromJailDiceRoll();
+                this->renderPlayersPositions();
+                this->nextPlayer();
             }
             else if (playerChose == 1) {
                 // GRACZ WYBRAL UZYCIE KARTY
@@ -92,7 +95,8 @@ void GameController::start() {
             else if (playerChose == 0) {
                 // GRACZ WYBRAL RZUT KOSTKAMI
                 this->renderMessage("RZUCAM KOSTKAMI");
-                this->simpleDiceRoll();
+                this->normalDiceRoll();
+                this->renderPlayersPositions();
                 this->nextPlayer();
             }
             else if (playerChose == 1) {
@@ -173,6 +177,53 @@ void GameController::simpleDiceRoll() {
     int rolledNumber = dtr->firstDice + dtr->secondDice;
     this->currentPlayer->moveBy(rolledNumber);
     this->renderPlayersPositions();
+}
+
+void GameController::normalDiceRoll() {
+    int doubles = 0;
+    int rolledNumber = 0;
+    DiceThrowResult* dtr = NULL;
+
+    while(true) {
+        dtr = this->diceRoller->rollDices();
+        rolledNumber = dtr->firstDice + dtr->secondDice;
+
+        if (dtr->isDouble()) {
+            this->renderMessage("WYRZUCONO DEBEL");
+            doubles++;
+
+            if (doubles == 3) {
+                this->renderMessage("IDZIESZ DO WIEZIENIA");
+                this->currentPlayer->goToJail();
+                return;
+            }
+
+            this->currentPlayer->moveBy(rolledNumber);
+
+            // WYKONAJ AKCJE DLA POLA
+        }
+        else {
+            this->currentPlayer->moveBy(rolledNumber);
+            // WYKONAJ AKCJE DLA
+            return; 
+        }
+    }
+}
+
+void GameController::getOutFromJailDiceRoll() {
+    DiceThrowResult* dtr = NULL;
+
+    for(int roll = 0; roll < 3; roll++) {
+        dtr = this->diceRoller->rollDices();
+
+        if (dtr->isDouble()) {
+            int rolledNumber = dtr->firstDice + dtr->secondDice;
+            this->currentPlayer->getOutOfJail();
+            this->currentPlayer->moveBy(rolledNumber);
+
+            return;
+        }
+    }
 }
 
 void GameController::bankruptPlayer(Player* player) {

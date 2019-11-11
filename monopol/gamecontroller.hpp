@@ -30,6 +30,8 @@ class GameController {
         void performAction();
         void takeLoan(Player* player);
         void simpleDiceRoll();
+        void normalDiceRoll();
+        void getOutFromJailDiceRoll();
         void setPlayersMoveOrder();
         void bankruptPlayer(Player* player);
         void renderPlayersMoveOrder();
