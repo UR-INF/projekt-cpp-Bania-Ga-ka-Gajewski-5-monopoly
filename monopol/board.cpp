@@ -107,6 +107,8 @@ Board::Board() {
 	//Field* field40 = new Field(PROPERTY, 39);
 	PropertyField* field40 = new PropertyField(NULL, "Austria", "Wiedeń", 800, new int[100, 400, 1200, 2800, 3400, 4000], 0, 400, 400, false, PROPERTY, 39);
 	fields[39] = field40;
+	bool test = testFields();
+	cout << "Test Planszy: " << test << endl;
 }
 
 Board::~Board() {
@@ -123,4 +125,24 @@ void Board::setField(int index, Field* field) {
 
 void Board::render() {
     std::cout << "Renderuje plansze" << endl;
+}
+
+bool Board::testFields() {
+	int badFields = 0;
+	int iterator = 0;
+	for (Field* field : fields) {
+		int fieldNumber = field->getFieldNumber();
+		if (fieldNumber != iterator) {
+			badFields++;
+		}
+		
+		++iterator;
+	}
+	if (badFields > 0) {
+		return false;
+	}
+	else
+	{
+		return true;
+	}
 }

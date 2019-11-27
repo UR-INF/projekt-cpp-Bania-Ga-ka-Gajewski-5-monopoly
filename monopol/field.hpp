@@ -12,6 +12,7 @@ class Field {
         Field(FieldType type, int fieldNumber);
         ~Field();
         FieldType getFieldType();
+		int getFieldNumber();
 		void setField(FieldType type, int fieldNumber);
 };
 
