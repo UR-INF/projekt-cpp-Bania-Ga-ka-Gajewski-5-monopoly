@@ -14,6 +14,7 @@ class Board {
         ~Board();
         Field* getField(int index);
         void render(); // metoda do wypisania planszy na konsoli
+		void setField(int index, Field* field); // metoda inicjuj¹ca obiekt field w tablicy
 };
 
 #endif

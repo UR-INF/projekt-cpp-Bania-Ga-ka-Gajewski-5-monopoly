@@ -151,7 +151,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="board.cpp" />
+    <ClCompile Include="diceroller.cpp" />
+    <ClCompile Include="dicethrowresult.cpp" />
+    <ClCompile Include="field.cpp" />
+    <ClCompile Include="fieldtype.cpp" />
+    <ClCompile Include="gamecontroller.cpp" />
     <ClCompile Include="monopol.cpp" />
+    <ClCompile Include="player.cpp" />
+    <ClCompile Include="playerstate.cpp" />
+    <ClCompile Include="propertyfield.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="board.hpp" />
+    <ClInclude Include="diceroller.hpp" />
+    <ClInclude Include="dicethrowresult.hpp" />
+    <ClInclude Include="field.hpp" />
+    <ClInclude Include="fieldtype.hpp" />
+    <ClInclude Include="gamecontroller.hpp" />
+    <ClInclude Include="player.hpp" />
+    <ClInclude Include="playerstate.hpp" />
+    <ClInclude Include="propertyfield.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

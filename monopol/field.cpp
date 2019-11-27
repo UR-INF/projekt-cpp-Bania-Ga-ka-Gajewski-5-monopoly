@@ -12,3 +12,7 @@ Field::~Field() {
 FieldType Field::getFieldType() {
     return this->type;
 }
+void Field::setField(FieldType type, int fieldNumber) {
+	this->type = type;
+	this->fieldNumber = fieldNumber;
+}
