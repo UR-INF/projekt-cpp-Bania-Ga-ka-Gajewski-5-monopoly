@@ -109,6 +109,105 @@ Board::Board() {
 	fields[39] = field40;
 	bool test = testFields();
 	cout << "Test Planszy: " << test << endl;
+
+
+	//inicjalizacja kart
+
+	//karty niebieskie
+	Card* blue0 = new Card(0, "Wychodzisz wolny z więzienia. Kartę należy zachować do wykorzystania lub sprzedania.");
+	blueCards[0] = blue0;
+
+	Card* blue1 = new Card(1, "Wracasz do \"WIEDNIA\"");
+	blueCards[1] = blue1;
+
+	Card* blue2 = new Card(2, "Płacisz za kartę 20$ lub ciągniesz \"SZANSĘ\" z drugiego zestawu (czerwonego)");
+	blueCards[2] = blue2;
+
+	Card* blue3 = new Card(3, "Wracasz na \"START\"");
+	blueCards[3] = blue3;
+
+	Card* blue4 = new Card(4, "Idziesz do więzienia. Nie przechodzisz przez \"START\". Nie otrzymujesz 200$.");
+	blueCards[4] = blue4;
+
+	Card* blue5 = new Card(5, "Płacisz koszty leczenia w wysokości 20$.");
+	blueCards[5] = blue5;
+
+	Card* blue6 = new Card(6, "Bank omylił się na Twoją krozyść. Otrzymujesz 400$.");
+	blueCards[6] = blue6;
+
+	Card* blue7 = new Card(7, "Zająłeś II miejsce w konkursie piękności - otrzymujesz z banku 200$.");
+	blueCards[7] = blue7;
+
+	Card* blue8 = new Card(8, "Otrzymujesz roczną rentę w wysokości 200$.");
+	blueCards[8] = blue8;
+
+	Card* blue9 = new Card(9, "Bank wypłaci ci należne 7% od kapitałów - otrzymujesz 50$.");
+	blueCards[9] = blue9;
+
+	Card* blue10 = new Card(10, "Płacisz składkę ubezpieczeniową w wysokości 20$.");
+	blueCards[10] = blue10;
+
+	Card* blue11 = new Card(11, "Z magazynu, w którym kupujesz otrzymujesz rabat w wyoskości 20$.");
+	blueCards[11] = blue11;
+
+	Card* blue12 = new Card(12, "Płacisz na budowę szpitala 400$.");
+	blueCards[12] = blue12;
+
+	Card* blue13 = new Card(13, "Otrzymujesz w spadku 200$.");
+	blueCards[13] = blue13;
+
+	Card* blue14 = new Card(14, "Masz urodziny - otrzymujesz od każdego gracza po 20$.");
+	blueCards[14] = blue14;
+
+	//karty czerwone
+	Card* red0 = new Card(0, "Wracasz na \"START\"");
+	redCards[0] = red0;
+
+	Card* red1 = new Card(1, "Piłeś w czasie pracy, płacisz karę 40$.");
+	redCards[1] = red1;
+
+	Card* red2 = new Card(2, "Idziesz do więzienia. Nie przechodzisz przez \"START\". Nie otrzymujesz premii 200$.");
+	redCards[2] = red2;
+
+	Card* red3 = new Card(3, "Remontujesz swoje domy. Płacisz do banku za każdy dom 50$, za każdy hotel 200$.");
+	redCards[3] = red3;
+	
+	Card* red4 = new Card(4, "Cofasz się o 3 pola.");
+	redCards[4] = red4;
+
+	Card* red5 = new Card(5, "Wcyhodzisz wolny z więzienia. Kartę należy zachować do wykorzystania lub sprzedania.");
+	redCards[5] = red5;
+
+	Card* red6 = new Card(6, "Idziesz do \"NEAPOLU\". Jeżeli przechodzisz przez \"START\" otrzymasz 200$.");
+	redCards[6] = red6;
+
+	Card* red7 = new Card(7, "Wracasz do \"Madrytu\"");
+	redCards[7] = red7;
+
+	Card* red8 = new Card(8, "Zobowiązany jesteś zmodernizować swoje miasto, płacisz do banku za każdy dom 80$, za każdy hotel 230$.");
+	redCards[8] = red8;
+
+	Card* red9 = new Card(9, "Idziesz do \"KOLEI WSCHODNICH\". Jeżeli przechodzisz przez \"START\" otrzymasz 200$.");
+	redCards[9] = red9;
+
+	Card* red10 = new Card(10, "Wracasz do \"Brukseli\". Jeżeli przechodzisz przez \"START\" otrzymujesz 200$.");
+	redCards[10] = red10;
+
+	Card* red11 = new Card(11, "Bank wpłaca Ci należne odsetkiw  wysokości 300$.");
+	redCards[11] = red11;
+
+	Card* red12 = new Card(12, "Mandat za szybką jazdę. Płacisz 30$.");
+	redCards[12] = red12;
+
+	Card* red13 = new Card(13, "Płacisz opłatę za szkołę 300$.");
+	redCards[13] = red13;
+
+	Card* red14 = new Card(14, "Bank wypłaca Ci pprocent w wysokości 100$.");
+	redCards[14] = red14;
+
+	Card* red15 = new Card(15, "Rozwiązałeś dobrze krzyżówkę. Jako I nagrodę otrzymujesz 200$.");
+	redCards[15] = red15;
+
 }
 
 Board::~Board() {

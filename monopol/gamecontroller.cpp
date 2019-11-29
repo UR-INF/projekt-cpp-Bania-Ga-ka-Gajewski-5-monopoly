@@ -297,3 +297,12 @@ void GameController::renderMessage(string message) {
     cout << message << endl;
 }
 
+void GameController::getRedCard(Player* player) {
+	//wylosowanie kartty czerwonej
+}
+
+void GameController::getBlueCard(Player* player) {
+	//wylosowanie karty niebieskiej
+
+}
+

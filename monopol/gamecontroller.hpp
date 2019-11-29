@@ -39,6 +39,8 @@ class GameController {
         void renderCurrentPlayer();
         void renderMessage(string message);
 
+		void getBlueCard(Player* player);
+		void getRedCard(Player* player);
 };
 
 #endif

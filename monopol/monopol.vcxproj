@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="board.cpp" />
+    <ClCompile Include="Card.cpp" />
     <ClCompile Include="diceroller.cpp" />
     <ClCompile Include="dicethrowresult.cpp" />
     <ClCompile Include="field.cpp" />
@@ -166,6 +167,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="board.hpp" />
+    <ClInclude Include="Card.h" />
     <ClInclude Include="diceroller.hpp" />
     <ClInclude Include="dicethrowresult.hpp" />
     <ClInclude Include="field.hpp" />
