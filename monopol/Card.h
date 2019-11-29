@@ -18,6 +18,7 @@ public:
 	int getCardId();
 	void setDescription(string description);
 	string getDescription();
+	string cardToString();
 };
 
 

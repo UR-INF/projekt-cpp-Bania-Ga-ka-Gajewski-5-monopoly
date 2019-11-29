@@ -23,3 +23,7 @@ void Card::setCardId(int cardId) {
 void Card::setDescription(string description) {
 	this->description = description;
 }
+
+string Card::cardToString() {
+	return std::to_string(this->cardId) +"|"+ this->description;
+}

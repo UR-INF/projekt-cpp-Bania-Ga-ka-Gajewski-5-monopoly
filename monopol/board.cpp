@@ -2,6 +2,7 @@
 #include "field.hpp"
 #include <iostream>
 #include "propertyfield.hpp"
+#include <time.h>
 
 Board::Board() {
     // tutaj będą tworzone wszystkie elementy typu field, tj miasta, koleje itd.
@@ -208,6 +209,33 @@ Board::Board() {
 	Card* red15 = new Card(15, "Rozwiązałeś dobrze krzyżówkę. Jako I nagrodę otrzymujesz 200$.");
 	redCards[15] = red15;
 
+	//tasowanie kart
+	//shuffleCards(redCards, sizeof(redCards));
+	cout << "red cards" << endl;
+	for (Card* card : redCards) {
+		cout << card->cardToString() << endl;
+		card++;
+	}
+	cout << "Blue cards" << endl;
+	for (Card* card : blueCards) {
+		cout << card->cardToString() << endl;
+		card++;
+	}
+
+	shuffleCards(redCards,16);
+	cout << "potasowane czerwone karty" << endl;
+	for (Card* card : redCards) {
+		cout << card->cardToString() << endl;
+		card++;
+	}
+
+	shuffleCards(blueCards, 15);
+	cout << "potasowane niebieskie karty" << endl;
+	for (Card* card : blueCards) {
+		cout << card->cardToString() << endl;
+		card++;
+	}
+
 }
 
 Board::~Board() {
@@ -245,3 +273,14 @@ bool Board::testFields() {
 		return true;
 	}
 }
+
+void Board::shuffleCards(Card** cards, int count) {
+	std::srand(time(NULL));
+	for (int i = count - 1; i > 0; i--) {
+		int j = rand() % (i + 1); // wybierz element 0 <= j <= i
+		Card* tmp = cards[j]; // zamień cards[i] z cards[j]
+		cards[j] = cards[i];
+		cards[i] = tmp;
+	}
+}
+

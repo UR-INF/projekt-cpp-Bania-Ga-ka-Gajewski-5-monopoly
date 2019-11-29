@@ -20,6 +20,7 @@ class Board {
         void render(); // metoda do wypisania planszy na konsoli
 		void setField(int index, Field* field); // metoda inicjuj¹ca obiekt field w tablicy
 		bool testFields(); // metoda zwraca true jeœli numery pola odpowiadaj¹ indexom
+		void shuffleCards(Card** cards, int count);
 };
 
 #endif
