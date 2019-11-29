@@ -157,6 +157,8 @@
     <ClCompile Include="field.cpp" />
     <ClCompile Include="fieldtype.cpp" />
     <ClCompile Include="gamecontroller.cpp" />
+    <ClCompile Include="input.cpp" />
+    <ClCompile Include="menu.cpp" />
     <ClCompile Include="monopol.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="playerstate.cpp" />
@@ -169,6 +171,8 @@
     <ClInclude Include="field.hpp" />
     <ClInclude Include="fieldtype.hpp" />
     <ClInclude Include="gamecontroller.hpp" />
+    <ClInclude Include="input.hpp" />
+    <ClInclude Include="menu.hpp" />
     <ClInclude Include="player.hpp" />
     <ClInclude Include="playerstate.hpp" />
     <ClInclude Include="propertyfield.hpp" />

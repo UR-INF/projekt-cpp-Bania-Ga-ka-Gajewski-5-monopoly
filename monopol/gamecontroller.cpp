@@ -26,7 +26,7 @@ GameController::GameController(Board* board, DiceRoller* diceRoller, int numberO
     for(int i = 0; i < this->numberOfPlayers; i++) {
         bool isComputer = i == 0 ? false : true; // przy 1 obiegu petli i == 0 zatem 1 utworzony gracz to gracz, reszta to komputery
 
-        Player* player = new Player(names[i], isComputer, new PlayerState(1500, false, false), 0);
+        Player* player = new Player(names[i], isComputer, new PlayerState(1500, false, false, 0), 0);
 
         this->players.push_back(*player);
     }
