@@ -1,4 +1,5 @@
 #include "playerstate.hpp"
+#include <iostream>
 
 PlayerState::PlayerState(int money, bool isInJail, bool bankrupt) {
     this->setMoney(money);
@@ -6,7 +7,9 @@ PlayerState::PlayerState(int money, bool isInJail, bool bankrupt) {
     this->setBankrupt(bankrupt);
 };
 
-PlayerState::~PlayerState() {};
+PlayerState::~PlayerState() {
+    //std::cout << "Usuwam obiekt PlayerState" << std::endl;
+};
 
 bool PlayerState::getIsInJail() {
     return this->isInJail;
