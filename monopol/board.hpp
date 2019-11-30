@@ -21,6 +21,8 @@ class Board {
 		void setField(int index, Field* field); // metoda inicjuj¹ca obiekt field w tablicy
 		bool testFields(); // metoda zwraca true jeœli numery pola odpowiadaj¹ indexom
 		void shuffleCards(Card** cards, int count);
+		Card pickBlueCard();
+		Card pickRedCard();
 };
 
 #endif

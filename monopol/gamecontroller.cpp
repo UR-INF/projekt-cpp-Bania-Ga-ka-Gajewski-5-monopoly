@@ -50,7 +50,7 @@ void GameController::start() {
     this->setPlayersOnStart();
 
     bool isPlaying = true;
-
+	pickBlueCard(currentPlayer);
     while(isPlaying && this->numberOfActivePlayers > 1) {
         
         this->renderCurrentPlayer();
@@ -297,12 +297,165 @@ void GameController::renderMessage(string message) {
     cout << message << endl;
 }
 
-void GameController::getRedCard(Player* player) {
-	//wylosowanie kartty czerwonej
-}
-
-void GameController::getBlueCard(Player* player) {
+void GameController::pickBlueCard(Player* player) {
 	//wylosowanie karty niebieskiej
+	Card card = board->pickBlueCard();
+	switch (card.getCardId())
+	{
+	case 0:
+		//Wychodzisz wolny z więzienia. Kartę należy zachować do wykorzystania lub sprzedania.
+		player->addOutOfJailCard();
+		renderMessage("BLUE CARD: " + card.getDescription());
+		break;
+	case 1:
+		//Wracasz do \"WIEDNIA\"
+		player->setPosition(39);
+		renderMessage("BLUE CARD: " + card.getDescription());
+		break;
+	case 2:
+		//Płacisz za karę 20$ lub ciągniesz \"SZANSĘ\" z drugiego zestawu (czerwonego)
+		renderMessage("BLUE CARD: " + card.getDescription());
+		//jeśli niezdolny zapłacić automatycznie ciągnie karte
+		if (player->getPlayerState().getMoney() < 20) {
+			pickRedCard(player);
+			//break or return?
+		}
+		else {
+			renderMessage("0 By zapłacić karę");
+			renderMessage("1 By pobrać partę z zestawu czerwonego");
+			int playerChose = Input::getDigitKey();
+			switch (playerChose)
+			{
+			case 0:
+				player->getPlayerState().setMoney(player->getPlayerState().getMoney()-20);
+			case 1:
+				pickRedCard(player);
+			default:
+				break;
+			}
+		}
+		break;
+	case 3:
+		//Wracasz na \"START\"
+		player->setPosition(0);
+		renderMessage("BLUE CARD: " + card.getDescription());
+		break;
+	case 4:
+		//Idziesz do więzienia.Nie przechodzisz przez \"START\". Nie otrzymujesz 200$.
+		player->setPosition(10);
+		renderMessage("BLUE CARD: " + card.getDescription());
+		break;
+	case 5:
+		//Płacisz koszty leczenia w wysokości 20$.
 
+		renderMessage("BLUE CARD: " + card.getDescription());
+		break;
+	case 6:
+		//Bank omylił się na Twoją krozyść. Otrzymujesz 400$.
+		player->getPlayerState().setMoney(player->getPlayerState().getMoney()+400);
+		renderMessage("BLUE CARD: " + card.getDescription());
+		break;
+	case 7:
+		//Zająłeś II miejsce w konkursie piękności - otrzymujesz z banku 200$.
+		player->getPlayerState().setMoney(player->getPlayerState().getMoney() + 200);
+		renderMessage("BLUE CARD: " + card.getDescription());
+		break;
+	case 8:
+		//Otrzymujesz roczną rentę w wysokości 200$.
+		player->getPlayerState().setMoney(player->getPlayerState().getMoney() + 200);
+		renderMessage("BLUE CARD: " + card.getDescription());
+		break;
+	case 9:
+		//Bank wypłaci ci należne 7% od kapitałów - otrzymujesz 50$.
+		player->getPlayerState().setMoney(player->getPlayerState().getMoney() + 50);
+		renderMessage("BLUE CARD: " + card.getDescription());
+		break;
+	case 10:
+		renderMessage("BLUE CARD: " + card.getDescription());
+		break;
+	case 11:
+		renderMessage("BLUE CARD: " + card.getDescription());
+		break;
+	case 12:
+		renderMessage("BLUE CARD: " + card.getDescription());
+		break;
+	case 13:
+		//Otrzymujesz w spadku 200$.
+		player->getPlayerState().setMoney(player->getPlayerState().getMoney() + 200);
+		renderMessage("BLUE CARD: " + card.getDescription());
+		break;
+	case 14:
+		renderMessage("BLUE CARD: " + card.getDescription());
+		break;
+	default:
+		break;
+	}
 }
 
+void GameController::pickRedCard(Player* player) {
+	//wylosowanie kartty czerwonej
+	Card card = board->pickRedCard();
+	switch (card.getCardId())
+	{
+	case 0:
+		renderMessage("RED CARD: " + card.getDescription());
+		break;
+	case 1:
+		renderMessage("RED CARD: " + card.getDescription());
+		break;
+	case 2:
+		renderMessage("RED CARD: " + card.getDescription());
+		break;
+	case 3:
+		renderMessage("RED CARD: " + card.getDescription());
+		break;
+	case 4:
+		//Cofasz się o 3 pola.
+		player->setPosition(player->getPosition() - 3);
+		renderMessage("RED CARD: " + card.getDescription());
+		break;
+	case 5:
+		//Wcyhodzisz wolny z więzienia. Kartę należy zachować do wykorzystania lub sprzedania.
+		player->addOutOfJailCard();
+		renderMessage("RED CARD: " + card.getDescription());
+		break;
+	case 6:
+		renderMessage("RED CARD: " + card.getDescription());
+		break;
+	case 7:
+		renderMessage("RED CARD: " + card.getDescription());
+		break;
+	case 8:
+		renderMessage("RED CARD: " + card.getDescription());
+		break;
+	case 9:
+		renderMessage("RED CARD: " + card.getDescription());
+		break;
+	case 10:
+		renderMessage("RED CARD: " + card.getDescription());
+		break;
+	case 11:
+		//Bank wpłaca Ci należne odsetkiw  wysokości 300$.
+		player->getPlayerState().setMoney(player->getPlayerState().getMoney() + 300);
+		renderMessage("RED CARD: " + card.getDescription());
+		break;
+	case 12:
+		renderMessage("RED CARD: " + card.getDescription());
+		break;
+	case 13:
+		renderMessage("RED CARD: " + card.getDescription());
+		break;
+	case 14:
+		//Bank wypłaca Ci pprocent w wysokości 100$.
+		player->getPlayerState().setMoney(player->getPlayerState().getMoney() + 100);
+		renderMessage("RED CARD: " + card.getDescription());
+		break;
+	case 15:
+		//Rozwiązałeś dobrze krzyżówkę. Jako I nagrodę otrzymujesz 200$.
+		player->getPlayerState().setMoney(player->getPlayerState().getMoney() + 200);
+		renderMessage("RED CARD: " + card.getDescription());
+		break;
+	default:
+		break;
+	}
+}

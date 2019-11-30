@@ -35,6 +35,10 @@ class Player {
         void payBackLoan();
         void goToJail();
         void getOutOfJail();
+		void addOutOfJailCard();
+		bool hasOutOfJailCard();
+		void useOutOfJailCard();
+		PlayerState getPlayerState();
 
 };
 

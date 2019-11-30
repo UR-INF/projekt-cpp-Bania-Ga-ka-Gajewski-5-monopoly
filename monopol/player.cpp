@@ -110,3 +110,32 @@ void Player::goToJail() {
 void Player::getOutOfJail() {
 	this->playerState->setIsInJail(false);
 }
+
+void Player::addOutOfJailCard() {
+	int numOfCards = playerState->getOutOfJailCards();
+	numOfCards++;
+	playerState->setOutOfJailCards(numOfCards);
+}
+
+bool Player::hasOutOfJailCard() {
+	if (playerState->getOutOfJailCards() > 0) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+void Player::useOutOfJailCard() {
+	int numOfCards = playerState->getOutOfJailCards();
+	numOfCards--;
+	if (numOfCards < 0) {
+		throw "Probojesz uzyć karty ktorej nie masz !";
+		return;
+	}
+	playerState->setOutOfJailCards(numOfCards);
+}
+
+PlayerState Player::getPlayerState() {
+	return *this->playerState;
+}

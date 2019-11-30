@@ -209,33 +209,6 @@ Board::Board() {
 	Card* red15 = new Card(15, "Rozwiązałeś dobrze krzyżówkę. Jako I nagrodę otrzymujesz 200$.");
 	redCards[15] = red15;
 
-	//tasowanie kart
-	//shuffleCards(redCards, sizeof(redCards));
-	cout << "red cards" << endl;
-	for (Card* card : redCards) {
-		cout << card->cardToString() << endl;
-		card++;
-	}
-	cout << "Blue cards" << endl;
-	for (Card* card : blueCards) {
-		cout << card->cardToString() << endl;
-		card++;
-	}
-
-	shuffleCards(redCards,16);
-	cout << "potasowane czerwone karty" << endl;
-	for (Card* card : redCards) {
-		cout << card->cardToString() << endl;
-		card++;
-	}
-
-	shuffleCards(blueCards, 15);
-	cout << "potasowane niebieskie karty" << endl;
-	for (Card* card : blueCards) {
-		cout << card->cardToString() << endl;
-		card++;
-	}
-
 }
 
 Board::~Board() {
@@ -282,5 +255,15 @@ void Board::shuffleCards(Card** cards, int count) {
 		cards[j] = cards[i];
 		cards[i] = tmp;
 	}
+}
+
+Card Board::pickBlueCard() {
+	shuffleCards(blueCards, 15);
+	return *blueCards[0];
+}
+
+Card Board::pickRedCard() {
+	shuffleCards(redCards, 16);
+	return *redCards[0];
 }
 
