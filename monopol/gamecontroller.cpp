@@ -347,7 +347,7 @@ void GameController::pickBlueCard(Player* player) {
 		break;
 	case 5:
 		//Płacisz koszty leczenia w wysokości 20$.
-
+		
 		renderMessage("BLUE CARD: " + card.getDescription());
 		break;
 	case 6:

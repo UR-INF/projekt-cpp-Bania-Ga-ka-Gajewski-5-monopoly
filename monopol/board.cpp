@@ -209,6 +209,8 @@ Board::Board() {
 	Card* red15 = new Card(15, "Rozwiązałeś dobrze krzyżówkę. Jako I nagrodę otrzymujesz 200$.");
 	redCards[15] = red15;
 
+	shuffleCards(blueCards, 15);
+	shuffleCards(redCards, 16);
 }
 
 Board::~Board() {
@@ -258,12 +260,40 @@ void Board::shuffleCards(Card** cards, int count) {
 }
 
 Card Board::pickBlueCard() {
-	shuffleCards(blueCards, 15);
-	return *blueCards[0];
+	Card* pickedCard = blueCards[0];
+	Card* temp[15];
+	for (int i = 0; i < 15; i++) {
+		if (i == 14) {
+			temp[0] = blueCards[i];
+		}
+		else {
+			temp[i + 1] = blueCards[i];
+		}
+	}
+	
+	for (int i = 0; i < 15; i++) {
+		blueCards[i] = temp[i];
+	}
+
+	return *pickedCard;
 }
 
 Card Board::pickRedCard() {
-	shuffleCards(redCards, 16);
-	return *redCards[0];
+	Card* pickedCard = redCards[0];
+	Card* temp[15];
+	for (int i = 0; i < 16; i++) {
+		if (i == 15) {
+			temp[0] = redCards[i];
+		}
+		else {
+			temp[i + 1] = redCards[i];
+		}
+	}
+
+	for (int i = 0; i < 16; i++) {
+		redCards[i] = temp[i];
+	}
+
+	return *pickedCard;
 }
 
