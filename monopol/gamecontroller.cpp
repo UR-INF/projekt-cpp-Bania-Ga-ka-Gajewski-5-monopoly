@@ -168,7 +168,7 @@ void GameController::performAction() {
                 this->currentPlayer->payMoney(100);
             }
             else {
-                this->currentPlayer->setBankrupt(true);
+                this->bankruptPlayer(this->currentPlayer);
             }
             break;
         case INCOME_TAX:
@@ -177,7 +177,7 @@ void GameController::performAction() {
             }
             else
             {
-                this->currentPlayer->setBankrupt(true);
+                this->bankruptPlayer(this->currentPlayer);
             }
             break;
             
