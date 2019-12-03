@@ -144,7 +144,44 @@ bool GameController::doesSomeoneWin() {
 }
 
 void GameController::performAction() {
+    int indexOfFieldContext = this->currentPlayer->getPosition();
 
+    Field* contextField = this->board->getField(indexOfFieldContext);
+
+    switch(contextField->getFieldType()) {
+        case START:
+            // this->currentPlayer->earMoneyFromStart();
+            // Obsluga tego pola jest juz zaimplementowana w Player MoveBy
+            break;
+        case JAIL:
+            this->renderMessage("Odwiedzasz wiezienie");
+            break;
+        case GO_TO_JAIL:
+            this->renderMessage("Idziesz do wiezienia!");
+            this->currentPlayer->goToJail();
+            break;
+        case FREE_PARKING:
+            this->renderMessage("Odpoczywasz na darmowym parkingu");
+            break;
+        case LUXURY_TAX:
+            if(this->currentPlayer->isSolvent(100, true)) {
+                this->currentPlayer->payMoney(100);
+            }
+            else {
+                this->currentPlayer->setBankrupt(true);
+            }
+            break;
+        case INCOME_TAX:
+            if(this->currentPlayer->isSolvent(200, true)) {
+                this->currentPlayer->payMoney(200);
+            }
+            else
+            {
+                this->currentPlayer->setBankrupt(true);
+            }
+            break;
+            
+    }
 }
 
 void GameController::takeLoan(Player* player) {
@@ -202,10 +239,12 @@ void GameController::normalDiceRoll() {
             this->currentPlayer->moveBy(rolledNumber);
 
             // WYKONAJ AKCJE DLA POLA
+            this->performAction();
         }
         else {
             this->currentPlayer->moveBy(rolledNumber);
-            // WYKONAJ AKCJE DLA
+            // WYKONAJ AKCJE DLA POLA
+            this->performAction();
             return; 
         }
     }
@@ -291,6 +330,7 @@ void GameController::renderPlayersPositions() {
 
 void GameController::renderCurrentPlayer() {
     this->renderMessage("Ruch gracza: " + this->currentPlayer->getName());
+    cout << "Stan konta: " << this->currentPlayer->getPlayerState().getMoney() << endl;
     cout << endl;
 }
 
