@@ -11,6 +11,7 @@ Player::Player(string name, bool isComputer, PlayerState *playerState, int posit
 	this->activeLoan = false;
 	this->canPayLoan = true;
 	this->cashGain = 200;
+
 };
 
 Player::~Player() {
@@ -41,13 +42,14 @@ void Player::setPosition(int position) {
 void Player::moveBy(int distance) {
 	if (this->position + distance > 39) {
 		this->setPosition((this->position + distance) % 40);
+		
 		//za każde przejście przez start gracz otrzymuje 200 jeżeli posiada pożyczkę 100
 		if (this->canPayLoan == true || this->activeLoan == false) {
-			this->playerState->setMoney(playerState->getMoney() + 200);
+			this->earMoneyFromStart();
 		}
 		else
 		{
-			this->playerState->setMoney(playerState->getMoney() + 100);
+			this->earMoneyFromStart();
 			this->canPayLoan = true;
 		}
 		
@@ -163,4 +165,16 @@ void Player::removeProperty(int fieldId) {
 
 PlayerState Player::getPlayerState() {
 	return *this->playerState;
+}
+
+void Player::earnMoney(int money) {
+	this->playerState->addMoney(money);
+}
+
+void Player::payMoney(int cost) {
+	this->playerState->removeMoney(cost);
+}
+
+void Player::earMoneyFromStart() {
+	this->playerState->addMoney(this->cashGain);
 }

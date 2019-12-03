@@ -14,7 +14,7 @@ class Player {
         PlayerState* playerState;
         int position; // pozycja na planszy [0 - 39]
         bool activeLoan;
-		bool canPayLoan; // mo¿na sp³aciæ je¿eli gracz przeszed³ przez pole start ( wartoœæ zmieniana jest w metodzie moveby)
+		bool canPayLoan; // moï¿½na spï¿½aciï¿½ jeï¿½eli gracz przeszedï¿½ przez pole start ( wartoï¿½ï¿½ zmieniana jest w metodzie moveby)
         int cashGain; // ilosc pieniedzy otrzymywana za przejscie przez pole START
 		set<int> playerProperties;
     
@@ -43,6 +43,9 @@ class Player {
 		void useOutOfJailCard();
 		void addProperty(int fieldId);
 		void removeProperty(int fieldId);
+        void earnMoney(int money);
+        void payMoney(int cost);
+        void earMoneyFromStart();
 		PlayerState getPlayerState();
 
 };

@@ -43,3 +43,13 @@ int PlayerState::getOutOfJailCards() {
 void PlayerState::setOutOfJailCards(int outOfJailCards) {
 	this->outOfJailCards = outOfJailCards;
 }
+
+void PlayerState::addMoney(int money) {
+    int currentMoney = this->getMoney();
+    this->setMoney(currentMoney + money);
+}
+
+void PlayerState::removeMoney(int money) {
+    int currentMoney = this->getMoney();
+    this->setMoney(currentMoney - money);
+}
