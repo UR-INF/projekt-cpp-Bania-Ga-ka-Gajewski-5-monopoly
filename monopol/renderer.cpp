@@ -43,3 +43,11 @@ void Renderer::renderPlayerPositions(vector<Player> playersToRender) {
     
     cout << endl;
 }
+
+void Renderer::renderMenu(Menu* menuToRender) {
+    vector<MenuItem*> currentMenuToRender = menuToRender->getCurrentMenu();
+
+    for(int index = 0; index < currentMenuToRender.size(); index++) {
+            cout << index << " - " << currentMenuToRender[index]->getOptionText() << endl;
+        }
+}
