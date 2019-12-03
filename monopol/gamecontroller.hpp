@@ -31,6 +31,7 @@ class GameController {
         bool doesSomeoneWin();
         void performAction();
         void takeLoan(Player* player);
+        void payLoan(Player* player);
         void simpleDiceRoll();
         void normalDiceRoll();
         void getOutFromJailDiceRoll();
