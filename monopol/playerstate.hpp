@@ -28,6 +28,10 @@ class PlayerState {
 		int getOutOfJailCards();
 
 		void setOutOfJailCards(int numcard);
+
+        void addMoney(int money);
+
+        void removeMoney(int money);
 };
 
 #endif

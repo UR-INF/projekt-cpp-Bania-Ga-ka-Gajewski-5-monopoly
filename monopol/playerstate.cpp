@@ -1,4 +1,5 @@
 #include "playerstate.hpp"
+#include <iostream>
 
 PlayerState::PlayerState(int money, bool isInJail, bool bankrupt, int outOfJailCards) {
     this->setMoney(money);
@@ -7,7 +8,9 @@ PlayerState::PlayerState(int money, bool isInJail, bool bankrupt, int outOfJailC
 	this->setOutOfJailCards(outOfJailCards);
 };
 
-PlayerState::~PlayerState() {};
+PlayerState::~PlayerState() {
+    //std::cout << "Usuwam obiekt PlayerState" << std::endl;
+};
 
 bool PlayerState::getIsInJail() {
     return this->isInJail;
@@ -39,4 +42,14 @@ int PlayerState::getOutOfJailCards() {
 
 void PlayerState::setOutOfJailCards(int outOfJailCards) {
 	this->outOfJailCards = outOfJailCards;
+}
+
+void PlayerState::addMoney(int money) {
+    int currentMoney = this->getMoney();
+    this->setMoney(currentMoney + money);
+}
+
+void PlayerState::removeMoney(int money) {
+    int currentMoney = this->getMoney();
+    this->setMoney(currentMoney - money);
 }

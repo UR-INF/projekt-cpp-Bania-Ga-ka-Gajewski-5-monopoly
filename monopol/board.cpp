@@ -214,7 +214,7 @@ Board::Board() {
 }
 
 Board::~Board() {
-
+    std::cout << "Usuwam obiekt Board" << endl;
 }
 
 Field* Board::getField(int index) {

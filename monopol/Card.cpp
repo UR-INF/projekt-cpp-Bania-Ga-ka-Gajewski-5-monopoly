@@ -1,4 +1,4 @@
-#include "Card.h";
+#include "Card.h"
 
 Card::Card(int cardId, string description){
 	this->cardId = cardId;
