@@ -1,10 +1,11 @@
 #include "playerstate.hpp"
 #include <iostream>
 
-PlayerState::PlayerState(int money, bool isInJail, bool bankrupt) {
+PlayerState::PlayerState(int money, bool isInJail, bool bankrupt, int outOfJailCards) {
     this->setMoney(money);
     this->setIsInJail(isInJail);
     this->setBankrupt(bankrupt);
+	this->setOutOfJailCards(outOfJailCards);
 };
 
 PlayerState::~PlayerState() {
@@ -35,3 +36,10 @@ void PlayerState::setBankrupt(bool bankrupt) {
     this->bankrupt = bankrupt;
 }
 
+int PlayerState::getOutOfJailCards() {
+	return this->outOfJailCards;
+}
+
+void PlayerState::setOutOfJailCards(int outOfJailCards) {
+	this->outOfJailCards = outOfJailCards;
+}
