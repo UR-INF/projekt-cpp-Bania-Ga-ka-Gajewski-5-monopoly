@@ -15,7 +15,7 @@ Player::Player(string name, bool isComputer, PlayerState *playerState, int posit
 };
 
 Player::~Player() {
-	cout << "Usuwam obiekt Player" << endl;
+	// cout << "Usuwam obiekt Player" << endl;
 	delete this->playerState;
 };
 
