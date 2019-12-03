@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 #include "player.hpp"
+#include "menu.hpp"
 
 #ifndef RENDERER_HPP
 #define RENDERER_HPP
@@ -15,6 +16,7 @@ class Renderer {
         void renderPlayerPositions(vector<Player> playersToRender);
         void renderCurrentPlayer(Player* playerToRender);
         void renderMessage(string message); 
+        void renderMenu(Menu* menuToRender);
 };
 
 #endif
