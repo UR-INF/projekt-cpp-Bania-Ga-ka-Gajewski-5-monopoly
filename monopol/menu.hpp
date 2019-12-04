@@ -1,4 +1,5 @@
 #include "player.hpp"
+#include "menuitem.hpp"
 #include <string>
 #include <vector>
 
@@ -9,15 +10,14 @@ using namespace std;
 
 class Menu {
     private:
-        vector<string> freedomOptions;
-        vector<string> jailOptions;
-        int choosedOption;
+        vector<MenuItem*> allMenuItems;
+        vector<MenuItem*> currentMenu;
 
     public:
         Menu();
         ~Menu();
-        void render(Player* player);
-        int getChoosedOption();
+        void construct(Player* player);
+        vector<MenuItem*> getCurrentMenu();
 };
 
 #endif

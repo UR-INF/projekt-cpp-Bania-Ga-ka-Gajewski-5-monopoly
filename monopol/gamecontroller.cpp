@@ -1,5 +1,6 @@
 #include "gamecontroller.hpp"
 #include "input.hpp"
+#include "renderer.hpp"
 #include <string>
 #include <iostream>
 #include <utility>
@@ -14,8 +15,9 @@ struct moveOrder {
     }
 };
 
-GameController::GameController(Board* board, DiceRoller* diceRoller, int numberOfPlayers, Menu* menu) {
+GameController::GameController(Board* board, Renderer* renderer, DiceRoller* diceRoller, int numberOfPlayers, Menu* menu) {
     this->board = board;
+    this->renderer = renderer;
     this->diceRoller = diceRoller;
     this->numberOfPlayers = numberOfPlayers;
     this->numberOfActivePlayers = numberOfPlayers;
@@ -35,7 +37,7 @@ GameController::GameController(Board* board, DiceRoller* diceRoller, int numberO
 }
 
 GameController::~GameController() {
-    this->renderMessage("Usuwam obiekt GameController");
+    this->renderer->renderMessage("Usuwam obiekt GameController");
     this->players.clear();
     this->orderOfMoves.clear();
 
@@ -47,76 +49,58 @@ GameController::~GameController() {
 
 void GameController::start() {
     this->setPlayersMoveOrder();    
-	this->renderPlayersMoveOrder();
+	this->renderer->renderPlayersMoveOrder(this->orderOfMoves);
     this->setPlayersOnStart();
 
     bool isPlaying = true;
 	// pickBlueCard(currentPlayer);
     while(isPlaying && this->numberOfActivePlayers > 1) {
         
-        this->renderCurrentPlayer();
+        this->renderer->renderCurrentPlayer(this->currentPlayer);
 
         if (this->currentPlayer->isComputer()) {
             cout << "KOMPUTER WYKONUJE RUCH" << endl;
         }
 
-        this->menu->render(this->currentPlayer); // wyświetlenie menu
+        this->menu->construct(this->currentPlayer); // utworzenie menu dla konkretnego gracza
+        this->renderer->renderMenu(this->menu); // wyswietlenie menu
+
         int playerChose = Input::getDigitKey();
 
-        if (this->currentPlayer->isInJail()) {
-            if (playerChose == 9) {
-                isPlaying = false;
-                break;
-            }
-            else if (playerChose == 0) {
-                // GRACZ WYBRAL RZUT KOSTKAMI
-                this->renderMessage("RZUCAM KOSTKAMI W WIEZIENIU");
-                this->getOutFromJailDiceRoll();
-                this->renderPlayersPositions();
-                this->nextPlayer();
-            }
-            else if (playerChose == 1) {
-                // GRACZ WYBRAL UZYCIE KARTY
-                this->renderMessage("UZYWAM KARTY");
-            }
-            else if (playerChose == 2) {
-                // GRACZ WYBRAL ZAPLATE I RZUT KOSTKAMI
-                this->renderMessage("PLACE I RZUCAM");
-            }
-            else {
-                this->renderMessage("Niepoprawny symbol");
-                continue;
-            }
-        }
-        else {       
-            if (playerChose == 9) {
-                isPlaying = false;
-                break;
-            }
-            else if (playerChose == 0) {
-                // GRACZ WYBRAL RZUT KOSTKAMI
-                this->renderMessage("RZUCAM KOSTKAMI");
+        switch(this->menu->getCurrentMenu()[playerChose]->getAction()) {
+            case NORMAL_DICE_ROLL:
                 this->normalDiceRoll();
-                this->renderPlayersPositions();
                 this->nextPlayer();
-            }
-            else if (playerChose == 1) {
-                // GRACZ WYBRAL ZAKUP DOMKOW
-                this->renderMessage("KUPUJE DOMKI");
-            }
-            else if (playerChose == 2) {
-                // GRACZ WYBRAL WYMIANE
-                this->renderMessage("WYMIENIAM");
-            }
-            else if (playerChose == 3) {
-                // GRACZ WYBRAL WZIECIE POZYCZKI Z BANKU
-                this->takeLoan(this->currentPlayer);                
-            }
-            else {
-                this->renderMessage("Niepoprawny symbol");
+                break;
+            case TAKE_LOAN:
+                this->takeLoan(this->currentPlayer);
                 continue;
-            }
-        } 
+            case PAY_LOAN:
+                this->payLoan(this->currentPlayer);
+                continue;
+            case BUY_HOUSE:
+                continue;
+            case SELL_HOUSE:
+                continue;
+            case EXCHANGE:
+                continue;
+            case OUT_OF_JAIL_ROLL_DICE:
+                this->getOutFromJailDiceRoll();
+                this->nextPlayer();
+                break;
+            case USE_CARD_TO_GET_FREE:
+                continue;
+            case PAY_AND_GET_FREE:
+
+                continue;
+            default:
+                this->renderer->renderMessage("Niepoprawny symbol");
+                continue;
+        }
+
+        this->renderer->renderMessage("Aktualne pozycje na planszy: ");
+        this->renderer->renderPlayerPositions(this->orderOfMoves);
+
     }
 }
 
@@ -154,14 +138,14 @@ void GameController::performAction() {
             // Obsluga tego pola jest juz zaimplementowana w Player MoveBy
             break;
         case JAIL:
-            this->renderMessage("Odwiedzasz wiezienie");
+            this->renderer->renderMessage("Odwiedzasz wiezienie");
             break;
         case GO_TO_JAIL:
-            this->renderMessage("Idziesz do wiezienia!");
+            this->renderer->renderMessage("Idziesz do wiezienia!");
             this->currentPlayer->goToJail();
             break;
         case FREE_PARKING:
-            this->renderMessage("Odpoczywasz na darmowym parkingu");
+            this->renderer->renderMessage("Odpoczywasz na darmowym parkingu");
             break;
         case LUXURY_TAX:
             if(this->currentPlayer->isSolvent(100, true)) {
@@ -185,36 +169,21 @@ void GameController::performAction() {
 }
 
 void GameController::takeLoan(Player* player) {
-    this->renderMessage("BIORE POZYCZKE");
-    
-    if (player->hasActiveLoan()) {
-        this->renderMessage("NIE MOZESZ WZIAC POZYCZKI DO POKI NIE SPLACISZ POPRZEDNIEJ");
-
-        if (!player->isSolvent(500, true)) {
-            this->renderMessage("NIE STAC CIE NA SPLATE POZYCZKI");
-            return;            
-        }
-
-        this->renderMessage("MOZESZ SPLACIC POZYCZKE \n 1 - SPLAC \n 2 - ANULUJ");
-        int playerChose = Input::getDigitKey();
-
-        if(playerChose == 1) {
-            player->payBackLoan();
-            this->renderMessage("POZYCZKA SPŁACONA");
-        }
-    }
-    else {
-        player->takeLoan();
-        this->renderMessage("WZIETO POZYCZKE");
-    }
+    player->takeLoan();
+    this->renderer->renderMessage("WZIETO POZYCZKE");
+    this->renderer->renderMessage("BIORE POZYCZKE");
 }
 
+void GameController::payLoan(Player* player) {
+    player->payBackLoan();
+    this->renderer->renderMessage("POZYCZKA SPLACONA");
+}
 // Prosty rzut kostkami - rzut -> przesunięcie gracza
 void GameController::simpleDiceRoll() {
     DiceThrowResult* dtr = this->diceRoller->rollDices();
     int rolledNumber = dtr->firstDice + dtr->secondDice;
     this->currentPlayer->moveBy(rolledNumber);
-    this->renderPlayersPositions();
+    this->renderer->renderPlayerPositions(this->orderOfMoves);
 }
 
 void GameController::normalDiceRoll() {
@@ -227,11 +196,11 @@ void GameController::normalDiceRoll() {
         rolledNumber = dtr->firstDice + dtr->secondDice;
 
         if (dtr->isDouble()) {
-            this->renderMessage("WYRZUCONO DEBEL");
+            this->renderer->renderMessage("WYRZUCONO DEBEL");
             doubles++;
 
             if (doubles == 3) {
-                this->renderMessage("IDZIESZ DO WIEZIENIA");
+                this->renderer->renderMessage("IDZIESZ DO WIEZIENIA");
                 this->currentPlayer->goToJail();
                 return;
             }
@@ -307,63 +276,30 @@ void GameController::setPlayersMoveOrder() {
     this->currentPlayer = &this->orderOfMoves[0];
 }
 
-void GameController::renderPlayersMoveOrder() {
-    this->renderMessage("Gracze wykonuja ruch w kolejnosci: ");
-   
-    for(vector<Player>::iterator it = this->orderOfMoves.begin(); it != this->orderOfMoves.end(); ++it) {
-        this->renderMessage(it->getName());
-    }
-
-    cout << endl;
-}
-
-// wypisuje na konsole aktualna pozycje kazdego z graczy
-void GameController::renderPlayersPositions() {
-    for(vector<Player>::iterator it = this->orderOfMoves.begin(); it != this->orderOfMoves.end(); ++it) {
-        cout << "Gracz " << it->getName() 
-             << " jest na polu " << it->getPosition() 
-             << endl;
-    }
-    
-    cout << endl;
-}
-
-void GameController::renderCurrentPlayer() {
-    this->renderMessage("Ruch gracza: " + this->currentPlayer->getName());
-    cout << "Stan konta: " << this->currentPlayer->getPlayerState().getMoney() << endl;
-    cout << endl;
-}
-
-void GameController::renderMessage(string message) {
-    cout << message << endl;
-}
-
 void GameController::pickBlueCard(Player* player) {
 	//wylosowanie karty niebieskiej
 	Card card = board->pickBlueCard();
+    this->renderer->renderMessage("BLUE CARD: " + card.getDescription());
 	switch (card.getCardId())
 	{
 	case 0:
 		//Wychodzisz wolny z więzienia. Kartę należy zachować do wykorzystania lub sprzedania.
 		player->addOutOfJailCard();
-		renderMessage("BLUE CARD: " + card.getDescription());
 		break;
 	case 1:
 		//Wracasz do \"WIEDNIA\"
 		player->setPosition(39);
-		renderMessage("BLUE CARD: " + card.getDescription());
 		break;
 	case 2:
 		//Płacisz za karę 20$ lub ciągniesz \"SZANSĘ\" z drugiego zestawu (czerwonego)
-		renderMessage("BLUE CARD: " + card.getDescription());
 		//jeśli niezdolny zapłacić automatycznie ciągnie karte
 		if (player->getPlayerState().getMoney() < 20) {
 			pickRedCard(player);
 			//break or return?
 		}
 		else {
-			renderMessage("0 By zapłacić karę");
-			renderMessage("1 By pobrać partę z zestawu czerwonego");
+			this->renderer->renderMessage("0 By zapłacić karę");
+			this->renderer->renderMessage("1 By pobrać partę z zestawu czerwonego");
 			int playerChose = Input::getDigitKey();
 			switch (playerChose)
 			{
@@ -379,54 +315,41 @@ void GameController::pickBlueCard(Player* player) {
 	case 3:
 		//Wracasz na \"START\"
 		player->setPosition(0);
-		renderMessage("BLUE CARD: " + card.getDescription());
 		break;
 	case 4:
 		//Idziesz do więzienia.Nie przechodzisz przez \"START\". Nie otrzymujesz 200$.
 		player->setPosition(10);
-		renderMessage("BLUE CARD: " + card.getDescription());
 		break;
 	case 5:
 		//Płacisz koszty leczenia w wysokości 20$.
-		
-		renderMessage("BLUE CARD: " + card.getDescription());
 		break;
 	case 6:
 		//Bank omylił się na Twoją krozyść. Otrzymujesz 400$.
 		player->getPlayerState().setMoney(player->getPlayerState().getMoney()+400);
-		renderMessage("BLUE CARD: " + card.getDescription());
 		break;
 	case 7:
 		//Zająłeś II miejsce w konkursie piękności - otrzymujesz z banku 200$.
 		player->getPlayerState().setMoney(player->getPlayerState().getMoney() + 200);
-		renderMessage("BLUE CARD: " + card.getDescription());
 		break;
 	case 8:
 		//Otrzymujesz roczną rentę w wysokości 200$.
 		player->getPlayerState().setMoney(player->getPlayerState().getMoney() + 200);
-		renderMessage("BLUE CARD: " + card.getDescription());
 		break;
 	case 9:
 		//Bank wypłaci ci należne 7% od kapitałów - otrzymujesz 50$.
 		player->getPlayerState().setMoney(player->getPlayerState().getMoney() + 50);
-		renderMessage("BLUE CARD: " + card.getDescription());
 		break;
 	case 10:
-		renderMessage("BLUE CARD: " + card.getDescription());
 		break;
 	case 11:
-		renderMessage("BLUE CARD: " + card.getDescription());
 		break;
 	case 12:
-		renderMessage("BLUE CARD: " + card.getDescription());
 		break;
 	case 13:
 		//Otrzymujesz w spadku 200$.
 		player->getPlayerState().setMoney(player->getPlayerState().getMoney() + 200);
-		renderMessage("BLUE CARD: " + card.getDescription());
 		break;
 	case 14:
-		renderMessage("BLUE CARD: " + card.getDescription());
 		break;
 	default:
 		break;
@@ -436,65 +359,50 @@ void GameController::pickBlueCard(Player* player) {
 void GameController::pickRedCard(Player* player) {
 	//wylosowanie kartty czerwonej
 	Card card = board->pickRedCard();
+    this->renderer->renderMessage("RED CARD: " + card.getDescription());
 	switch (card.getCardId())
 	{
 	case 0:
-		renderMessage("RED CARD: " + card.getDescription());
 		break;
 	case 1:
-		renderMessage("RED CARD: " + card.getDescription());
 		break;
-	case 2:
-		renderMessage("RED CARD: " + card.getDescription());
+	case 2:		
 		break;
 	case 3:
-		renderMessage("RED CARD: " + card.getDescription());
 		break;
 	case 4:
 		//Cofasz się o 3 pola.
 		player->setPosition(player->getPosition() - 3);
-		renderMessage("RED CARD: " + card.getDescription());
 		break;
 	case 5:
 		//Wcyhodzisz wolny z więzienia. Kartę należy zachować do wykorzystania lub sprzedania.
 		player->addOutOfJailCard();
-		renderMessage("RED CARD: " + card.getDescription());
 		break;
 	case 6:
-		renderMessage("RED CARD: " + card.getDescription());
 		break;
 	case 7:
-		renderMessage("RED CARD: " + card.getDescription());
 		break;
 	case 8:
-		renderMessage("RED CARD: " + card.getDescription());
 		break;
 	case 9:
-		renderMessage("RED CARD: " + card.getDescription());
 		break;
 	case 10:
-		renderMessage("RED CARD: " + card.getDescription());
 		break;
 	case 11:
 		//Bank wpłaca Ci należne odsetkiw  wysokości 300$.
 		player->getPlayerState().setMoney(player->getPlayerState().getMoney() + 300);
-		renderMessage("RED CARD: " + card.getDescription());
 		break;
 	case 12:
-		renderMessage("RED CARD: " + card.getDescription());
 		break;
 	case 13:
-		renderMessage("RED CARD: " + card.getDescription());
 		break;
 	case 14:
 		//Bank wypłaca Ci pprocent w wysokości 100$.
 		player->getPlayerState().setMoney(player->getPlayerState().getMoney() + 100);
-		renderMessage("RED CARD: " + card.getDescription());
 		break;
 	case 15:
 		//Rozwiązałeś dobrze krzyżówkę. Jako I nagrodę otrzymujesz 200$.
 		player->getPlayerState().setMoney(player->getPlayerState().getMoney() + 200);
-		renderMessage("RED CARD: " + card.getDescription());
 		break;
 	default:
 		break;

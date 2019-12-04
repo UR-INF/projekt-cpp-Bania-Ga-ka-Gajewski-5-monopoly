@@ -8,6 +8,7 @@
 #include "menu.hpp"
 #include "gamecontroller.hpp"
 #include "input.hpp"
+#include "renderer.hpp"
 
 using namespace std;
 
@@ -31,10 +32,11 @@ int main()
 	}
 
 	Board* board = new Board();
+	Renderer* renderer = new Renderer();
 	DiceRoller* diceRoller = new DiceRoller();
 	Menu* menu = new Menu();
 
-	GameController* gameController = new GameController(board, diceRoller, numOfPlayers, menu);
+	GameController* gameController = new GameController(board, renderer, diceRoller, numOfPlayers, menu);
 
 	gameController->start();
 

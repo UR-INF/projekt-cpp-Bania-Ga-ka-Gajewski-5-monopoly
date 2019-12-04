@@ -1,36 +1,65 @@
 
 #include "menu.hpp"
+#include "menuitem.hpp"
 #include "player.hpp"
+#include "actiontype.hpp"
+#include <string>
 #include <iostream>
+#include <vector>
+
+using namespace std;
 
 Menu::Menu() {
-    this->freedomOptions.push_back("Rzut kostkami");
-    this->freedomOptions.push_back("Zakup domkow");
-    this->freedomOptions.push_back("Wymiana z innym graczem");
-    this->freedomOptions.push_back("Pozyczka od banku");
-
-    this->jailOptions.push_back("Rzut kostkami na wyjscie z wiezienia");
-    this->jailOptions.push_back("Uzycie karty wyjscie z wiezienia");
-    this->jailOptions.push_back("Zaplata 50$ i rzut kostkami");
+    this->allMenuItems.push_back(new MenuItem("Rzut kostkami", NORMAL_DICE_ROLL)); // 0
+    this->allMenuItems.push_back(new MenuItem("Pozyczka z banku", TAKE_LOAN)); // 1
+    this->allMenuItems.push_back(new MenuItem("Splata pozyczki", PAY_LOAN)); // 2
+    this->allMenuItems.push_back(new MenuItem("Kupno domku", BUY_HOUSE)); // 3
+    this->allMenuItems.push_back(new MenuItem("Sprzedaz domku", SELL_HOUSE)); // 4
+    this->allMenuItems.push_back(new MenuItem("Wymiana", EXCHANGE)); // 5
+    this->allMenuItems.push_back(new MenuItem("Rzut kostkami na wyjscie z wiezienia", OUT_OF_JAIL_ROLL_DICE)); // 6
+    this->allMenuItems.push_back(new MenuItem("Uzycie karty wyjscie z wiezienia", USE_CARD_TO_GET_FREE)); // 7
+    this->allMenuItems.push_back(new MenuItem("Zaplac 50$ i rzuc kostkami", PAY_AND_GET_FREE)); // 8
 }
 
 Menu::~Menu() {
     std::cout << "Usuwam obiekt Menu" << endl;
-    this->freedomOptions.clear();
-    this->jailOptions.clear();
+    this->allMenuItems.clear();
 }
 
-void Menu::render(Player* player) {
-    if (player->isInJail()) {
-        for(int index = 0; index < this->jailOptions.size(); index++) {
-            cout << index << " - " << this->jailOptions[index] << endl;
+vector<MenuItem*> Menu::getCurrentMenu() {
+    return this->currentMenu;
+}
+
+void Menu::construct(Player* player) {
+    this->currentMenu.clear();
+
+    if(player->isInJail()) {
+        this->currentMenu.push_back(this->allMenuItems[6]);
+
+        if(player->hasOutOfJailCard()) {
+            this->currentMenu.push_back(this->allMenuItems[7]);
+        }        
+        
+        if(player->isSolvent(50, true)) {
+            this->currentMenu.push_back(this->allMenuItems[8]);
         }
+
+        if(player->hasActiveLoan() && player->isSolvent(500, true)) {
+            this->currentMenu.push_back(this->allMenuItems[2]);
+        }        
     }
     else {
-        for(int index = 0; index < this->freedomOptions.size(); index++) {
-            cout << index << " - " << this->freedomOptions[index] << endl;
+        this->currentMenu.push_back(this->allMenuItems[0]);
+        this->currentMenu.push_back(this->allMenuItems[3]);
+        this->currentMenu.push_back(this->allMenuItems[4]);
+        this->currentMenu.push_back(this->allMenuItems[5]);        
+
+        if(player->hasActiveLoan() && player->isSolvent(500, true)) {
+            this->currentMenu.push_back(this->allMenuItems[2]);
         }
-    }    
-    
+        else {
+            this->currentMenu.push_back(this->allMenuItems[1]);
+        }
+    }
     cout << endl;
 }
