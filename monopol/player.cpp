@@ -103,9 +103,12 @@ bool Player::hasActiveLoan() {
 
 // wziecie pozyczki
 void Player::takeLoan() {
+	/*
 	int currentMoney = this->playerState->getMoney();
 	currentMoney += 500;
 	this->playerState->setMoney(currentMoney);
+	*/
+	this->earnMoney(500);
 	this->activeLoan = true;
 	this->cashGain = 100;
 	// uniemozliwiam splate pozyczki do momentu przejscia przez start
@@ -114,9 +117,12 @@ void Player::takeLoan() {
 
 // splata pozyczki
 void Player::payBackLoan() {
+	/*
 	int currentMoney = this->playerState->getMoney();
 	currentMoney -= 500;
 	this->playerState->setMoney(currentMoney);
+	*/
+	this->payMoney(500);
 	this->activeLoan = false;
 	this->cashGain = 200;
 }
