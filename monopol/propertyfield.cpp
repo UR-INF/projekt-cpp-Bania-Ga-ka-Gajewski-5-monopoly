@@ -55,3 +55,17 @@ void PropertyField::setMortgage(bool mortgage) {
 string PropertyField::getPropertyInfo() {
     return this->country + " - " + this->city; 
 }
+
+string PropertyField::toString() {
+    string fieldNumber = to_string(this->getFieldNumber());
+    string fieldString = fieldNumber + " - " + this->country + " - " + this->city;
+
+    if (this->getOwner()) {
+        fieldString += " - Wlasciciel: " + this->getOwner()->getName();
+    }
+    else {
+        fieldString += " - Wlasciciel: brak";
+    }
+
+    return fieldString;
+}

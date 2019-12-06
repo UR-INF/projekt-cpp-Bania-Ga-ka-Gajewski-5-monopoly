@@ -31,6 +31,7 @@ class PropertyField : public Field {
         int getCurrentRent(); // pobież wysokość aktualnego czynszu
         void setMortgage(bool mortgage);
         string getPropertyInfo();
+        string toString();
 };
 
 #endif
