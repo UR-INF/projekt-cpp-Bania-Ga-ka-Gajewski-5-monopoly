@@ -19,6 +19,8 @@ Menu::Menu() {
     this->allMenuItems.push_back(new MenuItem("Rzut kostkami na wyjscie z wiezienia", OUT_OF_JAIL_ROLL_DICE)); // 6
     this->allMenuItems.push_back(new MenuItem("Uzycie karty wyjscie z wiezienia", USE_CARD_TO_GET_FREE)); // 7
     this->allMenuItems.push_back(new MenuItem("Zaplac 50$ i rzuc kostkami", PAY_AND_GET_FREE)); // 8
+    this->allMenuItems.push_back(new MenuItem("Tak", CONFIRM)); // 9
+    this->allMenuItems.push_back(new MenuItem("Anuluj", CANCEL)); // 10
 }
 
 Menu::~Menu() {
@@ -61,5 +63,14 @@ void Menu::construct(Player* player) {
             this->currentMenu.push_back(this->allMenuItems[1]);
         }
     }
+    cout << endl;
+}
+
+void Menu::constructConfirm() {
+    this->currentMenu.clear();
+
+    this->currentMenu.push_back(this->allMenuItems[9]);
+    this->currentMenu.push_back(this->allMenuItems[10]);
+
     cout << endl;
 }

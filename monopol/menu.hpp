@@ -17,6 +17,7 @@ class Menu {
         Menu();
         ~Menu();
         void construct(Player* player);
+        void constructConfirm();
         vector<MenuItem*> getCurrentMenu();
 };
 
