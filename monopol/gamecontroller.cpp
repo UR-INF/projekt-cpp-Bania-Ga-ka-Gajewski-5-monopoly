@@ -106,8 +106,9 @@ void GameController::start() {
             case USE_CARD_TO_GET_FREE:
                 continue;
             case PAY_AND_GET_FREE:
-
-                continue;
+                this->payAndGetOutFromJail();
+                this->nextPlayer();
+                break;
             default:
                 this->renderer->renderMessage("Niepoprawny symbol");
                 continue;
@@ -335,6 +336,12 @@ void GameController::getOutFromJailDiceRoll() {
             return;
         }
     }
+}
+
+void GameController::payAndGetOutFromJail() {
+    this->currentPlayer->payMoney(50);
+    this->currentPlayer->getOutOfJail();
+    this->simpleDiceRoll();
 }
 
 void GameController::bankruptPlayer(Player* player) {

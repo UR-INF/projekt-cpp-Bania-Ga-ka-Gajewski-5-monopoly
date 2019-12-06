@@ -35,6 +35,7 @@ class GameController {
         void simpleDiceRoll();
         void normalDiceRoll();
         void getOutFromJailDiceRoll();
+        void payAndGetOutFromJail();
         void setPlayersMoveOrder();
         void bankruptPlayer(Player* player);
 
