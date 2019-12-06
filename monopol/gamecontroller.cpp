@@ -69,7 +69,18 @@ void GameController::start() {
         this->menu->construct(this->currentPlayer); // utworzenie menu dla konkretnego gracza
         this->renderer->renderMenu(this->menu); // wyswietlenie menu
 
-        int playerChose = Input::getDigitKey();
+        int playerChose;
+
+        while(true) {
+            playerChose = Input::getDigitKey();
+
+            if (this->menu->getCurrentMenu().size() - 1 < playerChose) {
+                this->renderer->renderMessage("Podano niepoprawna opcje");
+                continue;
+            }
+
+            break;
+        }
 
         switch(this->menu->getCurrentMenu()[playerChose]->getAction()) {
             case NORMAL_DICE_ROLL:
@@ -105,6 +116,8 @@ void GameController::start() {
         this->renderer->renderMessage("Aktualne pozycje na planszy: ");
         this->renderer->renderPlayerPositions(this->orderOfMoves);
 
+        this->renderer->renderMessage("Aktualny stan planszy");
+        this->renderer->renderBoard(this->board);
     }
 }
 
