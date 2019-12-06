@@ -2,6 +2,8 @@
 #include <vector>
 #include "player.hpp"
 #include "menu.hpp"
+#include "board.hpp"
+#include "field.hpp"
 
 #ifndef RENDERER_HPP
 #define RENDERER_HPP
@@ -17,6 +19,8 @@ class Renderer {
         void renderCurrentPlayer(Player* playerToRender);
         void renderMessage(string message); 
         void renderMenu(Menu* menuToRender);
+        void renderBoard(Board* boardToRender);
+        void renderField(Field* fieldToRender);
 };
 
 #endif
