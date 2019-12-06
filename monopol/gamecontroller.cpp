@@ -1,6 +1,9 @@
 #include "gamecontroller.hpp"
 #include "input.hpp"
 #include "renderer.hpp"
+#include "propertyfield.hpp"
+#include "field.hpp"
+#include "board.hpp"
 #include <string>
 #include <iostream>
 #include <utility>
@@ -164,7 +167,92 @@ void GameController::performAction() {
                 this->bankruptPlayer(this->currentPlayer);
             }
             break;
-            
+        /* 
+                czy nieruchomosc nie ma wlasciciela:
+                    czy gracza stac na zakup:
+                        czy gracz chce kupic:  
+                            kup
+                        else
+                            licytacja
+                    else
+                        licytacja
+                else
+                    czy to nieruchomosc aktualnego gracza
+                        break
+                    else
+                        kalkulacja zaplaty
+                        czy gracza stac na splate czynszu
+                            gracz placi
+                            break
+                        else
+                            bankructwo
+                            break
+                        
+            */    
+        case PROPERTY:
+            PropertyField* propertyField = static_cast<PropertyField*>(contextField);
+            this->renderer->renderMessage("Stajesz na polu: " + propertyField->getPropertyInfo());
+            Player* propertyOwner = propertyField->getOwner();
+
+            if (!propertyOwner) {
+                if (this->currentPlayer->isSolvent(propertyField->getPrice(), true)) {
+                    this->menu->constructConfirm();
+                    this->renderer->renderMenu(this->menu);
+                    
+                    int playerChose = 0;
+
+                    while(true) {
+                        playerChose = Input::getDigitKey();
+
+                        if (this->menu->getCurrentMenu().size() - 1 < playerChose) {
+                            this->renderer->renderMessage("Podano niepoprawna opcje");
+                            continue;
+                        }
+
+                        switch(this->menu->getCurrentMenu()[playerChose]->getAction()) {
+                            case CONFIRM:
+                                this->currentPlayer->payMoney(propertyField->getPrice());
+                                this->currentPlayer->addProperty(indexOfFieldContext);
+                                propertyField->setOwner(this->currentPlayer);                                  
+                                this->renderer->renderMessage("Nieruchomosc zakupiona");                              
+                                return;
+                            case CANCEL:
+                                this->renderer->renderMessage("Zrezygnowano z zakupu nieruchomosci");
+                                return;
+                            default:
+                                break;
+                        }
+                    }                                       
+                }
+                else {
+                    /*
+                        LICYTACJA
+                    */
+                }
+            }
+            else {
+                if (this->currentPlayer == propertyOwner) {
+                    this->renderer->renderMessage("Odwiedzasz swoja nieruchomosc");
+                    break;
+                }
+                else {
+                    this->renderer->renderMessage("Płacisz czynsz graczowi: " + propertyOwner->getName());
+
+                    int rentToPay = propertyField->getCurrentRent();
+
+                    if(this->currentPlayer->isSolvent(rentToPay, true)) {
+                        this->currentPlayer->payMoney(rentToPay);
+                        propertyOwner->earnMoney(rentToPay);
+                        break;
+                    }
+                    else {
+                        this->bankruptPlayer(this->currentPlayer);
+                        break;
+                    }
+                }
+            }
+
+            break;            
     }
 }
 
@@ -237,6 +325,8 @@ void GameController::getOutFromJailDiceRoll() {
 
 void GameController::bankruptPlayer(Player* player) {
     player->setBankrupt(true);
+    player->clearProperties();
+    // player->getPlayerState().setOutOfJailCards(0);
     this->numberOfActivePlayers--;
                     
     for(int index = 0; index < this->orderOfMoves.size(); index++) {
