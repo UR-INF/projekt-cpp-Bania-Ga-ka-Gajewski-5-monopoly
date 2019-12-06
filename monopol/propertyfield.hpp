@@ -23,11 +23,14 @@ class PropertyField : public Field {
     public:
         PropertyField(Player* owner, string country, string city, int price, int pricing[], int housingLevel, int upgradeCost, int mortgage, bool isUnderMortgage, FieldType type, int fieldNumber);
         ~PropertyField();
+        Player* getOwner();
         void setOwner(Player* owner);
+        int getPrice();
         void upgrade(); // kup domek
         void degrade(); // sprzedaj domek
         int getCurrentRent(); // pobież wysokość aktualnego czynszu
         void setMortgage(bool mortgage);
+        string getPropertyInfo();
 };
 
 #endif

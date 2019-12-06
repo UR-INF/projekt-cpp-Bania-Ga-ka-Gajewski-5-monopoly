@@ -18,8 +18,16 @@ PropertyField::~PropertyField() {
 
 }
 
+Player* PropertyField::getOwner() {
+    return this->owner;
+}
+
 void PropertyField::setOwner(Player* owner) {
     this->owner = owner;
+}
+
+int PropertyField::getPrice() {
+    return this->price;
 }
 
 void PropertyField::upgrade() {
@@ -42,4 +50,8 @@ int PropertyField::getCurrentRent() {
 
 void PropertyField::setMortgage(bool mortgage) {
     this->isUnderMortgage = mortgage;
+}
+
+string PropertyField::getPropertyInfo() {
+    return this->country + " - " + this->city; 
 }
