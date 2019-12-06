@@ -10,7 +10,7 @@ Player::Player(string name, bool isComputer, PlayerState *playerState, int posit
 	this->setPosition(position);
 	this->activeLoan = false;
 	this->canPayLoan = true;
-	this->cashGain = 0;
+	this->cashGain = 100;
 
 };
 
