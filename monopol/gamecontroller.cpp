@@ -54,6 +54,7 @@ void GameController::start() {
     this->setPlayersMoveOrder();    
 	this->renderer->renderPlayersMoveOrder(this->orderOfMoves);
     this->setPlayersOnStart();
+    this->renderer->renderBoard(this->board);
 
     bool isPlaying = true;
 	// pickBlueCard(currentPlayer);
