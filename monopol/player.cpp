@@ -169,6 +169,10 @@ void Player::removeProperty(int fieldId) {
 	this->playerProperties.erase(this->playerProperties.find(fieldId));
 }
 
+void Player::clearProperties() {
+	this->playerProperties.clear();
+}
+
 PlayerState Player::getPlayerState() {
 	return *this->playerState;
 }
