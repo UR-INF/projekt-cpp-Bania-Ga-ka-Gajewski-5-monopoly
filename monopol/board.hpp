@@ -18,8 +18,8 @@ class Board {
         ~Board();
         Field* getField(int index);
         void render(); // metoda do wypisania planszy na konsoli
-		void setField(int index, Field* field); // metoda inicjuj¹ca obiekt field w tablicy
-		bool testFields(); // metoda zwraca true jeœli numery pola odpowiadaj¹ indexom
+		void setField(int index, Field* field); // metoda inicjujï¿½ca obiekt field w tablicy
+		bool testFields(); // metoda zwraca true jeï¿½li numery pola odpowiadajï¿½ indexom
 		void shuffleCards(Card** cards, int count);
 		Card pickBlueCard();
 		Card pickRedCard();

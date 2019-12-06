@@ -16,7 +16,7 @@ Board::Board() {
 	//Field* field4 = new Field(PROPERTY, 3);
 	PropertyField* field4 = new PropertyField(NULL, "Grecja", "Ateny", 120, new int[10, 40, 120, 360, 640, 900], 0, 100, 60, false, PROPERTY, 3);
 	fields[3] = field4;
-	Field* field5 = new Field(FREE_PARKING, 4);
+	Field* field5 = new Field(INCOME_TAX, 4);
 	fields[4] = field5;
 	Field* field6 = new Field(RAILWAY, 5);
 	fields[5] = field6;
@@ -57,7 +57,7 @@ Board::Board() {
 	//Field* field20 = new Field(PROPERTY, 19);
 	PropertyField* field20 = new PropertyField(NULL, "Wielka Brytania", "Londyn", 400, new int[35, 160, 440, 1200, 1600, 2000], 0, 200, 200, false, PROPERTY, 19);
 	fields[19] = field20;
-	Field* field21 = new Field(INCOME_TAX, 20);
+	Field* field21 = new Field(FREE_PARKING, 20);
 	fields[20] = field21;
 	//Field* field22 = new Field(PROPERTY, 21);
 	PropertyField* field22 = new PropertyField(NULL, "Benelux", "Rotterdam", 440, new int[35, 180, 500, 1400, 1750, 2100], 0, 300, 220, false, PROPERTY, 21);
