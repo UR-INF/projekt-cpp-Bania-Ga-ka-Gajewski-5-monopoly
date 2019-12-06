@@ -37,8 +37,9 @@ class GameController {
         void getOutFromJailDiceRoll();
         void payAndGetOutFromJail();
         void setPlayersMoveOrder();
+        void propertiesAcquisition(Player* bankrupt, Player* newOwner);
         void bankruptPlayer(Player* player);
-
+        void bankruptPlayerWithoutAcquisition(Player* player);
 		void pickBlueCard(Player* player);
 		void pickRedCard(Player* player);
 };

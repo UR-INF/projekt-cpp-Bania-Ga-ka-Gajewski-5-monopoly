@@ -132,12 +132,14 @@ void GameController::setPlayersOnStart() {
 // jezeli wskaznik wskazuje na ostatni element vectora orderOfMoves to przesun go na pierwszy element
 void GameController::nextPlayer() {
 
-    if (this->currentPlayer == &this->orderOfMoves[this->numberOfActivePlayers - 1]) {
-        this->currentPlayer = &this->orderOfMoves[0];
-    }
-    else {
-        this->currentPlayer++;
-    }
+    do {
+        if (this->currentPlayer == &this->orderOfMoves[this->orderOfMoves.size() - 1]) {
+            this->currentPlayer = &this->orderOfMoves[0];
+        }
+        else {
+            this->currentPlayer++;
+        }
+    } while(this->currentPlayer->isBankrupt());
 }
 
 bool GameController::doesSomeoneWin() {
@@ -170,7 +172,8 @@ void GameController::performAction() {
                 this->currentPlayer->payMoney(100);
             }
             else {
-                this->bankruptPlayer(this->currentPlayer);
+                this->renderer->renderMessage("Nie jestes w stanie zaplacic podatku od luksusu - bankrutujesz");
+                this->bankruptPlayerWithoutAcquisition(this->currentPlayer);
             }
             break;
         case INCOME_TAX:
@@ -179,7 +182,8 @@ void GameController::performAction() {
             }
             else
             {
-                this->bankruptPlayer(this->currentPlayer);
+                this->renderer->renderMessage("Nie jestes w stanie zaplacic podatku dochodowego - bankrutujesz");
+                this->bankruptPlayerWithoutAcquisition(this->currentPlayer);
             }
             break;
         /* 
@@ -261,6 +265,8 @@ void GameController::performAction() {
                         break;
                     }
                     else {
+                        this->renderer->renderMessage("Brankrutujesz! Twoje nieruchomosci przejmuje: " + propertyOwner->getName());
+                        this->propertiesAcquisition(this->currentPlayer, propertyOwner);
                         this->bankruptPlayer(this->currentPlayer);
                         break;
                     }
@@ -346,10 +352,9 @@ void GameController::payAndGetOutFromJail() {
 
 void GameController::bankruptPlayer(Player* player) {
     player->setBankrupt(true);
-    player->clearProperties();
-    // player->getPlayerState().setOutOfJailCards(0);
     this->numberOfActivePlayers--;
-                    
+    // player->getPlayerState().setOutOfJailCards(0);    
+    /*            
     for(int index = 0; index < this->orderOfMoves.size(); index++) {
         if (player == &this->orderOfMoves[index]) {
             this->nextPlayer();
@@ -357,6 +362,33 @@ void GameController::bankruptPlayer(Player* player) {
             break;
         }
     }
+    */
+}
+
+void GameController::bankruptPlayerWithoutAcquisition(Player* player) {
+    set<int> properties = player->getProperties();
+
+    for(auto propertyIndex : properties) {
+        cout << "Indeks usuwanej nieruchomosci: " << propertyIndex << endl;
+        PropertyField* propertyField = static_cast<PropertyField*>(this->board->getField(propertyIndex));
+        cout << "Ustawiam wlasciciela posiadlosci: " << propertyField->getFieldNumber() << " na NULL" << endl;
+        propertyField->setOwner(NULL);
+        cout << "Owner: " << propertyField->getOwner() << endl;
+    }
+
+    player->clearProperties();
+    this->bankruptPlayer(player);
+}
+
+void GameController::propertiesAcquisition(Player* bankrupt, Player* newOwner) {
+    set<int> properties = bankrupt->getProperties();
+
+    for(auto propertyIndex : properties) {
+        PropertyField* propertyField = static_cast<PropertyField*>(this->board->getField(propertyIndex));
+        propertyField->setOwner(newOwner);
+    }
+
+    bankrupt->clearProperties();
 }
 
 // kazdy z graczy rzuca kostkami, na podstawie wynikow ustalana jest kolejnosc wykonywania ruchow
