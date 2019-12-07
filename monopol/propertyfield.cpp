@@ -1,33 +1,22 @@
 #include "propertyfield.hpp"
 #include "fieldtype.hpp"
+#include <iostream>
+#include <vector>
 
-PropertyField::PropertyField(Player* owner, string country, string city, int price, int pricing[], int housingLevel, int upgradeCost, int mortgage, bool isUnderMortgage, FieldType type, int fieldNumer)
-                            : Field(type, fieldNumer) {
-    this->owner = owner;
+PropertyField::PropertyField(string country, string city, int pricing[], int housingLevel, int upgradeCost, Player* owner, int price, int rent, int mortgage, FieldType type, int fieldNumber)
+                            : PurchasableField(owner, price, rent, mortgage, type, fieldNumber) {
     this->country = country;
     this->city = city;
-    this->price = price;
-    *this->pricing = *pricing;
     this->housingLevel = housingLevel;
     this->upgradeCost = upgradeCost;
-    this->mortgage = mortgage;
-    this-> isUnderMortgage = isUnderMortgage;
+
+    for (int index = 0; index < 6; index++) {
+        this->pricing[index] = pricing[index];
+    }
 }
 
 PropertyField::~PropertyField() {
 
-}
-
-Player* PropertyField::getOwner() {
-    return this->owner;
-}
-
-void PropertyField::setOwner(Player* owner) {
-    this->owner = owner;
-}
-
-int PropertyField::getPrice() {
-    return this->price;
 }
 
 void PropertyField::upgrade() {
@@ -44,12 +33,8 @@ void PropertyField::degrade() {
     this->housingLevel--;
 }
 
-int PropertyField::getCurrentRent() {
+int PropertyField::getRent() {
     return this->pricing[this->housingLevel];
-}
-
-void PropertyField::setMortgage(bool mortgage) {
-    this->isUnderMortgage = mortgage;
 }
 
 string PropertyField::getPropertyInfo() {
