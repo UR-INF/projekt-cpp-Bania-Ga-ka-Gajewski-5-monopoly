@@ -43,13 +43,23 @@ string PropertyField::getPropertyInfo() {
 
 string PropertyField::toString() {
     string fieldNumber = to_string(this->getFieldNumber());
-    string fieldString = fieldNumber + " - " + this->country + " - " + this->city;
+    string fieldCountry = this->country;
+    string fieldCity = this->city;
+    fieldNumber.resize(2, ' ');
+    fieldCountry.resize(15, ' ');
+    fieldCity.resize(15, ' ');
+    
+    string fieldString = fieldNumber + " - " + fieldCountry + " - " + fieldCity;
 
     if (this->getOwner()) {
-        fieldString += " - Wlasciciel: " + this->getOwner()->getName();
+        string fieldOwner = this->getOwner()->getName();
+        fieldOwner.resize(20, ' ');
+        fieldString += " - Wlasciciel: " + fieldOwner;
     }
     else {
-        fieldString += " - Wlasciciel: brak";
+        string fieldOwner = "brak";
+        fieldOwner.resize(20, ' ');
+        fieldString += " - Wlasciciel: " + fieldOwner;
     }
 
     return fieldString;

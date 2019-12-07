@@ -3,6 +3,7 @@
 #include "purchasablefield.hpp"
 #include "propertyfield.hpp"
 #include "railwayfield.hpp"
+#include "rentmultipierfield.hpp"
 #include <iostream>
 #include <time.h>
 
@@ -24,22 +25,23 @@ Board::Board() {
 	Field* field6 = new RailwayField("Koleje poludniowe", NULL, 400, 50, 200, RAILWAY, 5);
 	fields[5] = field6;
 	//Field* field7 = new Field(PROPERTY, 6);
-	PropertyField* field7 = new PropertyField("Włochy", "Neapol", new int[6]{15, 60, 180, 540, 800, 1100}, 0, 100, NULL, 200, 15, 100, PROPERTY, 6);
+	PropertyField* field7 = new PropertyField("Wlochy", "Neapol", new int[6]{15, 60, 180, 540, 800, 1100}, 0, 100, NULL, 200, 15, 100, PROPERTY, 6);
 	fields[6] = field7;
 	Field* field8 = new Field(RED_CHANCE, 7);
 	fields[7] = field8;
 	//Field* field9 = new Field(PROPERTY, 8);
-	PropertyField* field9 = new PropertyField("Włochy", "Mediolan", new int[6]{15, 60, 180, 540, 800, 1100}, 0, 100, NULL, 200, 15, 100, PROPERTY, 8);
+	PropertyField* field9 = new PropertyField("Wlochy", "Mediolan", new int[6]{15, 60, 180, 540, 800, 1100}, 0, 100, NULL, 200, 15, 100, PROPERTY, 8);
 	fields[8] = field9;
 	//Field* field10 = new Field(PROPERTY, 9);
-	PropertyField* field10 = new PropertyField("Włochy", "Rzym", new int[6] {20, 80, 200, 600, 900, 1200}, 0, 100, NULL, 240, 20, 120, PROPERTY, 9);
+	PropertyField* field10 = new PropertyField("Wlochy", "Rzym", new int[6] {20, 80, 200, 600, 900, 1200}, 0, 100, NULL, 240, 20, 120, PROPERTY, 9);
 	fields[9] = field10;
 	Field* field11 = new Field(JAIL, 10);
 	fields[10] = field11;
 	//Field* field12 = new Field(PROPERTY, 11);
 	PropertyField* field12 = new PropertyField("Hiszpania", "Barcelona", new int[6]{20, 100, 300, 900, 1250, 1500}, 0, 200, NULL, 280, 20, 140, PROPERTY, 11);
 	fields[11] = field12;
-	Field* field13 = new Field(ELECTRICITY, 12);
+	// Field* field13 = new Field(ELECTRICITY, 12);
+	Field* field13 = new RentMultipierField("Elektrownia", NULL, 300, 10, 150, ELECTRICITY, 12);
 	fields[12] = field13;
 	//Field* field14 = new Field(PROPERTY, 13);
 	PropertyField* field14 = new PropertyField("Hiszpania", "Sewilla", new int[6]{20, 100, 300, 900, 1250, 1500}, 0, 200, NULL, 280, 20, 140, PROPERTY, 13);
@@ -83,7 +85,8 @@ Board::Board() {
 	//Field* field28 = new Field(PROPERTY, 27);
 	PropertyField* field28 = new PropertyField("Szwecja", "Goteborg", new int[6]{45, 220, 660, 1600, 1950, 2300}, 0, 300, NULL, 520, 45, 260, PROPERTY, 27);
 	fields[27] = field28;
-	Field* field29 = new Field(WATER_SUPPLY_NETWORK, 28);
+	// Field* field29 = new Field(WATER_SUPPLY_NETWORK, 28);
+	Field* field29 = new RentMultipierField("Wodociagi", NULL, 300, 10, 150, WATER_SUPPLY_NETWORK, 28);
 	fields[28] = field29;
 	//Field* field30 = new Field(PROPERTY, 29);
 	PropertyField* field30 = new PropertyField("Szwecja", "Sztokholm", new int[6]{50, 240, 720, 1700, 2050, 2400}, 0, 300, NULL, 560, 50, 280, PROPERTY, 29);
@@ -112,7 +115,7 @@ Board::Board() {
 	Field* field39 = new Field(LUXURY_TAX, 38);
 	fields[38] = field39;
 	//Field* field40 = new Field(PROPERTY, 39);
-	PropertyField* field40 = new PropertyField("Austria", "Wiedeń", new int[6]{100, 400, 1200, 2800, 3400, 4000}, 0, 400, NULL, 800, 100, 400, PROPERTY, 39);
+	PropertyField* field40 = new PropertyField("Austria", "Wieden", new int[6]{100, 400, 1200, 2800, 3400, 4000}, 0, 400, NULL, 800, 100, 400, PROPERTY, 39);
 	fields[39] = field40;
 	bool test = testFields();
 	cout << "Test Planszy: " << test << endl;

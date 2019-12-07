@@ -32,3 +32,7 @@ DiceThrowResult* DiceRoller::rollDices() {
 bool DiceRoller::isDouble() {
     return throwResult->isDouble();
 }
+
+int DiceRoller::getRolledNumber() {
+    return (this->throwResult->firstDice + this->throwResult->secondDice);
+}

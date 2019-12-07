@@ -21,15 +21,47 @@ void RailwayField::setName(string name) {
     this->name = name;
 }
 
+int RailwayField::getRent(set<int> properties) {
+    // indeksy pol kolei : 5, 15, 25, 35
+    int railwaysCount = 0;
+
+    for (auto elem : properties) {
+        if (elem == 5 || elem == 15 || elem == 25 || elem == 35) {
+            railwaysCount++;
+        }
+    }
+
+    switch(railwaysCount) {
+        case 1:
+            return 50;
+        case 2:
+            return 100;
+        case 3:
+            return 200;
+        case 4:
+            return 400;
+        default:
+            return PurchasableField::getRent();
+    }
+}
+
 string RailwayField::toString() {
     string fieldNumber = to_string(this->getFieldNumber());
-    string fieldString = fieldNumber + " - " + this->getName();
+    string fieldName = this->getName();
+    fieldNumber.resize(2, ' ');
+    fieldName.resize(33, ' ');
+    
+    string fieldString = fieldNumber + " - " + fieldName;
 
     if (this->getOwner()) {
-        fieldString += " - Wlasciciel: " + this->getOwner()->getName();
+        string fieldOwner = this->getOwner()->getName();
+        fieldOwner.resize(20, ' ');
+        fieldString += " - Wlasciciel: " + fieldOwner;
     }
     else {
-        fieldString += " - Wlasciciel: brak";
+        string fieldOwner = "brak";
+        fieldOwner.resize(20, ' ');
+        fieldString += " - Wlasciciel: " + fieldOwner;
     }
 
     return fieldString;

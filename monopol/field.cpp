@@ -24,6 +24,7 @@ void Field::setField(FieldType type, int fieldNumber) {
 
 std::string Field::toString() {
     std::string fieldNumber = std::to_string(this->getFieldNumber());
+    fieldNumber.resize(2, ' ');
     std::string fieldString = "";
 
     switch(this->getFieldType()) {
@@ -64,6 +65,8 @@ std::string Field::toString() {
             fieldString = " - Pole podatek od luksusu";
             break;
     }
+
+    fieldString.resize(30, ' ');
 
     return (fieldNumber + fieldString);
 }

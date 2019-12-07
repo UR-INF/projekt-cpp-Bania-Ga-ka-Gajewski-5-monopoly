@@ -16,6 +16,7 @@ class RailwayField : public PurchasableField {
         ~RailwayField();
         string getName();
         void setName(string name);
+        int getRent(set<int> properties);
         string toString();
 
 };
