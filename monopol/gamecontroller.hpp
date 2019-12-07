@@ -20,7 +20,6 @@ class GameController {
         std::vector<Player> orderOfMoves;
         Menu* menu;
 
-    
     public:
         GameController(Board* board, Renderer* renderer, DiceRoller* diceRoller, int numberOfPlayers, Menu* menu);
         ~GameController();
