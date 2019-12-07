@@ -209,70 +209,79 @@ void GameController::performAction() {
                         
             */    
         case PROPERTY:
-            PropertyField* propertyField = static_cast<PropertyField*>(contextField);
-            this->renderer->renderMessage("Stajesz na polu: " + propertyField->getPropertyInfo());
-            Player* propertyOwner = propertyField->getOwner();
+            {
+                PropertyField* propertyField = static_cast<PropertyField*>(contextField);
+                this->renderer->renderMessage("Stajesz na polu: " + propertyField->getPropertyInfo());
+                this->renderer->renderMessage("Cena: " + to_string(propertyField->getPrice()));
+                Player* propertyOwner = propertyField->getOwner();
 
-            if (!propertyOwner) {
-                if (this->currentPlayer->isSolvent(propertyField->getPrice(), true)) {
-                    this->menu->constructConfirm();
-                    this->renderer->renderMenu(this->menu);
-                    
-                    int playerChose = 0;
+                if (!propertyOwner) {
+                    if (this->currentPlayer->isSolvent(propertyField->getPrice(), true)) {
+                        this->menu->constructConfirm();
+                        this->renderer->renderMessage("Czy chcesz kupic te nieruchomosc?");
+                        this->renderer->renderMenu(this->menu);
+                        
+                        int playerChose = 0;
 
-                    while(true) {
-                        playerChose = Input::getDigitKey();
+                        while(true) {
+                            playerChose = Input::getDigitKey();
 
-                        if (this->menu->getCurrentMenu().size() - 1 < playerChose) {
-                            this->renderer->renderMessage("Podano niepoprawna opcje");
-                            continue;
-                        }
+                            if (this->menu->getCurrentMenu().size() - 1 < playerChose) {
+                                this->renderer->renderMessage("Podano niepoprawna opcje");
+                                continue;
+                            }
 
-                        switch(this->menu->getCurrentMenu()[playerChose]->getAction()) {
-                            case CONFIRM:
-                                this->currentPlayer->payMoney(propertyField->getPrice());
-                                this->currentPlayer->addProperty(indexOfFieldContext);
-                                propertyField->setOwner(this->currentPlayer);                                  
-                                this->renderer->renderMessage("Nieruchomosc zakupiona");                              
-                                return;
-                            case CANCEL:
-                                this->renderer->renderMessage("Zrezygnowano z zakupu nieruchomosci");
-                                return;
-                            default:
-                                break;
-                        }
-                    }                                       
+                            switch(this->menu->getCurrentMenu()[playerChose]->getAction()) {
+                                case CONFIRM:
+                                    this->currentPlayer->payMoney(propertyField->getPrice());
+                                    this->currentPlayer->addProperty(indexOfFieldContext);
+                                    propertyField->setOwner(this->currentPlayer);                                  
+                                    this->renderer->renderMessage("Nieruchomosc zakupiona");                              
+                                    return;
+                                case CANCEL:
+                                    this->renderer->renderMessage("Zrezygnowano z zakupu nieruchomosci");
+                                    return;
+                                default:
+                                    break;
+                            }
+                        }                                       
+                    }
+                    else {
+                        /*
+                            LICYTACJA
+                        */
+                    }
                 }
                 else {
-                    /*
-                        LICYTACJA
-                    */
-                }
-            }
-            else {
-                if (this->currentPlayer == propertyOwner) {
-                    this->renderer->renderMessage("Odwiedzasz swoja nieruchomosc");
-                    break;
-                }
-                else {
-                    this->renderer->renderMessage("Płacisz czynsz graczowi: " + propertyOwner->getName());
-
-                    int rentToPay = propertyField->getCurrentRent();
-
-                    if(this->currentPlayer->isSolvent(rentToPay, true)) {
-                        this->currentPlayer->payMoney(rentToPay);
-                        propertyOwner->earnMoney(rentToPay);
+                    if (this->currentPlayer == propertyOwner) {
+                        this->renderer->renderMessage("Odwiedzasz swoja nieruchomosc");
                         break;
                     }
                     else {
-                        this->renderer->renderMessage("Brankrutujesz! Twoje nieruchomosci przejmuje: " + propertyOwner->getName());
-                        this->propertiesAcquisition(this->currentPlayer, propertyOwner);
-                        this->bankruptPlayer(this->currentPlayer);
-                        break;
+                        this->renderer->renderMessage("Płacisz czynsz graczowi: " + propertyOwner->getName());
+
+                        int rentToPay = propertyField->getRent();
+
+                        if(this->currentPlayer->isSolvent(rentToPay, true)) {
+                            this->renderer->renderMessage("Placisz " + to_string(rentToPay));
+                            this->currentPlayer->payMoney(rentToPay);
+                            propertyOwner->earnMoney(rentToPay);
+                            break;
+                        }
+                        else {
+                            this->renderer->renderMessage("Brankrutujesz! Twoje nieruchomosci przejmuje: " + propertyOwner->getName());
+                            this->propertiesAcquisition(this->currentPlayer, propertyOwner);
+                            this->bankruptPlayer(this->currentPlayer);
+                            break;
+                        }
                     }
                 }
-            }
 
+                break;
+            }
+            
+        case RAILWAY:
+            
             break;            
     }
 }
