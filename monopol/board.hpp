@@ -1,5 +1,7 @@
 #include "field.hpp"
-#include "card.h"
+#include "Card.h"
+#include "country.hpp"
+#include <map>
 
 #ifndef BOARD_H
 #define BOARD_H
@@ -12,6 +14,9 @@ class Board {
 
 		Card* redCards[16];
 		Card* blueCards[15];
+
+        // Country* countries[8];
+        map<string, Country*> countries;
     
     public:
         Board();
@@ -23,6 +28,10 @@ class Board {
 		void shuffleCards(Card** cards, int count);
 		Card pickBlueCard();
 		Card pickRedCard();
+        map<string, Country*> getCountries();
+        void setCountries(map<string, Country*> countries);
+        Country* getCountry(string name);
+        void setCountry(string name, Country* country);
 };
 
 #endif

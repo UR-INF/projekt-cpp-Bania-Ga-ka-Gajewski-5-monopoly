@@ -4,8 +4,10 @@
 #include "propertyfield.hpp"
 #include "railwayfield.hpp"
 #include "rentmultipierfield.hpp"
+#include "country.hpp"
 #include <iostream>
 #include <time.h>
+#include <set>
 
 Board::Board() {
     // tutaj będą tworzone wszystkie elementy typu field, tj miasta, koleje itd.
@@ -120,7 +122,7 @@ Board::Board() {
 	bool test = testFields();
 	cout << "Test Planszy: " << test << endl;
 
-
+	// **************************************************************************************************************
 	//inicjalizacja kart
 
 	//karty niebieskie
@@ -220,6 +222,34 @@ Board::Board() {
 
 	shuffleCards(blueCards, 15);
 	shuffleCards(redCards, 16);
+
+	// ***************************************************************************************
+	// inicjalizacja panstw
+	Country* country1 = new Country("Grecja", set<int> {1, 3});
+	Country* country2 = new Country("Wlochy", set<int> {6, 8, 9});
+	Country* country3 = new Country("Hiszpania", set<int> {11, 13, 14});
+	Country* country4 = new Country("Wielka Brytania", set<int> {16, 18, 19});
+	Country* country5 = new Country("Benelux", set<int> {21, 23, 24});
+	Country* country6 = new Country("Szwecja", set<int> {26, 27, 29});
+	Country* country7 = new Country("Niemcy", set<int> {31, 32, 34});
+	Country* country8 = new Country("Austria", set<int> {37, 39});
+
+	this->countries.insert(pair<string, Country*>("Grecja", country1));
+	this->countries.insert(pair<string, Country*>("Wlochy", country2));
+	this->countries.insert(pair<string, Country*>("Hiszpania", country3));
+	this->countries.insert(pair<string, Country*>("Wielka Brytania", country4));
+	this->countries.insert(pair<string, Country*>("Benelux", country5));
+	this->countries.insert(pair<string, Country*>("Szwecja", country6));
+	this->countries.insert(pair<string, Country*>("Niemcy", country7));
+	this->countries.insert(pair<string, Country*>("Austria", country8));
+
+	for (map<string, Country*>::iterator it = this->countries.begin();
+		 it != this->countries.end(); ++it) {
+			 cout << it->first << endl;
+			 for (auto elem : it->second->getProperties()) {
+				cout << this->fields[elem]->toString() << endl;
+			}
+		 }
 }
 
 Board::~Board() {
@@ -306,3 +336,18 @@ Card Board::pickRedCard() {
 	return *pickedCard;
 }
 
+map<string, Country*> Board::getCountries() {
+	return this->countries;
+}
+
+void Board::setCountries(map<string, Country*> countries) {
+	this->countries = countries;
+}
+
+Country* Board::getCountry(string name) {
+	return this->countries.find(name)->second;
+}
+
+void Board::setCountry(string name, Country* country) {
+	this->countries.insert(pair<string, Country*>(name, country));
+}
