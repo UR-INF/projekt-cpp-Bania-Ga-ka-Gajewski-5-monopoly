@@ -6,8 +6,13 @@
 #include "rentmultipierfield.hpp"
 #include <iostream>
 #include <time.h>
+#include <vector> 
+#include <algorithm>
+
+int myrandom(int i) { return std::rand() % i; };
 
 Board::Board() {
+	srand(unsigned(time(0)));
     // tutaj będą tworzone wszystkie elementy typu field, tj miasta, koleje itd.
 	Field* field1 = new Field(START, 0);
 	fields[0] = field1;
@@ -120,106 +125,149 @@ Board::Board() {
 	bool test = testFields();
 	cout << "Test Planszy: " << test << endl;
 
-
 	//inicjalizacja kart
-
+	vector<Card> tempBlueCards;
 	//karty niebieskie
-	Card* blue0 = new Card(0, "Wychodzisz wolny z więzienia. Kartę należy zachować do wykorzystania lub sprzedania.");
-	blueCards[0] = blue0;
+	Card blue0 =  Card(0, "Wychodzisz wolny z wiezienia. Karte nalezy zachowac do wykorzystania lub sprzedania.");
+	//blueCards[0] = blue0;
+	tempBlueCards.push_back(blue0);
 
-	Card* blue1 = new Card(1, "Wracasz do \"WIEDNIA\"");
-	blueCards[1] = blue1;
+	Card blue1 =  Card(1, "Wracasz do \"WIEDNIA\"");
+	//blueCards[1] = blue1;
+	tempBlueCards.push_back(blue1);
 
-	Card* blue2 = new Card(2, "Płacisz za kartę 20$ lub ciągniesz \"SZANSĘ\" z drugiego zestawu (czerwonego)");
-	blueCards[2] = blue2;
+	Card blue2 =  Card(2, "Placisz za karte 20$ lub ciagniesz \"SZANSE\" z drugiego zestawu (czerwonego)");
+	//blueCards[2] = blue2;
+	tempBlueCards.push_back(blue2);
 
-	Card* blue3 = new Card(3, "Wracasz na \"START\"");
-	blueCards[3] = blue3;
+	Card blue3 =  Card(3, "Wracasz na \"START\"");
+	//blueCards[3] = blue3;
+	tempBlueCards.push_back(blue3);
 
-	Card* blue4 = new Card(4, "Idziesz do więzienia. Nie przechodzisz przez \"START\". Nie otrzymujesz 200$.");
-	blueCards[4] = blue4;
+	Card blue4 =  Card(4, "Idziesz do wiezienia. Nie przechodzisz przez \"START\". Nie otrzymujesz 200$.");
+	//blueCards[4] = blue4;
+	tempBlueCards.push_back(blue4);
 
-	Card* blue5 = new Card(5, "Płacisz koszty leczenia w wysokości 20$.");
-	blueCards[5] = blue5;
+	Card blue5 =  Card(5, "Placisz koszty leczenia w wysokosci 20$.");
+	//blueCards[5] = blue5;
+	tempBlueCards.push_back(blue5);
 
-	Card* blue6 = new Card(6, "Bank omylił się na Twoją krozyść. Otrzymujesz 400$.");
-	blueCards[6] = blue6;
+	Card blue6 =  Card(6, "Bank omylil sie na Twoja krozysc. Otrzymujesz 400$.");
+	//blueCards[6] = blue6;
+	tempBlueCards.push_back(blue6);
 
-	Card* blue7 = new Card(7, "Zająłeś II miejsce w konkursie piękności - otrzymujesz z banku 200$.");
-	blueCards[7] = blue7;
+	Card blue7 =  Card(7, "Zajales II miejsce w konkursie pieknosci - otrzymujesz z banku 200$.");
+	//blueCards[7] = blue7;
+	tempBlueCards.push_back(blue7);
 
-	Card* blue8 = new Card(8, "Otrzymujesz roczną rentę w wysokości 200$.");
-	blueCards[8] = blue8;
+	Card blue8 =  Card(8, "Otrzymujesz roczna rente w wysokosci 200$.");
+	//blueCards[8] = blue8;
+	tempBlueCards.push_back(blue8);
 
-	Card* blue9 = new Card(9, "Bank wypłaci ci należne 7% od kapitałów - otrzymujesz 50$.");
-	blueCards[9] = blue9;
+	Card blue9 =  Card(9, "Bank wyplaci ci nalezne 7% od kapitalow - otrzymujesz 50$.");
+	//blueCards[9] = blue9;
+	tempBlueCards.push_back(blue9);
 
-	Card* blue10 = new Card(10, "Płacisz składkę ubezpieczeniową w wysokości 20$.");
-	blueCards[10] = blue10;
+	Card blue10 =  Card(10, "Placisz skladke ubezpieczeniowa w wysokosci 20$.");
+	//blueCards[10] = blue10;
+	tempBlueCards.push_back(blue10);
 
-	Card* blue11 = new Card(11, "Z magazynu, w którym kupujesz otrzymujesz rabat w wyoskości 20$.");
-	blueCards[11] = blue11;
+	Card blue11 =  Card(11, "Z magazynu, w ktorym kupujesz otrzymujesz rabat w wyoskosci 20$.");
+	//blueCards[11] = blue11;
+	tempBlueCards.push_back(blue11);
 
-	Card* blue12 = new Card(12, "Płacisz na budowę szpitala 400$.");
-	blueCards[12] = blue12;
+	Card blue12 =  Card(12, "Placisz na budowe szpitala 400$.");
+	//blueCards[12] = blue12;
+	tempBlueCards.push_back(blue12);
 
-	Card* blue13 = new Card(13, "Otrzymujesz w spadku 200$.");
-	blueCards[13] = blue13;
+	Card blue13 =  Card(13, "Otrzymujesz w spadku 200$.");
+	//blueCards[13] = blue13;
+	tempBlueCards.push_back(blue13);
 
-	Card* blue14 = new Card(14, "Masz urodziny - otrzymujesz od każdego gracza po 20$.");
-	blueCards[14] = blue14;
+	Card blue14 =  Card(14, "Masz urodziny - otrzymujesz od kazdego gracza po 20$.");
+	//blueCards[14] = blue14;
+	tempBlueCards.push_back(blue14);
 
+
+	vector<Card> tempRedCards;
 	//karty czerwone
-	Card* red0 = new Card(0, "Wracasz na \"START\"");
-	redCards[0] = red0;
+	Card red0 =  Card(0, "Wracasz na \"START\"");
+	//redCards[0] = red0;
+	tempRedCards.push_back(red0);
 
-	Card* red1 = new Card(1, "Piłeś w czasie pracy, płacisz karę 40$.");
-	redCards[1] = red1;
+	Card red1 =  Card(1, "Piles w czasie pracy, placisz kare 40$.");
+	//redCards[1] = red1;
+	tempRedCards.push_back(red1);
 
-	Card* red2 = new Card(2, "Idziesz do więzienia. Nie przechodzisz przez \"START\". Nie otrzymujesz premii 200$.");
-	redCards[2] = red2;
+	Card red2 =  Card(2, "Idziesz do wiezienia. Nie przechodzisz przez \"START\". Nie otrzymujesz premii 200$.");
+	//redCards[2] = red2;
+	tempRedCards.push_back(red2);
 
-	Card* red3 = new Card(3, "Remontujesz swoje domy. Płacisz do banku za każdy dom 50$, za każdy hotel 200$.");
-	redCards[3] = red3;
+	Card red3 =  Card(3, "Remontujesz swoje domy. Placisz do banku za kazdy dom 50$, za kazdy hotel 200$.");
+	//redCards[3] = red3;
+	tempRedCards.push_back(red3);
 	
-	Card* red4 = new Card(4, "Cofasz się o 3 pola.");
-	redCards[4] = red4;
+	Card red4 =  Card(4, "Cofasz sie o 3 pola.");
+	//redCards[4] = red4;
+	tempRedCards.push_back(red4);
 
-	Card* red5 = new Card(5, "Wcyhodzisz wolny z więzienia. Kartę należy zachować do wykorzystania lub sprzedania.");
-	redCards[5] = red5;
+	Card red5 =  Card(5, "Wcyhodzisz wolny z wiezienia. Karte nalezy zachowac do wykorzystania lub sprzedania.");
+	//redCards[5] = red5;
+	tempRedCards.push_back(red5);
 
-	Card* red6 = new Card(6, "Idziesz do \"NEAPOLU\". Jeżeli przechodzisz przez \"START\" otrzymasz 200$.");
-	redCards[6] = red6;
+	Card red6 =  Card(6, "Idziesz do \"NEAPOLU\". Jezeli przechodzisz przez \"START\" otrzymasz 200$.");
+	//redCards[6] = red6;
+	tempRedCards.push_back(red6);
 
-	Card* red7 = new Card(7, "Wracasz do \"Madrytu\"");
-	redCards[7] = red7;
+	Card red7 =  Card(7, "Wracasz do \"Madrytu\"");
+	//redCards[7] = red7;
+	tempRedCards.push_back(red7);
 
-	Card* red8 = new Card(8, "Zobowiązany jesteś zmodernizować swoje miasto, płacisz do banku za każdy dom 80$, za każdy hotel 230$.");
-	redCards[8] = red8;
+	Card red8 =  Card(8, "Zobowiazany jestes zmodernizowac swoje miasto, placisz do banku za kazdy dom 80$, za kazdy hotel 230$.");
+	//redCards[8] = red8;
+	tempRedCards.push_back(red8);
 
-	Card* red9 = new Card(9, "Idziesz do \"KOLEI WSCHODNICH\". Jeżeli przechodzisz przez \"START\" otrzymasz 200$.");
-	redCards[9] = red9;
+	Card red9 =  Card(9, "Idziesz do \"KOLEI WSCHODNICH\". Jezeli przechodzisz przez \"START\" otrzymasz 200$.");
+	//redCards[9] = red9;
+	tempRedCards.push_back(red9);
 
-	Card* red10 = new Card(10, "Wracasz do \"Brukseli\". Jeżeli przechodzisz przez \"START\" otrzymujesz 200$.");
-	redCards[10] = red10;
+	Card red10 =  Card(10, "Wracasz do \"Brukseli\". Jezeli przechodzisz przez \"START\" otrzymujesz 200$.");
+	//redCards[10] = red10;
+	tempRedCards.push_back(red10);
 
-	Card* red11 = new Card(11, "Bank wpłaca Ci należne odsetkiw  wysokości 300$.");
-	redCards[11] = red11;
+	Card red11 =  Card(11, "Bank wplaca Ci nalezne odsetkiw  wysokosci 300$.");
+	//redCards[11] = red11;
+	tempRedCards.push_back(red11);
 
-	Card* red12 = new Card(12, "Mandat za szybką jazdę. Płacisz 30$.");
-	redCards[12] = red12;
+	Card red12 =  Card(12, "Mandat za szybka jazde. Placisz 30$.");
+	//redCards[12] = red12;
+	tempRedCards.push_back(red12);
 
-	Card* red13 = new Card(13, "Płacisz opłatę za szkołę 300$.");
-	redCards[13] = red13;
+	Card red13 =  Card(13, "Placisz oplate za szkole 300$.");
+	//redCards[13] = red13;
+	tempRedCards.push_back(red13);
 
-	Card* red14 = new Card(14, "Bank wypłaca Ci pprocent w wysokości 100$.");
-	redCards[14] = red14;
+	Card red14 =  Card(14, "Bank wyplaca Ci pprocent w wysokosci 100$.");
+	//redCards[14] = red14;
+	tempRedCards.push_back(red14);
 
-	Card* red15 = new Card(15, "Rozwiązałeś dobrze krzyżówkę. Jako I nagrodę otrzymujesz 200$.");
-	redCards[15] = red15;
+	Card red15 =  Card(15, "Rozwiazales dobrze krzyzowke. Jako I nagrode otrzymujesz 200$.");
+	//redCards[15] = red15;
+	tempRedCards.push_back(red15);
 
-	shuffleCards(blueCards, 15);
-	shuffleCards(redCards, 16);
+	std::random_shuffle(tempBlueCards.begin(), tempBlueCards.end());
+	std::random_shuffle(tempRedCards.begin(), tempRedCards.end());
+
+	for (Card card : tempBlueCards) {
+		blueCards.push_back(card);
+	}
+
+	for (Card card : tempRedCards) {
+		redCards.push_back(card);
+	}
+
+	
+
 }
 
 Board::~Board() {
@@ -258,7 +306,7 @@ bool Board::testFields() {
 	}
 }
 
-void Board::shuffleCards(Card** cards, int count) {
+/*void Board::shuffleCards(Card** cards, int count) {
 	std::srand(time(NULL));
 	for (int i = count - 1; i > 0; i--) {
 		int j = rand() % (i + 1); // wybierz element 0 <= j <= i
@@ -266,43 +314,21 @@ void Board::shuffleCards(Card** cards, int count) {
 		cards[j] = cards[i];
 		cards[i] = tmp;
 	}
-}
+}*/
+
+
 
 Card Board::pickBlueCard() {
-	Card* pickedCard = blueCards[0];
-	Card* temp[15];
-	for (int i = 0; i < 15; i++) {
-		if (i == 14) {
-			temp[0] = blueCards[i];
-		}
-		else {
-			temp[i + 1] = blueCards[i];
-		}
-	}
-	
-	for (int i = 0; i < 15; i++) {
-		blueCards[i] = temp[i];
-	}
-
-	return *pickedCard;
+	Card pickedCard = blueCards.front();
+	blueCards.pop_front();
+	blueCards.push_back(pickedCard);
+	return pickedCard;
 }
 
 Card Board::pickRedCard() {
-	Card* pickedCard = redCards[0];
-	Card* temp[15];
-	for (int i = 0; i < 16; i++) {
-		if (i == 15) {
-			temp[0] = redCards[i];
-		}
-		else {
-			temp[i + 1] = redCards[i];
-		}
-	}
-
-	for (int i = 0; i < 16; i++) {
-		redCards[i] = temp[i];
-	}
-
-	return *pickedCard;
+	Card pickedCard = redCards.front();
+	redCards.pop_front();
+	redCards.push_back(pickedCard);
+	return pickedCard;
 }
 

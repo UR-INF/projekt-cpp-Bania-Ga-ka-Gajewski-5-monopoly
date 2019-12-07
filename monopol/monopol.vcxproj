@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="actiontype.cpp" />
     <ClCompile Include="board.cpp" />
     <ClCompile Include="Card.cpp" />
     <ClCompile Include="diceroller.cpp" />
@@ -160,12 +161,15 @@
     <ClCompile Include="gamecontroller.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="menu.cpp" />
+    <ClCompile Include="menuitem.cpp" />
     <ClCompile Include="monopol.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="playerstate.cpp" />
     <ClCompile Include="propertyfield.cpp" />
+    <ClCompile Include="renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="actiontype.hpp" />
     <ClInclude Include="board.hpp" />
     <ClInclude Include="Card.h" />
     <ClInclude Include="diceroller.hpp" />
@@ -175,9 +179,11 @@
     <ClInclude Include="gamecontroller.hpp" />
     <ClInclude Include="input.hpp" />
     <ClInclude Include="menu.hpp" />
+    <ClInclude Include="menuitem.hpp" />
     <ClInclude Include="player.hpp" />
     <ClInclude Include="playerstate.hpp" />
     <ClInclude Include="propertyfield.hpp" />
+    <ClInclude Include="renderer.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
