@@ -58,10 +58,14 @@ string PurchasableField::toString() {
     string fieldString = fieldNumber;
 
     if (this->getOwner()) {
-        fieldString += " - Wlasciciel: " + this->getOwner()->getName();
+        string fieldOwner = this->getOwner()->getName();
+        fieldOwner.resize(20, ' ');
+        fieldString += " - Wlasciciel: " + fieldOwner;
     }
     else {
-        fieldString += " - Wlasciciel: brak";
+        string fieldOwner = "brak";
+        fieldOwner.resize(20, ' ');
+        fieldString += " - Wlasciciel: " + fieldOwner;
     }
 
     return fieldString;
