@@ -1,4 +1,4 @@
-#include "field.hpp"
+#include "purchasablefield.hpp"
 #include "player.hpp"
 #include <string>
 
@@ -8,29 +8,22 @@
 using namespace std;
 
 // Pole reprezentujace nieruchomosc
-class PropertyField : public Field {
+class PropertyField : public PurchasableField {
     private:
-        Player* owner; // posiadacz własności
         string country;
         string city;
-        int price;
         int pricing[6];
         int housingLevel; // poziom nieruchomosci (ile domkow, bedzie indexem dla pricing gdy zatrzyma się gracz-przeciwnik)
         int upgradeCost;
-        int mortgage; // koszt zastawu hipotecznego
-        bool isUnderMortgage; // czy pole jest zastawione
     
     public:
-        PropertyField(Player* owner, string country, string city, int price, int pricing[], int housingLevel, int upgradeCost, int mortgage, bool isUnderMortgage, FieldType type, int fieldNumber);
+        PropertyField(string country, string city, int pricing[], int housingLevel, int upgradeCost, Player* owner, int price, int rent, int mortgage, FieldType type, int fieldNumber);
         ~PropertyField();
-        Player* getOwner();
-        void setOwner(Player* owner);
-        int getPrice();
         void upgrade(); // kup domek
         void degrade(); // sprzedaj domek
-        int getCurrentRent(); // pobież wysokość aktualnego czynszu
-        void setMortgage(bool mortgage);
+        int getRent(); // pobież wysokość aktualnego czynszu
         string getPropertyInfo();
+        string toString();
 };
 
 #endif

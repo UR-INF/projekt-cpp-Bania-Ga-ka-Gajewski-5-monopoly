@@ -10,7 +10,7 @@ Player::Player(string name, bool isComputer, PlayerState *playerState, int posit
 	this->setPosition(position);
 	this->activeLoan = false;
 	this->canPayLoan = true;
-	this->cashGain = 200;
+	this->cashGain = 100;
 
 };
 
@@ -103,11 +103,6 @@ bool Player::hasActiveLoan() {
 
 // wziecie pozyczki
 void Player::takeLoan() {
-	/*
-	int currentMoney = this->playerState->getMoney();
-	currentMoney += 500;
-	this->playerState->setMoney(currentMoney);
-	*/
 	this->earnMoney(500);
 	this->activeLoan = true;
 	this->cashGain = 100;
@@ -117,11 +112,6 @@ void Player::takeLoan() {
 
 // splata pozyczki
 void Player::payBackLoan() {
-	/*
-	int currentMoney = this->playerState->getMoney();
-	currentMoney -= 500;
-	this->playerState->setMoney(currentMoney);
-	*/
 	this->payMoney(500);
 	this->activeLoan = false;
 	this->cashGain = 200;
@@ -171,6 +161,10 @@ void Player::removeProperty(int fieldId) {
 
 void Player::clearProperties() {
 	this->playerProperties.clear();
+}
+
+set<int> Player::getProperties() {
+	return this->playerProperties;
 }
 
 PlayerState Player::getPlayerState() {

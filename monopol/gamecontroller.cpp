@@ -2,6 +2,8 @@
 #include "input.hpp"
 #include "renderer.hpp"
 #include "propertyfield.hpp"
+#include "railwayfield.hpp"
+#include "rentmultipierfield.hpp"
 #include "field.hpp"
 #include "board.hpp"
 #include <string>
@@ -54,6 +56,7 @@ void GameController::start() {
     this->setPlayersMoveOrder();    
 	this->renderer->renderPlayersMoveOrder(this->orderOfMoves);
     this->setPlayersOnStart();
+    this->renderer->renderBoard(this->board);
 
     bool isPlaying = true;
 	pickBlueCard(currentPlayer);
@@ -68,7 +71,18 @@ void GameController::start() {
         this->menu->construct(this->currentPlayer); // utworzenie menu dla konkretnego gracza
         this->renderer->renderMenu(this->menu); // wyswietlenie menu
 
-        int playerChose = Input::getDigitKey();
+        int playerChose;
+
+        while(true) {
+            playerChose = Input::getDigitKey();
+
+            if (this->menu->getCurrentMenu().size() - 1 < playerChose) {
+                this->renderer->renderMessage("Podano niepoprawna opcje");
+                continue;
+            }
+
+            break;
+        }
 
         switch(this->menu->getCurrentMenu()[playerChose]->getAction()) {
             case NORMAL_DICE_ROLL:
@@ -94,8 +108,9 @@ void GameController::start() {
             case USE_CARD_TO_GET_FREE:
                 continue;
             case PAY_AND_GET_FREE:
-
-                continue;
+                this->payAndGetOutFromJail();
+                this->nextPlayer();
+                break;
             default:
                 this->renderer->renderMessage("Niepoprawny symbol");
                 continue;
@@ -104,6 +119,8 @@ void GameController::start() {
         this->renderer->renderMessage("Aktualne pozycje na planszy: ");
         this->renderer->renderPlayerPositions(this->orderOfMoves);
 
+        this->renderer->renderMessage("Aktualny stan planszy");
+        this->renderer->renderBoard(this->board);
     }
 }
 
@@ -117,12 +134,14 @@ void GameController::setPlayersOnStart() {
 // jezeli wskaznik wskazuje na ostatni element vectora orderOfMoves to przesun go na pierwszy element
 void GameController::nextPlayer() {
 
-    if (this->currentPlayer == &this->orderOfMoves[this->numberOfActivePlayers - 1]) {
-        this->currentPlayer = &this->orderOfMoves[0];
-    }
-    else {
-        this->currentPlayer++;
-    }
+    do {
+        if (this->currentPlayer == &this->orderOfMoves[this->orderOfMoves.size() - 1]) {
+            this->currentPlayer = &this->orderOfMoves[0];
+        }
+        else {
+            this->currentPlayer++;
+        }
+    } while(this->currentPlayer->isBankrupt());
 }
 
 bool GameController::doesSomeoneWin() {
@@ -155,7 +174,8 @@ void GameController::performAction() {
                 this->currentPlayer->payMoney(100);
             }
             else {
-                this->bankruptPlayer(this->currentPlayer);
+                this->renderer->renderMessage("Nie jestes w stanie zaplacic podatku od luksusu - bankrutujesz");
+                this->bankruptPlayerWithoutAcquisition(this->currentPlayer);
             }
             break;
         case INCOME_TAX:
@@ -164,7 +184,8 @@ void GameController::performAction() {
             }
             else
             {
-                this->bankruptPlayer(this->currentPlayer);
+                this->renderer->renderMessage("Nie jestes w stanie zaplacic podatku dochodowego - bankrutujesz");
+                this->bankruptPlayerWithoutAcquisition(this->currentPlayer);
             }
             break;
         /* 
@@ -172,10 +193,7 @@ void GameController::performAction() {
                     czy gracza stac na zakup:
                         czy gracz chce kupic:  
                             kup
-                        else
-                            licytacja
-                    else
-                        licytacja
+                            break
                 else
                     czy to nieruchomosc aktualnego gracza
                         break
@@ -190,15 +208,22 @@ void GameController::performAction() {
                         
             */    
         case PROPERTY:
-            PropertyField* propertyField = static_cast<PropertyField*>(contextField);
-            this->renderer->renderMessage("Stajesz na polu: " + propertyField->getPropertyInfo());
-            Player* propertyOwner = propertyField->getOwner();
+        case RAILWAY:
+        case ELECTRICITY:
+        case WATER_SUPPLY_NETWORK:
+        {
+            PurchasableField* purchasableField = static_cast<PurchasableField*>(contextField);
+            this->renderer->renderMessage("Stajesz na polu: " + purchasableField->toString());
+
+            Player* propertyOwner = purchasableField->getOwner();
 
             if (!propertyOwner) {
-                if (this->currentPlayer->isSolvent(propertyField->getPrice(), true)) {
-                    this->menu->constructConfirm();
+                if (this->currentPlayer->isSolvent(purchasableField->getPrice(), true)) {
+                    this->menu->constructConfirm();                    
+                    this->renderer->renderMessage("Cena: " + to_string(purchasableField->getPrice()));
+                    this->renderer->renderMessage("Czy chcesz kupic te nieruchomosc?");
                     this->renderer->renderMenu(this->menu);
-                    
+                        
                     int playerChose = 0;
 
                     while(true) {
@@ -211,9 +236,9 @@ void GameController::performAction() {
 
                         switch(this->menu->getCurrentMenu()[playerChose]->getAction()) {
                             case CONFIRM:
-                                this->currentPlayer->payMoney(propertyField->getPrice());
+                                this->currentPlayer->payMoney(purchasableField->getPrice());
                                 this->currentPlayer->addProperty(indexOfFieldContext);
-                                propertyField->setOwner(this->currentPlayer);                                  
+                                purchasableField->setOwner(this->currentPlayer);                                  
                                 this->renderer->renderMessage("Nieruchomosc zakupiona");                              
                                 return;
                             case CANCEL:
@@ -224,11 +249,6 @@ void GameController::performAction() {
                         }
                     }                                       
                 }
-                else {
-                    /*
-                        LICYTACJA
-                    */
-                }
             }
             else {
                 if (this->currentPlayer == propertyOwner) {
@@ -236,23 +256,36 @@ void GameController::performAction() {
                     break;
                 }
                 else {
-                    this->renderer->renderMessage("Płacisz czynsz graczowi: " + propertyOwner->getName());
+                    this->renderer->renderMessage("Placisz czynsz graczowi: " + propertyOwner->getName());
 
-                    int rentToPay = propertyField->getCurrentRent();
+                    int rentToPay = 0;
+
+                    if (typeid(purchasableField) == typeid(RailwayField)) {
+                        rentToPay = static_cast<RailwayField*>(purchasableField)->getRent(propertyOwner->getProperties());
+                    }
+                    else if (typeid(purchasableField) == typeid(RentMultipierField)) {
+                        rentToPay = purchasableField->getRent() * this->diceRoller->getRolledNumber();
+                    }
+                    else {
+                        rentToPay = purchasableField->getRent();
+                    }
 
                     if(this->currentPlayer->isSolvent(rentToPay, true)) {
+                        this->renderer->renderMessage("Placisz " + to_string(rentToPay));
                         this->currentPlayer->payMoney(rentToPay);
                         propertyOwner->earnMoney(rentToPay);
                         break;
                     }
                     else {
+                        this->renderer->renderMessage("Brankrutujesz! Twoje nieruchomosci przejmuje: " + propertyOwner->getName());
+                        this->propertiesAcquisition(this->currentPlayer, propertyOwner);
                         this->bankruptPlayer(this->currentPlayer);
                         break;
                     }
                 }
             }
-
-            break;            
+            break;
+        }           
     }
 }
 
@@ -271,6 +304,7 @@ void GameController::simpleDiceRoll() {
     DiceThrowResult* dtr = this->diceRoller->rollDices();
     int rolledNumber = dtr->firstDice + dtr->secondDice;
     this->currentPlayer->moveBy(rolledNumber);
+    this->performAction();
     this->renderer->renderPlayerPositions(this->orderOfMoves);
 }
 
@@ -317,18 +351,23 @@ void GameController::getOutFromJailDiceRoll() {
             int rolledNumber = dtr->firstDice + dtr->secondDice;
             this->currentPlayer->getOutOfJail();
             this->currentPlayer->moveBy(rolledNumber);
-
+            this->performAction();
             return;
         }
     }
 }
 
+void GameController::payAndGetOutFromJail() {
+    this->currentPlayer->payMoney(50);
+    this->currentPlayer->getOutOfJail();
+    this->simpleDiceRoll();
+}
+
 void GameController::bankruptPlayer(Player* player) {
     player->setBankrupt(true);
-    player->clearProperties();
-    // player->getPlayerState().setOutOfJailCards(0);
     this->numberOfActivePlayers--;
-                    
+    // player->getPlayerState().setOutOfJailCards(0);    
+    /*            
     for(int index = 0; index < this->orderOfMoves.size(); index++) {
         if (player == &this->orderOfMoves[index]) {
             this->nextPlayer();
@@ -336,6 +375,37 @@ void GameController::bankruptPlayer(Player* player) {
             break;
         }
     }
+    */
+}
+
+void GameController::bankruptPlayerWithoutAcquisition(Player* player) {
+    set<int> properties = player->getProperties();
+
+    for(auto propertyIndex : properties) {
+        cout << "Indeks usuwanej nieruchomosci: " << propertyIndex << endl;
+        PropertyField* propertyField = static_cast<PropertyField*>(this->board->getField(propertyIndex));
+        cout << "Ustawiam wlasciciela posiadlosci: " << propertyField->getFieldNumber() << " na NULL" << endl;
+        propertyField->setOwner(NULL);
+        cout << "Owner: " << propertyField->getOwner() << endl;
+    }
+
+    player->clearProperties();
+    this->bankruptPlayer(player);
+}
+
+void GameController::propertiesAcquisition(Player* bankrupt, Player* newOwner) {
+    set<int> properties = bankrupt->getProperties();
+
+    for(auto propertyIndex : properties) {
+        PropertyField* propertyField = static_cast<PropertyField*>(this->board->getField(propertyIndex));
+        propertyField->setOwner(newOwner);
+    }
+
+    int bankruptMoney = bankrupt->getPlayerState().getMoney();
+    bankrupt->payMoney(bankruptMoney);
+    newOwner->earnMoney(bankruptMoney);
+
+    bankrupt->clearProperties();
 }
 
 // kazdy z graczy rzuca kostkami, na podstawie wynikow ustalana jest kolejnosc wykonywania ruchow

@@ -1,5 +1,8 @@
 #include "renderer.hpp"
 #include "player.hpp"
+#include "field.hpp"
+#include "propertyfield.hpp"
+
 #include <vector>
 #include <string>
 #include <iostream>
@@ -44,10 +47,20 @@ void Renderer::renderPlayerPositions(vector<Player> playersToRender) {
     cout << endl;
 }
 
+void Renderer::renderField(Field* fieldToRender) {
+    this->renderMessage(fieldToRender->toString());
+}
+
 void Renderer::renderMenu(Menu* menuToRender) {
     vector<MenuItem*> currentMenuToRender = menuToRender->getCurrentMenu();
 
     for(int index = 0; index < currentMenuToRender.size(); index++) {
             cout << index << " - " << currentMenuToRender[index]->getOptionText() << endl;
         }
+}
+
+void Renderer::renderBoard(Board* boardToRender) {
+    for(int index = 0; index < 40; index++) {
+        this->renderField(boardToRender->getField(index));
+    }
 }

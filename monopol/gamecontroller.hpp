@@ -20,7 +20,6 @@ class GameController {
         std::vector<Player> orderOfMoves;
         Menu* menu;
 
-    
     public:
         GameController(Board* board, Renderer* renderer, DiceRoller* diceRoller, int numberOfPlayers, Menu* menu);
         ~GameController();
@@ -35,9 +34,11 @@ class GameController {
         void simpleDiceRoll();
         void normalDiceRoll();
         void getOutFromJailDiceRoll();
+        void payAndGetOutFromJail();
         void setPlayersMoveOrder();
+        void propertiesAcquisition(Player* bankrupt, Player* newOwner);
         void bankruptPlayer(Player* player);
-
+        void bankruptPlayerWithoutAcquisition(Player* player);
 		void pickBlueCard(Player* player);
 		void pickRedCard(Player* player);
 };

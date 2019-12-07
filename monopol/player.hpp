@@ -44,6 +44,7 @@ class Player {
 		void addProperty(int fieldId);
 		void removeProperty(int fieldId);
         void clearProperties();
+        set<int> getProperties();
         void earnMoney(int money);
         void payMoney(int cost);
         void earMoneyFromStart();

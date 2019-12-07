@@ -11,7 +11,8 @@ class DiceRoller {
         DiceRoller();
         ~DiceRoller();
         DiceThrowResult* rollDices();
-        bool isDouble();        
+        bool isDouble();       
+        int getRolledNumber(); 
 };
 
 #endif
