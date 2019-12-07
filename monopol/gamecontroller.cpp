@@ -57,13 +57,22 @@ void GameController::start() {
 	this->renderer->renderPlayersMoveOrder(this->orderOfMoves);
     this->setPlayersOnStart();
     this->renderer->renderBoard(this->board);
-    /*
+    
     static_cast<PropertyField*>(this->board->getField(1))->setOwner(this->currentPlayer);
     static_cast<PropertyField*>(this->board->getField(3))->setOwner(this->currentPlayer);
+    static_cast<PropertyField*>(this->board->getField(6))->setOwner(this->currentPlayer);
+    static_cast<PropertyField*>(this->board->getField(8))->setOwner(this->currentPlayer);
+    static_cast<PropertyField*>(this->board->getField(9))->setOwner(this->currentPlayer);
+
     this->currentPlayer->addProperty(1);
     this->currentPlayer->addProperty(3);
+    this->currentPlayer->addProperty(6);
+    this->currentPlayer->addProperty(8);
+    this->currentPlayer->addProperty(9);
+
     this->currentPlayer->addCountry(this->board->getCountry("Grecja"));
-    */
+    this->currentPlayer->addCountry(this->board->getCountry("Wlochy"));
+    
 
     bool isPlaying = true;
 	// pickBlueCard(currentPlayer);
@@ -476,11 +485,16 @@ void GameController::bankruptPlayerWithoutAcquisition(Player* player) {
 
 void GameController::propertiesAcquisition(Player* bankrupt, Player* newOwner) {
     set<int> properties = bankrupt->getProperties();
+    vector<PurchasableField*> obtainedFields = vector<PurchasableField*>();
 
     for(auto propertyIndex : properties) {
         PurchasableField* purchasableField = static_cast<PurchasableField*>(this->board->getField(propertyIndex));
         purchasableField->setOwner(newOwner);
-        this->checkCountryObtain(newOwner, purchasableField);
+        obtainedFields.push_back(purchasableField);
+    }
+
+    for(auto obtainedField : obtainedFields) {
+        this->checkCountryObtain(newOwner, obtainedField);
     }
 
     int bankruptMoney = bankrupt->getPlayerState().getMoney();
