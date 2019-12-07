@@ -56,7 +56,7 @@ void GameController::start() {
     this->setPlayersOnStart();
 
     bool isPlaying = true;
-	// pickBlueCard(currentPlayer);
+	pickBlueCard(currentPlayer);
     while(isPlaying && this->numberOfActivePlayers > 1) {
         
         this->renderer->renderCurrentPlayer(this->currentPlayer);

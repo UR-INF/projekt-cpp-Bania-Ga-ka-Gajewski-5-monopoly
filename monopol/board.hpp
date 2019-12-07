@@ -1,5 +1,6 @@
 #include "field.hpp"
 #include "card.h"
+#include "deque"
 
 #ifndef BOARD_H
 #define BOARD_H
@@ -10,8 +11,8 @@ class Board {
     private:
         Field* fields[40];
 
-		Card* redCards[16];
-		Card* blueCards[15];
+	    deque<Card> redCards;
+        deque<Card> blueCards;
     
     public:
         Board();
@@ -20,7 +21,7 @@ class Board {
         void render(); // metoda do wypisania planszy na konsoli
 		void setField(int index, Field* field); // metoda inicjuj¹ca obiekt field w tablicy
 		bool testFields(); // metoda zwraca true jeœli numery pola odpowiadaj¹ indexom
-		void shuffleCards(Card** cards, int count);
+		//void shuffleCards(Card** cards, int count);
 		Card pickBlueCard();
 		Card pickRedCard();
 };
