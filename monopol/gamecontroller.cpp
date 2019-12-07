@@ -211,6 +211,10 @@ void GameController::performAction() {
         case RAILWAY:
         case ELECTRICITY:
         case WATER_SUPPLY_NETWORK:
+        case RED_CHANCE:
+            pickBlueCard(this->currentPlayer);
+        case BLUE_CHANCE:
+            pickRedCard(this->currentPlayer);
         {
             PurchasableField* purchasableField = static_cast<PurchasableField*>(contextField);
             this->renderer->renderMessage("Stajesz na polu: " + purchasableField->toString());
