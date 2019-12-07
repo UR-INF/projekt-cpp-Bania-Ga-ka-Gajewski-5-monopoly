@@ -59,7 +59,7 @@ void GameController::start() {
     this->renderer->renderBoard(this->board);
 
     bool isPlaying = true;
-	pickBlueCard(currentPlayer);
+	//pickBlueCard(currentPlayer);
     while(isPlaying && this->numberOfActivePlayers > 1) {
         
         this->renderer->renderCurrentPlayer(this->currentPlayer);
@@ -495,7 +495,7 @@ void GameController::pickBlueCard(Player* player) {
             player->payMoney(20);
         }
         else {
-            if (player->hasActiveLoan) {
+            if (player->hasActiveLoan()) {
                 this->renderer->renderMessage("Masz aktywna pozyczke. Nie mozesz wziasc kolejnej co prowadzi do bankructwa.");
                 bankruptPlayerWithoutAcquisition(player);
             }
