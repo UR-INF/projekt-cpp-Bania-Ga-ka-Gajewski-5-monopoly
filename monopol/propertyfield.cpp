@@ -64,3 +64,15 @@ string PropertyField::toString() {
 
     return fieldString;
 }
+
+string PropertyField::getCountryName() {
+    return this->country;
+}
+
+int PropertyField::getUpgradeCost() {
+    return this->upgradeCost;
+}
+
+int PropertyField::getHousingLevel() {
+    return this->housingLevel;
+}
