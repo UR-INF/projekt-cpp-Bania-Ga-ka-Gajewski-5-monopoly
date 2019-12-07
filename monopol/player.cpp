@@ -11,7 +11,8 @@ Player::Player(string name, bool isComputer, PlayerState *playerState, int posit
 	this->activeLoan = false;
 	this->canPayLoan = true;
 	this->cashGain = 0;
-
+	this->playerProperties = set<int>();
+	this->ownedCountries = set<Country*>();
 };
 
 Player::~Player() {
