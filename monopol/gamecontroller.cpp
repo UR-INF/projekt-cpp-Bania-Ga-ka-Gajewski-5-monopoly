@@ -453,28 +453,33 @@ void GameController::pickBlueCard(Player* player) {
 	case 1:
 		//Wracasz do \"WIEDNIA\"
 		player->setPosition(39);
+        performAction();
+        //Field* contextField = this->board->getField(39);
+        //PurchasableField* purchasableField = static_cast<PurchasableField*>(contextField);
+        //Player* propertyOwner = purchasableField->getOwner;
 		break;
 	case 2:
 		//Płacisz za karę 20$ lub ciągniesz \"SZANSĘ\" z drugiego zestawu (czerwonego)
 		//jeśli niezdolny zapłacić automatycznie ciągnie karte
-		if (player->getPlayerState().getMoney() < 20) {
-			pickRedCard(player);
-			//break or return?
+		if (player->isSolvent(20)) {
+            this->renderer->renderMessage("0 By zaplacic kare");
+            this->renderer->renderMessage("1 By pobrać partę z zestawu czerwonego");
+            int playerChose = Input::getDigitKey();
+            switch (playerChose)
+            {
+            case 0:
+                player->payMoney(20);
+            case 1:
+                pickRedCard(player);
+            default:
+                break;
+            }
 		}
 		else {
-			this->renderer->renderMessage("0 By zapłacić karę");
-			this->renderer->renderMessage("1 By pobrać partę z zestawu czerwonego");
-			int playerChose = Input::getDigitKey();
-			switch (playerChose)
-			{
-			case 0:
-				player->getPlayerState().setMoney(player->getPlayerState().getMoney()-20);
-			case 1:
-				pickRedCard(player);
-			default:
-				break;
+            this->renderer->renderMessage("Nie masz pieniedzy by zaplacic kare. Bierzesz karte z czerwonego zestawu.");
+            pickRedCard(player);
+            //break or return?
 			}
-		}
 		break;
 	case 3:
 		//Wracasz na \"START\"
@@ -486,34 +491,105 @@ void GameController::pickBlueCard(Player* player) {
 		break;
 	case 5:
 		//Płacisz koszty leczenia w wysokości 20$.
+        if (player->isSolvent(20)) {
+            player->payMoney(20);
+        }
+        else {
+            if (player->hasActiveLoan) {
+                this->renderer->renderMessage("Masz aktywna pozyczke. Nie mozesz wziasc kolejnej co prowadzi do bankructwa.");
+                bankruptPlayerWithoutAcquisition(player);
+            }
+            else
+            {
+                this->renderer->renderMessage("Musisz wziac pozyczke by zaplacic kare");
+                takeLoan(player);
+                player->payMoney(20);
+            }
+        }
 		break;
 	case 6:
 		//Bank omylił się na Twoją krozyść. Otrzymujesz 400$.
-		player->getPlayerState().setMoney(player->getPlayerState().getMoney()+400);
+		player->earnMoney(400);
 		break;
 	case 7:
 		//Zająłeś II miejsce w konkursie piękności - otrzymujesz z banku 200$.
-		player->getPlayerState().setMoney(player->getPlayerState().getMoney() + 200);
+        player->earnMoney(200);
 		break;
 	case 8:
 		//Otrzymujesz roczną rentę w wysokości 200$.
-		player->getPlayerState().setMoney(player->getPlayerState().getMoney() + 200);
+        player->earnMoney(200);
 		break;
 	case 9:
 		//Bank wypłaci ci należne 7% od kapitałów - otrzymujesz 50$.
-		player->getPlayerState().setMoney(player->getPlayerState().getMoney() + 50);
+		player->earnMoney(50);
 		break;
 	case 10:
+        //Placisz skladke ubezpieczeniowa w wysokosci 20$.
+        if (player->isSolvent(20)) {
+            player->payMoney(20);
+        }
+        else {
+            if (player->hasActiveLoan()) {
+                this->renderer->renderMessage("Masz aktywna pozyczke. Nie mozesz wziasc kolejnej co prowadzi do bankructwa.");
+                bankruptPlayerWithoutAcquisition(player);
+            }
+            else
+            {
+                this->renderer->renderMessage("Musisz wziac pozyczke by zaplacic kare");
+                takeLoan(player);
+                player->payMoney(20);
+            }
+        }
 		break;
 	case 11:
+        //Z magazynu, w ktorym kupujesz otrzymujesz rabat w wyoskosci 20$.
+        player->earnMoney(20);
 		break;
 	case 12:
+        //Placisz na budowe szpitala 400$.
+        if (player->isSolvent(400)) {
+            player->payMoney(400);
+        }
+        else {
+            if (player->hasActiveLoan()) {
+                this->renderer->renderMessage("Masz aktywna pozyczke. Nie mozesz wziasc kolejnej co prowadzi do bankructwa.");
+                bankruptPlayerWithoutAcquisition(player);
+            }
+            else
+            {
+                this->renderer->renderMessage("Musisz wziac pozyczke by zaplacic kare");
+                takeLoan(player);
+                player->payMoney(400);
+            }
+        }
 		break;
 	case 13:
 		//Otrzymujesz w spadku 200$.
-		player->getPlayerState().setMoney(player->getPlayerState().getMoney() + 200);
+		player->earnMoney(200);
 		break;
 	case 14:
+        //Masz urodziny - otrzymujesz od kazdego gracza po 20$.
+        for (Player otherplayer : players) {
+            if (otherplayer.getName() != player->getName()) {
+                if (otherplayer.isSolvent(20)) {
+                    otherplayer.payMoney(20);
+                    player->earnMoney(20);
+                }
+                else
+                {
+                    if (otherplayer.hasActiveLoan()) {
+                        this->renderer->renderMessage(otherplayer.getName()+" ma aktywna pozyczke nie moze wziac kolejnej wiec bankrutuje.");
+                        //bankruptPlayerWithoutAcquisition(otherplayer);
+                    }
+                    else {
+                        this->renderer->renderMessage(otherplayer.getName() + " musial wziac pozyczke by kupic prezent.");
+                        //takeLoan(otherplayer);
+                        player->earnMoney(20);
+                    }
+                }
+                
+            }
+        }
 		break;
 	default:
 		break;
@@ -554,7 +630,7 @@ void GameController::pickRedCard(Player* player) {
 		break;
 	case 11:
 		//Bank wpłaca Ci należne odsetkiw  wysokości 300$.
-		player->getPlayerState().setMoney(player->getPlayerState().getMoney() + 300);
+		player->earnMoney(300);
 		break;
 	case 12:
 		break;
@@ -562,11 +638,11 @@ void GameController::pickRedCard(Player* player) {
 		break;
 	case 14:
 		//Bank wypłaca Ci pprocent w wysokości 100$.
-		player->getPlayerState().setMoney(player->getPlayerState().getMoney() + 100);
+		player->earnMoney(100);
 		break;
 	case 15:
 		//Rozwiązałeś dobrze krzyżówkę. Jako I nagrodę otrzymujesz 200$.
-		player->getPlayerState().setMoney(player->getPlayerState().getMoney() + 200);
+		player->earnMoney(200);
 		break;
 	default:
 		break;
