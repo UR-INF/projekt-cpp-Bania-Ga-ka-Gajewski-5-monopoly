@@ -188,6 +188,12 @@ void GameController::performAction() {
                 this->bankruptPlayerWithoutAcquisition(this->currentPlayer);
             }
             break;
+        case RED_CHANCE:
+            pickBlueCard(this->currentPlayer);
+            break;
+        case BLUE_CHANCE:
+            pickRedCard(this->currentPlayer);
+            break;
         /* 
                 czy nieruchomosc nie ma wlasciciela:
                     czy gracza stac na zakup:
@@ -211,10 +217,6 @@ void GameController::performAction() {
         case RAILWAY:
         case ELECTRICITY:
         case WATER_SUPPLY_NETWORK:
-        case RED_CHANCE:
-            pickBlueCard(this->currentPlayer);
-        case BLUE_CHANCE:
-            pickRedCard(this->currentPlayer);
         {
             PurchasableField* purchasableField = static_cast<PurchasableField*>(contextField);
             this->renderer->renderMessage("Stajesz na polu: " + purchasableField->toString());
