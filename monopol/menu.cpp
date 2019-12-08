@@ -54,7 +54,7 @@ void Menu::construct(Player* player) {
         this->currentMenu.push_back(this->allMenuItems[0]);
         this->currentMenu.push_back(this->allMenuItems[3]);
         this->currentMenu.push_back(this->allMenuItems[4]);
-        this->currentMenu.push_back(this->allMenuItems[5]);        
+        //this->currentMenu.push_back(this->allMenuItems[5]);        
 
         if(player->hasActiveLoan() && player->isSolvent(500, true)) {
             this->currentMenu.push_back(this->allMenuItems[2]);

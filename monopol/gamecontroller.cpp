@@ -573,7 +573,7 @@ void GameController::setPlayersMoveOrder() {
 void GameController::pickBlueCard(Player* player) {
 	//wylosowanie karty niebieskiej
 	Card card = board->pickBlueCard();
-    this->renderer->renderMessage("BLUE CARD: " + card.getDescription());
+    this->renderer->renderMessage("Pole: " + to_string(player->getPosition()) + " Niebieska Szansa " + card.getDescription());
 	switch (card.getCardId())
 	{
 	case 0:
@@ -729,7 +729,7 @@ void GameController::pickBlueCard(Player* player) {
 void GameController::pickRedCard(Player* player) {
 	//wylosowanie kartty czerwonej
 	Card card = board->pickRedCard();
-    this->renderer->renderMessage("RED CARD: " + card.getDescription());
+    this->renderer->renderMessage("Pole: "+to_string(player->getPosition())+" Czerwona Szansa: " + card.getDescription());
 
 
 
