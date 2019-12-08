@@ -154,6 +154,7 @@
     <ClCompile Include="actiontype.cpp" />
     <ClCompile Include="board.cpp" />
     <ClCompile Include="Card.cpp" />
+    <ClCompile Include="country.cpp" />
     <ClCompile Include="diceroller.cpp" />
     <ClCompile Include="dicethrowresult.cpp" />
     <ClCompile Include="field.cpp" />
@@ -175,6 +176,7 @@
     <ClInclude Include="actiontype.hpp" />
     <ClInclude Include="board.hpp" />
     <ClInclude Include="Card.h" />
+    <ClInclude Include="country.hpp" />
     <ClInclude Include="diceroller.hpp" />
     <ClInclude Include="dicethrowresult.hpp" />
     <ClInclude Include="field.hpp" />
