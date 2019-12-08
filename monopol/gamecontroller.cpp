@@ -267,6 +267,11 @@ void GameController::performAction() {
             if(this->currentPlayer->isSolvent(100, true)) {
                 this->currentPlayer->payMoney(100);
             }
+            else if (!this->currentPlayer->hasActiveLoan()) {
+                this->renderer->renderMessage("Nie stac cie na zaplate podatku od luksusu. Bierzesz pozyczke");
+                this->currentPlayer->takeLoan();
+                this->currentPlayer->payMoney(100);
+            }
             else {
                 this->renderer->renderMessage("Nie jestes w stanie zaplacic podatku od luksusu - bankrutujesz");
                 this->bankruptPlayerWithoutAcquisition(this->currentPlayer);
@@ -274,6 +279,11 @@ void GameController::performAction() {
             break;
         case INCOME_TAX:
             if(this->currentPlayer->isSolvent(200, true)) {
+                this->currentPlayer->payMoney(200);
+            }
+            else if (!this->currentPlayer->hasActiveLoan()) {
+                this->renderer->renderMessage("Nie stac cie na zaplate podatku dochodowego. Bierzesz pozyczke");
+                this->currentPlayer->takeLoan();
                 this->currentPlayer->payMoney(200);
             }
             else
@@ -375,7 +385,15 @@ void GameController::performAction() {
                         propertyOwner->earnMoney(rentToPay);
                         break;
                     }
+                    else if (!this->currentPlayer->hasActiveLoan() && this->currentPlayer->isSolvent(500 + rentToPay, true)) {
+                        this->renderer->renderMessage("Aby splacic czynsz bierzesz pozyczke");
+                        this->currentPlayer->takeLoan();
+                        this->currentPlayer->payMoney(rentToPay);
+                        propertyOwner->earnMoney(rentToPay);
+                        break;
+                    }
                     else {
+                        this->renderer->renderMessage("Nie jestes w stanie zaplacic czynszu w wysokosci: " + to_string(rentToPay));
                         this->renderer->renderMessage("Bankrutujesz! Twoje nieruchomosci przejmuje: " + propertyOwner->getName());
                         this->propertiesAcquisition(this->currentPlayer, propertyOwner);
                         this->bankruptPlayer(this->currentPlayer);
