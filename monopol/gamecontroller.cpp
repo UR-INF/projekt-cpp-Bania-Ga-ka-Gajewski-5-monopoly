@@ -641,7 +641,7 @@ void GameController::setPlayersMoveOrder() {
 void GameController::pickBlueCard(Player* player) {
 	//wylosowanie karty niebieskiej
 	Card card = board->pickBlueCard();
-    this->renderer->renderMessage("BLUE CARD: " + card.getDescription());
+    this->renderer->renderMessage("Pole: " + to_string(player->getPosition()) + " Niebieska Szansa " + card.getDescription());
 	switch (card.getCardId())
 	{
 	case 0:
@@ -797,7 +797,7 @@ void GameController::pickBlueCard(Player* player) {
 void GameController::pickRedCard(Player* player) {
 	//wylosowanie kartty czerwonej
 	Card card = board->pickRedCard();
-    this->renderer->renderMessage("RED CARD: " + card.getDescription());
+    this->renderer->renderMessage("Pole: "+to_string(player->getPosition())+" Czerwona Szansa: " + card.getDescription());
 
 
 
@@ -862,6 +862,7 @@ void GameController::pickRedCard(Player* player) {
 	case 4:
 		//Cofasz się o 3 pola.
 		player->setPosition(player->getPosition() - 3);
+        performAction();
 		break;
 	case 5:
 		//Wcyhodzisz wolny z więzienia. Kartę należy zachować do wykorzystania lub sprzedania.
@@ -870,10 +871,12 @@ void GameController::pickRedCard(Player* player) {
 	case 6:
         //Idziesz do \"NEAPOLU\". Jezeli przechodzisz przez \"START\" otrzymasz 200$. Neapol(6)
         player->setPosition(distanceTo(player->getPosition(),6));
+        performAction();
 		break;
 	case 7:
         //Wracasz do \"Madrytu\"
         player->setPosition(14);
+        performAction();
 		break;
 	case 8:
         //Zobowiazany jestes zmodernizowac swoje miasto, placisz do banku za kazdy dom 80$, za kazdy hotel 230$.
@@ -908,10 +911,12 @@ void GameController::pickRedCard(Player* player) {
 	case 9:
         //Idziesz do \"KOLEI WSCHODNICH\". Jezeli przechodzisz przez \"START\" otrzymasz 200$. Koleje wschodnie(35)
         player->moveBy(distanceTo(player->getPosition(), 35));
+        performAction();
 		break;
 	case 10:
         //Wracasz do \"Brukseli\". Jezeli przechodzisz przez \"START\" otrzymujesz 200$. Bruksela(23)
         player->moveBy(distanceTo(player->getPosition(), 23));
+        performAction();
 		break;
 	case 11:
 		//Bank wpłaca Ci należne odsetkiw  wysokości 300$.
