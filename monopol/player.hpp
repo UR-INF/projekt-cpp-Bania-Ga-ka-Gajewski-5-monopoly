@@ -15,7 +15,7 @@ class Player {
         PlayerState* playerState;
         int position; // pozycja na planszy [0 - 39]
         bool activeLoan;
-		bool canPayLoan; // mo�na sp�aci� je�eli gracz przeszed� przez pole start ( warto�� zmieniana jest w metodzie moveby)
+		bool canPayLoan; // mozna splacic pozyczke jezeli gracz przeszedl przez pole start ( wartosc zmieniana jest w metodzie moveby)
         int cashGain; // ilosc pieniedzy otrzymywana za przejscie przez pole START
 		set<int> playerProperties;
         set<Country*> ownedCountries;
@@ -36,6 +36,7 @@ class Player {
         bool isBankrupt();
         void setBankrupt(bool isBankrupt);
         bool hasActiveLoan();
+        bool getCanPayLoan();
         void takeLoan();
         void payBackLoan();
         void goToJail();

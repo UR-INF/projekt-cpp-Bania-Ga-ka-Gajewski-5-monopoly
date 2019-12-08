@@ -47,17 +47,24 @@ void Menu::construct(Player* player) {
         }
 
         if(player->hasActiveLoan() && player->isSolvent(500, true)) {
-            this->currentMenu.push_back(this->allMenuItems[2]);
+            if (player->getCanPayLoan()) {
+                this->currentMenu.push_back(this->allMenuItems[2]);
+            }            
         }        
     }
     else {
         this->currentMenu.push_back(this->allMenuItems[0]);
-        this->currentMenu.push_back(this->allMenuItems[3]);
-        this->currentMenu.push_back(this->allMenuItems[4]);
-        this->currentMenu.push_back(this->allMenuItems[5]);        
+        // this->currentMenu.push_back(this->allMenuItems[5]);  
+
+        if (player->hasAnyCountry()) {
+            this->currentMenu.push_back(this->allMenuItems[3]);
+            this->currentMenu.push_back(this->allMenuItems[4]);
+        }              
 
         if(player->hasActiveLoan() && player->isSolvent(500, true)) {
-            this->currentMenu.push_back(this->allMenuItems[2]);
+            if (player->getCanPayLoan()) {
+                this->currentMenu.push_back(this->allMenuItems[2]);
+            }
         }
         else {
             this->currentMenu.push_back(this->allMenuItems[1]);
