@@ -166,7 +166,10 @@
     <ClCompile Include="player.cpp" />
     <ClCompile Include="playerstate.cpp" />
     <ClCompile Include="propertyfield.cpp" />
+    <ClCompile Include="purchasablefield.cpp" />
+    <ClCompile Include="railwayfield.cpp" />
     <ClCompile Include="renderer.cpp" />
+    <ClCompile Include="rentmultipierfield.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="actiontype.hpp" />
@@ -183,7 +186,10 @@
     <ClInclude Include="player.hpp" />
     <ClInclude Include="playerstate.hpp" />
     <ClInclude Include="propertyfield.hpp" />
+    <ClInclude Include="purchasablefield.hpp" />
+    <ClInclude Include="railwayfield.hpp" />
     <ClInclude Include="renderer.hpp" />
+    <ClInclude Include="rentmultipierfield.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -2,10 +2,11 @@
 #include "player.hpp"
 #include "field.hpp"
 #include "propertyfield.hpp"
-
+#include <windows.h>
 #include <vector>
 #include <string>
 #include <iostream>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -60,7 +61,49 @@ void Renderer::renderMenu(Menu* menuToRender) {
 }
 
 void Renderer::renderBoard(Board* boardToRender) {
+    WORD attributes;
+    CONSOLE_SCREEN_BUFFER_INFO info;
+    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &info);
+    attributes = info.wAttributes;
     for(int index = 0; index < 40; index++) {
-        this->renderField(boardToRender->getField(index));
+        if (index == 1||index == 3) {
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),BACKGROUND_RED );
+                this->renderField(boardToRender->getField(index));
+        }
+        else if (index == 6||index == 8 || index == 9) {
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_GREEN);
+            this->renderField(boardToRender->getField(index));
+        }
+        else if (index == 11 || index == 13 || index == 14) {
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_BLUE);
+            this->renderField(boardToRender->getField(index));
+        }
+        else if (index == 16 || index == 18 || index == 19) {
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_GREEN|BACKGROUND_RED);
+            this->renderField(boardToRender->getField(index));
+        }
+        else if (index == 21 || index == 23 || index == 24) {
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_RED|BACKGROUND_BLUE);
+            this->renderField(boardToRender->getField(index));
+        }
+        else if (index == 26 || index == 27 || index == 29) {
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_GREEN|BACKGROUND_BLUE);
+            this->renderField(boardToRender->getField(index));
+        }
+        else if (index == 31 || index == 32 || index == 34) {
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_RED|BACKGROUND_INTENSITY);
+            this->renderField(boardToRender->getField(index));
+        }
+        else if (index == 37 || index == 39) {
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_GREEN|BACKGROUND_INTENSITY);
+            this->renderField(boardToRender->getField(index));
+        }
+        else {
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), attributes);
+            this->renderField(boardToRender->getField(index));
+        }
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), attributes);
     }
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), attributes);
 }
+

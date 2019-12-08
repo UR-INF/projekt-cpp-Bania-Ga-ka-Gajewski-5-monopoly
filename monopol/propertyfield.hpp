@@ -22,6 +22,7 @@ class PropertyField : public PurchasableField {
         void upgrade(); // kup domek
         void degrade(); // sprzedaj domek
         int getRent(); // pobież wysokość aktualnego czynszu
+        int getHousingLevel();
         string getPropertyInfo();
         string toString();
         string getCountryName();

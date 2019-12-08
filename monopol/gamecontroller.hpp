@@ -42,7 +42,10 @@ class GameController {
         void bankruptPlayerWithoutAcquisition(Player* player);
 		void pickBlueCard(Player* player);
 		void pickRedCard(Player* player);
+        int distanceTo(int playerPos, int destination);
+        int renovationCost(Player* player);
         void checkCountryObtain(Player* player, PurchasableField* obtainedField);
+
 };
 
 #endif

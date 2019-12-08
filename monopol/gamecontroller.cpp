@@ -83,7 +83,7 @@ void GameController::start() {
     this->renderer->renderBoard(this->board);
 
     bool isPlaying = true;
-	pickBlueCard(currentPlayer);
+	//pickBlueCard(currentPlayer);
     while(isPlaying && this->numberOfActivePlayers > 1) {
         
         this->renderer->renderCurrentPlayer(this->currentPlayer);
@@ -291,6 +291,12 @@ void GameController::performAction() {
                 this->renderer->renderMessage("Nie jestes w stanie zaplacic podatku dochodowego - bankrutujesz");
                 this->bankruptPlayerWithoutAcquisition(this->currentPlayer);
             }
+            break;
+        case RED_CHANCE:
+            pickBlueCard(this->currentPlayer);
+            break;
+        case BLUE_CHANCE:
+            pickRedCard(this->currentPlayer);
             break;
         /* 
                 czy nieruchomosc nie ma wlasciciela:
@@ -577,28 +583,33 @@ void GameController::pickBlueCard(Player* player) {
 	case 1:
 		//Wracasz do \"WIEDNIA\"
 		player->setPosition(39);
+        performAction();
+        //Field* contextField = this->board->getField(39);
+        //PurchasableField* purchasableField = static_cast<PurchasableField*>(contextField);
+        //Player* propertyOwner = purchasableField->getOwner;
 		break;
 	case 2:
 		//Płacisz za karę 20$ lub ciągniesz \"SZANSĘ\" z drugiego zestawu (czerwonego)
 		//jeśli niezdolny zapłacić automatycznie ciągnie karte
-		if (player->getPlayerState().getMoney() < 20) {
-			pickRedCard(player);
-			//break or return?
+		if (player->isSolvent(20)) {
+            this->renderer->renderMessage("0 By zaplacic kare");
+            this->renderer->renderMessage("1 By pobrać partę z zestawu czerwonego");
+            int playerChose = Input::getDigitKey();
+            switch (playerChose)
+            {
+            case 0:
+                player->payMoney(20);
+            case 1:
+                pickRedCard(player);
+            default:
+                break;
+            }
 		}
 		else {
-			this->renderer->renderMessage("0 By zapłacić karę");
-			this->renderer->renderMessage("1 By pobrać partę z zestawu czerwonego");
-			int playerChose = Input::getDigitKey();
-			switch (playerChose)
-			{
-			case 0:
-				player->getPlayerState().setMoney(player->getPlayerState().getMoney()-20);
-			case 1:
-				pickRedCard(player);
-			default:
-				break;
+            this->renderer->renderMessage("Nie masz pieniedzy by zaplacic kare. Bierzesz karte z czerwonego zestawu.");
+            pickRedCard(player);
+            //break or return?
 			}
-		}
 		break;
 	case 3:
 		//Wracasz na \"START\"
@@ -610,34 +621,105 @@ void GameController::pickBlueCard(Player* player) {
 		break;
 	case 5:
 		//Płacisz koszty leczenia w wysokości 20$.
+        if (player->isSolvent(20)) {
+            player->payMoney(20);
+        }
+        else {
+            if (player->hasActiveLoan()) {
+                this->renderer->renderMessage("Masz aktywna pozyczke. Nie mozesz wziasc kolejnej co prowadzi do bankructwa.");
+                bankruptPlayerWithoutAcquisition(player);
+            }
+            else
+            {
+                this->renderer->renderMessage("Musisz wziac pozyczke by zaplacic kare");
+                takeLoan(player);
+                player->payMoney(20);
+            }
+        }
 		break;
 	case 6:
 		//Bank omylił się na Twoją krozyść. Otrzymujesz 400$.
-		player->getPlayerState().setMoney(player->getPlayerState().getMoney()+400);
+		player->earnMoney(400);
 		break;
 	case 7:
 		//Zająłeś II miejsce w konkursie piękności - otrzymujesz z banku 200$.
-		player->getPlayerState().setMoney(player->getPlayerState().getMoney() + 200);
+        player->earnMoney(200);
 		break;
 	case 8:
 		//Otrzymujesz roczną rentę w wysokości 200$.
-		player->getPlayerState().setMoney(player->getPlayerState().getMoney() + 200);
+        player->earnMoney(200);
 		break;
 	case 9:
 		//Bank wypłaci ci należne 7% od kapitałów - otrzymujesz 50$.
-		player->getPlayerState().setMoney(player->getPlayerState().getMoney() + 50);
+		player->earnMoney(50);
 		break;
 	case 10:
+        //Placisz skladke ubezpieczeniowa w wysokosci 20$.
+        if (player->isSolvent(20)) {
+            player->payMoney(20);
+        }
+        else {
+            if (player->hasActiveLoan()) {
+                this->renderer->renderMessage("Masz aktywna pozyczke. Nie mozesz wziasc kolejnej co prowadzi do bankructwa.");
+                bankruptPlayerWithoutAcquisition(player);
+            }
+            else
+            {
+                this->renderer->renderMessage("Musisz wziac pozyczke by zaplacic kare");
+                takeLoan(player);
+                player->payMoney(20);
+            }
+        }
 		break;
 	case 11:
+        //Z magazynu, w ktorym kupujesz otrzymujesz rabat w wyoskosci 20$.
+        player->earnMoney(20);
 		break;
 	case 12:
+        //Placisz na budowe szpitala 400$.
+        if (player->isSolvent(400)) {
+            player->payMoney(400);
+        }
+        else {
+            if (player->hasActiveLoan()) {
+                this->renderer->renderMessage("Masz aktywna pozyczke. Nie mozesz wziasc kolejnej co prowadzi do bankructwa.");
+                bankruptPlayerWithoutAcquisition(player);
+            }
+            else
+            {
+                this->renderer->renderMessage("Musisz wziac pozyczke by zaplacic kare");
+                takeLoan(player);
+                player->payMoney(400);
+            }
+        }
 		break;
 	case 13:
 		//Otrzymujesz w spadku 200$.
-		player->getPlayerState().setMoney(player->getPlayerState().getMoney() + 200);
+		player->earnMoney(200);
 		break;
 	case 14:
+        //Masz urodziny - otrzymujesz od kazdego gracza po 20$.
+        for (Player otherplayer : orderOfMoves) {
+            if (otherplayer.getName() != player->getName()) {
+                if (otherplayer.isSolvent(20)) {
+                    otherplayer.payMoney(20);
+                    player->earnMoney(20);
+                }
+                else
+                {
+                    if (otherplayer.hasActiveLoan()) {
+                        this->renderer->renderMessage(otherplayer.getName()+" ma aktywna pozyczke nie moze wziac kolejnej wiec bankrutuje.");
+                        //bankruptPlayerWithoutAcquisition(otherplayer);
+                    }
+                    else {
+                        this->renderer->renderMessage(otherplayer.getName() + " musial wziac pozyczke by kupic prezent.");
+                        //takeLoan(otherplayer);
+                        player->earnMoney(20);
+                    }
+                }
+                
+            }
+        }
 		break;
 	default:
 		break;
@@ -648,15 +730,66 @@ void GameController::pickRedCard(Player* player) {
 	//wylosowanie kartty czerwonej
 	Card card = board->pickRedCard();
     this->renderer->renderMessage("RED CARD: " + card.getDescription());
-	switch (card.getCardId())
-	{
-	case 0:
-		break;
-	case 1:
-		break;
-	case 2:		
-		break;
-	case 3:
+
+
+
+    switch (card.getCardId())
+    {
+    case 0:
+        //Wracasz na \"START\"
+        player->setPosition(0);
+        break;
+    case 1:
+        //Piles w czasie pracy, placisz kare 40$.
+        if (player->isSolvent(40)) {
+            player->payMoney(40);
+        }
+        else {
+            if (player->hasActiveLoan()) {
+                this->renderer->renderMessage("Masz aktywna pozyczke. Nie mozesz wziasc kolejnej co prowadzi do bankructwa.");
+                bankruptPlayerWithoutAcquisition(player);
+            }
+            else
+            {
+                this->renderer->renderMessage("Musisz wziac pozyczke by zaplacic kare");
+                takeLoan(player);
+                player->payMoney(40);
+            }
+        }
+        break;
+    case 2:
+        //Idziesz do wiezienia. Nie przechodzisz przez \"START\". Nie otrzymujesz premii 200$.
+        player->setPosition(10);
+        break;
+    case 3:
+        //Remontujesz swoje domy. Placisz do banku za kazdy dom 50$, za kazdy hotel 200$.
+        {
+        int renovatePrice = renovationCost(player);
+        this->renderer->renderMessage("Calkowity koszt remontu wynosi: " + renovatePrice);
+        if (player->isSolvent(renovatePrice)) {
+            this->renderer->renderMessage("Zaplaciles za remont: " + renovatePrice);
+            player->payMoney(renovatePrice);
+        }
+        else
+        {
+            if (player->hasActiveLoan()) {
+                this->renderer->renderMessage("Nie mozesz wziac kolejnego kredytu. Bakrutujesz.");
+                bankruptPlayerWithoutAcquisition(player);
+            }
+            else {
+                player->takeLoan();
+                if (player->isSolvent(renovatePrice)) {
+                    this->renderer->renderMessage("Zaplaciles za remont: " + renovatePrice);
+                    player->payMoney(renovatePrice);
+                }
+                else
+                {
+                    this->renderer->renderMessage("Koszty remontu przerastaja twoja zdolnosc kredytowa. Bakrutujesz.");
+                    bankruptPlayerWithoutAcquisition(player);
+                }
+            }
+        }
+    }
 		break;
 	case 4:
 		//Cofasz się o 3 pola.
@@ -667,34 +800,138 @@ void GameController::pickRedCard(Player* player) {
 		player->addOutOfJailCard();
 		break;
 	case 6:
+        //Idziesz do \"NEAPOLU\". Jezeli przechodzisz przez \"START\" otrzymasz 200$. Neapol(6)
+        player->setPosition(distanceTo(player->getPosition(),6));
 		break;
 	case 7:
+        //Wracasz do \"Madrytu\"
+        player->setPosition(14);
 		break;
 	case 8:
-		break;
+        //Zobowiazany jestes zmodernizowac swoje miasto, placisz do banku za kazdy dom 80$, za kazdy hotel 230$.
+        {
+        int renovatePrice = renovationCost(player);
+        this->renderer->renderMessage("Calkowity koszt remontu wynosi: " + renovatePrice);
+        if (player->isSolvent(renovatePrice)) {
+            this->renderer->renderMessage("Zaplaciles za remont: " + renovatePrice);
+            player->payMoney(renovatePrice);
+        }
+        else
+        {
+            if (player->hasActiveLoan()) {
+                this->renderer->renderMessage("Nie mozesz wziac kolejnego kredytu. Bakrutujesz.");
+                bankruptPlayerWithoutAcquisition(player);
+            }
+            else {
+                player->takeLoan();
+                if (player->isSolvent(renovatePrice)) {
+                    this->renderer->renderMessage("Zaplaciles za remont: " + renovatePrice);
+                    player->payMoney(renovatePrice);
+                }
+                else
+                {
+                    this->renderer->renderMessage("Koszty remontu przerastaja twoja zdolnosc kredytowa. Bakrutujesz.");
+                    bankruptPlayerWithoutAcquisition(player);
+                }
+            }
+        }
+        break;
+        }
 	case 9:
+        //Idziesz do \"KOLEI WSCHODNICH\". Jezeli przechodzisz przez \"START\" otrzymasz 200$. Koleje wschodnie(35)
+        player->moveBy(distanceTo(player->getPosition(), 35));
 		break;
 	case 10:
+        //Wracasz do \"Brukseli\". Jezeli przechodzisz przez \"START\" otrzymujesz 200$. Bruksela(23)
+        player->moveBy(distanceTo(player->getPosition(), 23));
 		break;
 	case 11:
 		//Bank wpłaca Ci należne odsetkiw  wysokości 300$.
-		player->getPlayerState().setMoney(player->getPlayerState().getMoney() + 300);
+		player->earnMoney(300);
 		break;
 	case 12:
+        //Mandat za szybka jazde. Placisz 30$.
+        if (player->isSolvent(30)) {
+            player->payMoney(30);
+        }
+        else {
+            if (player->hasActiveLoan()) {
+                this->renderer->renderMessage("Masz aktywna pozyczke. Nie mozesz wziasc kolejnej co prowadzi do bankructwa.");
+                bankruptPlayerWithoutAcquisition(player);
+            }
+            else
+            {
+                this->renderer->renderMessage("Musisz wziac pozyczke by zaplacic kare");
+                takeLoan(player);
+                player->payMoney(30);
+            }
+        }
 		break;
 	case 13:
+        //Placisz oplate za szkole 300$.
+        if (player->isSolvent(300)) {
+            player->payMoney(300);
+        }
+        else {
+            if (player->hasActiveLoan()) {
+                this->renderer->renderMessage("Masz aktywna pozyczke. Nie mozesz wziasc kolejnej co prowadzi do bankructwa.");
+                bankruptPlayerWithoutAcquisition(player);
+            }
+            else
+            {
+                this->renderer->renderMessage("Musisz wziac pozyczke by zaplacic kare");
+                takeLoan(player);
+                player->payMoney(300);
+            }
+        }
 		break;
 	case 14:
 		//Bank wypłaca Ci pprocent w wysokości 100$.
-		player->getPlayerState().setMoney(player->getPlayerState().getMoney() + 100);
+		player->earnMoney(100);
 		break;
 	case 15:
 		//Rozwiązałeś dobrze krzyżówkę. Jako I nagrodę otrzymujesz 200$.
-		player->getPlayerState().setMoney(player->getPlayerState().getMoney() + 200);
+		player->earnMoney(200);
 		break;
 	default:
 		break;
 	}
+}
+
+
+int GameController::distanceTo(int curentPos, int destination) {
+    if (curentPos < destination) {
+        return destination - curentPos;
+    }
+    else
+    {
+        return 40 - curentPos + destination;
+    }
+}
+
+int GameController::renovationCost(Player* player) {
+    int renovatePrice = 0;
+    //this->renderer->renderMessage("! Obliczam renovation cost");
+    
+    for (int i : player->getProperties()) {
+        //this->renderer->renderMessage("! Wszedłem do petli");
+        Field* field = board->getField(i);
+        if (field->getFieldType() == PROPERTY) {
+            //this->renderer->renderMessage("! sprawdzam czy pole jest propert");
+            PropertyField* propertyField = static_cast<PropertyField*>(this->board->getField(i));
+                int fieldLv = propertyField->getHousingLevel();
+                if (fieldLv == 5) {
+                    //this->renderer->renderMessage("! zwiekszam koszt o hotel");
+                    renovatePrice += 230;
+                }
+                else {
+                    //this->renderer->renderMessage("! zwiekszam koszt o dom");
+                    renovatePrice += fieldLv * 80;
+                }
+        }
+    }
+    //this->renderer->renderMessage("! koszt renowacji: "+renovatePrice);
+    return renovatePrice;
 }
 
 // metoda sprawdza czy po uzyskaniu nieruchomosci gracz posiadl cale panstwo

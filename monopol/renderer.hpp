@@ -21,6 +21,7 @@ class Renderer {
         void renderMenu(Menu* menuToRender);
         void renderBoard(Board* boardToRender);
         void renderField(Field* fieldToRender);
+        void restore_attributes();
 };
 
 #endif
