@@ -64,3 +64,7 @@ string PropertyField::toString() {
 
     return fieldString;
 }
+
+int PropertyField::getHousingLevel() {
+    return this->housingLevel;
+}
