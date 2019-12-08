@@ -56,23 +56,31 @@ void GameController::start() {
     this->setPlayersMoveOrder();    
 	this->renderer->renderPlayersMoveOrder(this->orderOfMoves);
     this->setPlayersOnStart();
-    this->renderer->renderBoard(this->board);
-    
+    /*
     static_cast<PropertyField*>(this->board->getField(1))->setOwner(this->currentPlayer);
     static_cast<PropertyField*>(this->board->getField(3))->setOwner(this->currentPlayer);
     static_cast<PropertyField*>(this->board->getField(6))->setOwner(this->currentPlayer);
     static_cast<PropertyField*>(this->board->getField(8))->setOwner(this->currentPlayer);
     static_cast<PropertyField*>(this->board->getField(9))->setOwner(this->currentPlayer);
+    static_cast<PropertyField*>(this->board->getField(16))->setOwner(this->currentPlayer);
+    static_cast<PropertyField*>(this->board->getField(18))->setOwner(this->currentPlayer);
+    static_cast<PropertyField*>(this->board->getField(19))->setOwner(this->currentPlayer);
 
     this->currentPlayer->addProperty(1);
     this->currentPlayer->addProperty(3);
     this->currentPlayer->addProperty(6);
     this->currentPlayer->addProperty(8);
     this->currentPlayer->addProperty(9);
+    this->currentPlayer->addProperty(16);
+    this->currentPlayer->addProperty(18);
+    this->currentPlayer->addProperty(19);
 
     this->currentPlayer->addCountry(this->board->getCountry("Grecja"));
     this->currentPlayer->addCountry(this->board->getCountry("Wlochy"));
+    this->currentPlayer->addCountry(this->board->getCountry("Wielka Brytania"));
+    */
     
+    this->renderer->renderBoard(this->board);
 
     bool isPlaying = true;
 	// pickBlueCard(currentPlayer);
@@ -137,7 +145,8 @@ void GameController::start() {
                     bool isCorrectChose = true;
 
                     while (true) {                        
-                        playerChose = Input::getDigitKey();
+                        // playerChose = Input::getDigitKey();
+                        playerChose = Input::getNumber();
 
                         for (auto country : this->currentPlayer->getOwnedCountries()) {
                             set<int> properties = country->getProperties(); 
@@ -367,7 +376,7 @@ void GameController::performAction() {
                         break;
                     }
                     else {
-                        this->renderer->renderMessage("Brankrutujesz! Twoje nieruchomosci przejmuje: " + propertyOwner->getName());
+                        this->renderer->renderMessage("Bankrutujesz! Twoje nieruchomosci przejmuje: " + propertyOwner->getName());
                         this->propertiesAcquisition(this->currentPlayer, propertyOwner);
                         this->bankruptPlayer(this->currentPlayer);
                         break;
@@ -494,7 +503,12 @@ void GameController::propertiesAcquisition(Player* bankrupt, Player* newOwner) {
     }
 
     for(auto obtainedField : obtainedFields) {
-        this->checkCountryObtain(newOwner, obtainedField);
+        if (typeid(*obtainedField) == typeid(PropertyField)) {            
+            this->checkCountryObtain(newOwner, obtainedField);
+        }
+        else {
+            this->renderer->renderMessage("Pole inne niz PropertyField, nie sprawdzam zatem");
+        }
     }
 
     int bankruptMoney = bankrupt->getPlayerState().getMoney();
@@ -665,8 +679,19 @@ void GameController::pickRedCard(Player* player) {
 	}
 }
 
-// metoda sprawdza czy po zakupieniu nieruchomosci gracz posiadl cale panstwo
+// metoda sprawdza czy po uzyskaniu nieruchomosci gracz posiadl cale panstwo
 void GameController::checkCountryObtain(Player* owner, PurchasableField* obtainedField) {
+    /*
+    int railwaysAndRentMultipierIndexes[] = {5, 12, 15, 25, 28, 35};
+    int indexToFind = obtainedField->getFieldNumber();
+
+    int* elem = find(begin(railwaysAndRentMultipierIndexes), end(railwaysAndRentMultipierIndexes), indexToFind);
+
+    if (elem != end(railwaysAndRentMultipierIndexes)) {
+        this->renderer->renderMessage("Pole kolei, elektrowni lub wodocaigow. Pomijam sprawdzanie");
+        return;
+    }
+    */
     PropertyField* obtainedProperty = static_cast<PropertyField*>(obtainedField);
 
     string countryName = obtainedProperty->getCountryName();
