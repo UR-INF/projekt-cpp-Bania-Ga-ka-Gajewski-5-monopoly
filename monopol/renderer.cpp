@@ -67,35 +67,45 @@ void Renderer::renderBoard(Board* boardToRender) {
     attributes = info.wAttributes;
     for(int index = 0; index < 40; index++) {
         if (index == 1||index == 3) {
-            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),BACKGROUND_RED );
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),FOREGROUND_RED|FOREGROUND_INTENSITY );
                 this->renderField(boardToRender->getField(index));
         }
         else if (index == 6||index == 8 || index == 9) {
-            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_GREEN);
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN|FOREGROUND_INTENSITY);
             this->renderField(boardToRender->getField(index));
         }
         else if (index == 11 || index == 13 || index == 14) {
-            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_BLUE);
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_BLUE|FOREGROUND_INTENSITY);
             this->renderField(boardToRender->getField(index));
         }
         else if (index == 16 || index == 18 || index == 19) {
-            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_GREEN|BACKGROUND_RED);
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED|FOREGROUND_GREEN|FOREGROUND_INTENSITY);
             this->renderField(boardToRender->getField(index));
         }
         else if (index == 21 || index == 23 || index == 24) {
-            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_RED|BACKGROUND_BLUE);
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED| FOREGROUND_BLUE|FOREGROUND_INTENSITY);
             this->renderField(boardToRender->getField(index));
         }
         else if (index == 26 || index == 27 || index == 29) {
-            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_GREEN|BACKGROUND_BLUE);
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN| FOREGROUND_BLUE| FOREGROUND_INTENSITY);
             this->renderField(boardToRender->getField(index));
         }
         else if (index == 31 || index == 32 || index == 34) {
-            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_RED|BACKGROUND_INTENSITY);
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED);
             this->renderField(boardToRender->getField(index));
         }
         else if (index == 37 || index == 39) {
-            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_GREEN|BACKGROUND_INTENSITY);
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN);
+            this->renderField(boardToRender->getField(index));
+        }
+        else if(index == 2||index == 17||index == 33)
+        {
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_BLUE|BACKGROUND_INTENSITY|FOREGROUND_BLUE|FOREGROUND_RED|FOREGROUND_GREEN|FOREGROUND_INTENSITY);
+            this->renderField(boardToRender->getField(index));
+        }
+        else if (index == 7 || index == 22 || index == 36)
+        {
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_RED| FOREGROUND_BLUE | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY);
             this->renderField(boardToRender->getField(index));
         }
         else {
