@@ -62,9 +62,11 @@ void GameController::start() {
     static_cast<PropertyField*>(this->board->getField(6))->setOwner(this->currentPlayer);
     static_cast<PropertyField*>(this->board->getField(8))->setOwner(this->currentPlayer);
     static_cast<PropertyField*>(this->board->getField(9))->setOwner(this->currentPlayer);
+    static_cast<PropertyField*>(this->board->getField(12))->setOwner(this->currentPlayer);
     static_cast<PropertyField*>(this->board->getField(16))->setOwner(this->currentPlayer);
     static_cast<PropertyField*>(this->board->getField(18))->setOwner(this->currentPlayer);
     static_cast<PropertyField*>(this->board->getField(19))->setOwner(this->currentPlayer);
+    static_cast<PropertyField*>(this->board->getField(35))->setOwner(this->currentPlayer);
     static_cast<PropertyField*>(this->board->getField(37))->setOwner(&this->orderOfMoves[2]);
     static_cast<PropertyField*>(this->board->getField(39))->setOwner(&this->orderOfMoves[2]);
 
@@ -73,9 +75,11 @@ void GameController::start() {
     this->currentPlayer->addProperty(6);
     this->currentPlayer->addProperty(8);
     this->currentPlayer->addProperty(9);
+    this->currentPlayer->addProperty(12);
     this->currentPlayer->addProperty(16);
     this->currentPlayer->addProperty(18);
     this->currentPlayer->addProperty(19);
+    this->currentPlayer->addProperty(35);
 
     this->currentPlayer->addCountry(this->board->getCountry("Grecja"));
     this->currentPlayer->addCountry(this->board->getCountry("Wlochy"));
@@ -85,9 +89,27 @@ void GameController::start() {
     this->currentPlayer->addProperty(37);
     this->currentPlayer->addProperty(39);
     this->currentPlayer->addCountry(this->board->getCountry("Austria"));
+    
+    Player* own = this->currentPlayer;
 
     this->currentPlayer = &this->orderOfMoves[0];
+    
+    
+    this->renderer->renderBoard(this->board);
+
+    this->renderer->renderMessage("Bede przepisywal posiadlosci: ");
+    this->propertiesAcquisition(this->currentPlayer, own);
+    this->bankruptPlayer(this->currentPlayer);
+    this->nextPlayer();
+
+    this->renderer->renderBoard(this->board);
+
+    this->renderer->renderMessage("Bede przepisywal posiadlosci: ");
+    this->propertiesAcquisition(this->currentPlayer, own);
+    this->bankruptPlayer(this->currentPlayer);
+    this->nextPlayer();
     */
+
     this->renderer->renderBoard(this->board);
 
     bool isPlaying = true;
@@ -262,7 +284,11 @@ void GameController::start() {
                 this->nextPlayer();
                 break;
             case USE_CARD_TO_GET_FREE:
-                continue;
+                this->currentPlayer->useOutOfJailCard();
+                this->currentPlayer->getOutOfJail();
+                this->simpleDiceRoll();
+                this->nextPlayer();
+                break;
             case PAY_AND_GET_FREE:
                 this->payAndGetOutFromJail();
                 this->nextPlayer();
