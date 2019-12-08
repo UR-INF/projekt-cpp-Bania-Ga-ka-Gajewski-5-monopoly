@@ -45,6 +45,8 @@ string PropertyField::toString() {
     string fieldNumber = to_string(this->getFieldNumber());
     string fieldCountry = this->country;
     string fieldCity = this->city;
+    string fieldLevel = to_string(this->getHousingLevel());
+
     fieldNumber.resize(2, ' ');
     fieldCountry.resize(15, ' ');
     fieldCity.resize(15, ' ');
@@ -61,7 +63,10 @@ string PropertyField::toString() {
         fieldOwner.resize(20, ' ');
         fieldString += " - Wlasciciel: " + fieldOwner;
     }
+    fieldLevel = " - Poziom rozbudowy: " + fieldLevel;
 
+    fieldString += fieldLevel;
+     
     return fieldString;
 }
 
