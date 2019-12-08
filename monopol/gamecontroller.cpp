@@ -114,12 +114,13 @@ void GameController::start() {
 
     bool isPlaying = true;
 	//pickBlueCard(currentPlayer);
-    while(isPlaying && this->numberOfActivePlayers > 1) {
-        
+    while(isPlaying && this->numberOfActivePlayers > 1) {        
         this->renderer->renderCurrentPlayer(this->currentPlayer);
 
         if (this->currentPlayer->isComputer()) {
             cout << "KOMPUTER WYKONUJE RUCH" << endl;
+            this->computerMove();
+            continue;            
         }
 
         this->menu->construct(this->currentPlayer); // utworzenie menu dla konkretnego gracza
@@ -1062,5 +1063,129 @@ void GameController::checkCountryObtain(Player* owner, PurchasableField* obtaine
 
     if (hadObtainedCountry) {
         owner->addCountry(countryToCheck);
+    }
+}
+
+// metoda wykonuje ruch komputera
+void GameController::computerMove() {    
+/* ALGORYTM KOMPUTERA                
+    if jest w wiezieniu:
+        if posiada karte na wyjscie z wiezienia:
+            uzyj karty
+            break
+        else if jest wyplacalny 200:
+            zaplac i rzuc kostka
+            break
+        else:
+            rzut na wyjscie z wiezienia
+            break
+    else:
+        if posiada zaciagnieta pozyczke:
+            if moze splacic pozyczke:
+                if is solvent 700:
+                    splac pozyczke
+        else if jesli ma mniej niz 150:
+            wez pozyczke
+
+        if posiada jakies panstwo:
+            if moze kupic jakas nieruchomosc zeby mu zostalo wiecej niz 200:
+                kup domek
+            else if ma mniej niz 100:
+                sprzedaj domek
+                    
+        rzut kostka
+        -obsluga karty
+        -kupno nieruchomosci:
+*/
+    if (this->currentPlayer->isInJail()) {
+        if (this->currentPlayer->hasOutOfJailCard()) {
+            this->renderer->renderMessage("Komputer-Gracz: " + this->currentPlayer->getName() + " uzywa karty na wyjscie z wiezienia");
+            this->currentPlayer->useOutOfJailCard();
+            this->currentPlayer->getOutOfJail();
+            this->simpleDiceRoll();
+            return;           
+        }
+        else if (this->currentPlayer->isSolvent(200, true)) {
+            this->renderer->renderMessage("Komputer-Gracz: " + this->currentPlayer->getName() + " placi 50$ i rzuca kostka i wychodzi z wiezienia");
+            this->payAndGetOutFromJail();
+            return;
+        }
+        else {
+            this->renderer->renderMessage("Komputer-Gracz: " + this->currentPlayer->getName() + " wykonuje rzut na wyjscie z wiezienia");
+            this->getOutFromJailDiceRoll();
+            return;
+        }
+    }
+    else {
+        if (this->currentPlayer->hasActiveLoan()) {
+            if (this->currentPlayer->getCanPayLoan()) {
+                if (this->currentPlayer->isSolvent(700, true)) {
+                    this->renderer->renderMessage("Komputer-Gracz: " + this->currentPlayer->getName() + " splaca pozyczke");
+                    this->currentPlayer->payBackLoan();
+                }
+            }
+        } 
+        else if (this->currentPlayer->getPlayerState().getMoney() < 150) {
+            this->renderer->renderMessage("Komputer-Gracz: " + this->currentPlayer->getName() + " bierze pozyczke");
+            this->currentPlayer->takeLoan();
+        }
+
+        if (this->currentPlayer->hasAnyCountry()) {
+            set<Country*> computerCountries = this->currentPlayer->getOwnedCountries();           
+
+            if (this->currentPlayer->getPlayerState().getMoney() < 100) {
+                bool isSearchingForHouseToSell = true;
+
+                for (auto country : computerCountries) {
+                    set<int> computerCountryProperties = country->getProperties();
+
+                    for (auto computerPropertyIndex : computerCountryProperties) {
+                        PropertyField* computerPropertyField = static_cast<PropertyField*>(this->board->getField(computerPropertyIndex));
+
+                        if (computerPropertyField->getHousingLevel() == 0) {
+                            continue;
+                        }
+
+                        int moneyToAdd = computerPropertyField->getUpgradeCost() / 2;
+                        computerPropertyField->degrade();
+                        this->currentPlayer->earnMoney(moneyToAdd);
+
+                        if (this->currentPlayer->getPlayerState().getMoney() > 100) {
+                            isSearchingForHouseToSell = false;
+                        }
+                    }
+
+                    if (!isSearchingForHouseToSell) {
+                        break;
+                    } 
+                }
+            }
+            else {
+                for (auto country : computerCountries) {
+                    set<int> computerCountryProperties = country->getProperties();
+
+                    for (auto computerPropertyIndex : computerCountryProperties) {                        
+                        PropertyField* computerPropertyField = static_cast<PropertyField*>(this->board->getField(computerPropertyIndex));
+                            
+                        if (computerPropertyField->getHousingLevel() == 5) {
+                            continue;
+                        }
+
+                        int upgradeCost = computerPropertyField->getUpgradeCost();
+
+                        if (this->currentPlayer->isSolvent(upgradeCost + 200, true)) {
+                            this->renderer->renderMessage("Komputer-Gracz: " + this->currentPlayer->getName() + " ulepsza pole " + computerPropertyField->getPropertyInfo);
+                            this->currentPlayer->payMoney(upgradeCost);
+                            computerPropertyField->upgrade();
+                        }
+                        else {
+                            break;
+                        }                    
+                    }
+                }
+            }           
+        }
+
+        this->normalDiceRoll();
     }
 }

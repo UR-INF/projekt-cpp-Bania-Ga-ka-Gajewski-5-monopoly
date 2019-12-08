@@ -45,6 +45,7 @@ class GameController {
         int distanceTo(int playerPos, int destination);
         int renovationCost(Player* player);
         void checkCountryObtain(Player* player, PurchasableField* obtainedField);
+        void computerMove();
 
 };
 
