@@ -10,7 +10,7 @@ Player::Player(string name, bool isComputer, PlayerState *playerState, int posit
 	this->setPosition(position);
 	this->activeLoan = false;
 	this->canPayLoan = true;
-	this->cashGain = 0;
+	this->cashGain = 200;
 	this->playerProperties = set<int>();
 	this->ownedCountries = set<Country*>();
 };
@@ -44,16 +44,13 @@ void Player::moveBy(int distance) {
 	if (this->position + distance > 39) {
 		this->setPosition((this->position + distance) % 40);
 		
-		//za każde przejście przez start gracz otrzymuje 200 jeżeli posiada pożyczkę 100
-		if (this->canPayLoan == true || this->activeLoan == false) {
-			this->earMoneyFromStart();
-		}
-		else
-		{
-			this->earMoneyFromStart();
-			this->canPayLoan = true;
-		}
-		
+		cout << "Przechodze przez pole START" << endl;
+
+		this->earMoneyFromStart();
+
+		cout << "Zarabiam " << this->cashGain << endl;
+
+		this->canPayLoan = true;		
 	}
 	else {
 		int currentPosition = this->getPosition();
@@ -100,6 +97,10 @@ void Player::setBankrupt(bool isBankrupt) {
 // czy gracz ma pozyczke do splaty
 bool Player::hasActiveLoan() {
 	return this->activeLoan;
+}
+
+bool Player::getCanPayLoan() {
+	return this->canPayLoan;
 }
 
 // wziecie pozyczki

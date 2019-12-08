@@ -65,6 +65,8 @@ void GameController::start() {
     static_cast<PropertyField*>(this->board->getField(16))->setOwner(this->currentPlayer);
     static_cast<PropertyField*>(this->board->getField(18))->setOwner(this->currentPlayer);
     static_cast<PropertyField*>(this->board->getField(19))->setOwner(this->currentPlayer);
+    static_cast<PropertyField*>(this->board->getField(37))->setOwner(&this->orderOfMoves[2]);
+    static_cast<PropertyField*>(this->board->getField(39))->setOwner(&this->orderOfMoves[2]);
 
     this->currentPlayer->addProperty(1);
     this->currentPlayer->addProperty(3);
@@ -78,8 +80,14 @@ void GameController::start() {
     this->currentPlayer->addCountry(this->board->getCountry("Grecja"));
     this->currentPlayer->addCountry(this->board->getCountry("Wlochy"));
     this->currentPlayer->addCountry(this->board->getCountry("Wielka Brytania"));
-    */
     
+    this->currentPlayer += 2;
+    this->currentPlayer->addProperty(37);
+    this->currentPlayer->addProperty(39);
+    this->currentPlayer->addCountry(this->board->getCountry("Austria"));
+
+    this->currentPlayer = &this->orderOfMoves[0];
+    */
     this->renderer->renderBoard(this->board);
 
     bool isPlaying = true;
@@ -194,6 +202,60 @@ void GameController::start() {
                 
                 continue;
             case SELL_HOUSE:
+                if (this->currentPlayer->hasAnyCountry()) {
+                    this->renderer->renderMessage("Posiadane kraje: ");
+                    for (auto country : this->currentPlayer->getOwnedCountries()) {
+                        this->renderer->renderMessage(country->getName() + ":");
+
+                        for(auto fieldIndex : country->getProperties()) {
+                            PropertyField* propertyField = static_cast<PropertyField*>(this->board->getField(fieldIndex));        
+                            this->renderer->renderMessage(propertyField->toString());
+                        }
+                    }
+
+                    // wybor pola z ktorego domek ma byc sprzedany
+                    this->renderer->renderMessage("Podaj nr nieruchomosci z ktorej chcesz sprzedac domek, 0 jesli chcesz anulowac:");
+                    int playerChose = 0;
+                    bool isCorrectChose = true;
+
+                    while (true) {                        
+                        // playerChose = Input::getDigitKey();
+                        playerChose = Input::getNumber();
+
+                        for (auto country : this->currentPlayer->getOwnedCountries()) {
+                            set<int> properties = country->getProperties(); 
+                            isCorrectChose = properties.find(playerChose) != properties.end() || playerChose == 0;                       
+                            
+                            if (isCorrectChose) {
+                                break;
+                            }
+                        } 
+
+                        if (isCorrectChose) {
+                            break;
+                        }                    
+                    }
+
+                    // jesli wybral 0 - anuluj sprzedaz
+                    if (playerChose == 0) {
+                        this->renderer->renderMessage("Anulowano zakup");
+                        continue;
+                    }
+
+                    PropertyField* propertyField = static_cast<PropertyField*>(this->board->getField(playerChose));
+
+                    if (propertyField->getHousingLevel() == 0) {
+                        this->renderer->renderMessage("Na tym polu nie ma nic co mozna sprzedac");
+                        break;
+                    }
+
+                    int upgradeCost = propertyField->getUpgradeCost();
+
+                    propertyField->degrade();
+                    this->currentPlayer->earnMoney(upgradeCost / 2);
+
+                    this->renderer->renderMessage("Domek na polu " + propertyField->getPropertyInfo() + " zostal sprzedany");
+                }
                 continue;
             case OUT_OF_JAIL_ROLL_DICE:
                 this->getOutFromJailDiceRoll();
@@ -454,6 +516,11 @@ void GameController::normalDiceRoll() {
 
             // WYKONAJ AKCJE DLA POLA
             this->performAction();
+
+            // jesli w wyniku tego debla gracz zbankrutowal lub trafil do wiezienia to metoda sie konczy, nastepne rzuty nie sa wykonywane
+            if (this->currentPlayer->isBankrupt() || this->currentPlayer->isInJail()) {
+                return;
+            }
         }
         else {
             this->currentPlayer->moveBy(rolledNumber);
@@ -523,6 +590,7 @@ void GameController::propertiesAcquisition(Player* bankrupt, Player* newOwner) {
     for(auto propertyIndex : properties) {
         PurchasableField* purchasableField = static_cast<PurchasableField*>(this->board->getField(propertyIndex));
         purchasableField->setOwner(newOwner);
+        this->renderer->renderMessage("Nowy wlasciciel pola " + purchasableField->toString() + " - " + purchasableField->getOwner()->getName());
         obtainedFields.push_back(purchasableField);
     }
 
