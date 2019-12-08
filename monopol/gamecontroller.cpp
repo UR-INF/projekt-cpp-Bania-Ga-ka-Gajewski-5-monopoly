@@ -781,22 +781,26 @@ int GameController::distanceTo(int curentPos, int destination) {
 }
 
 int GameController::renovationCost(Player* player) {
-    int static renovatePrice = 0;
-    for (int i = 0; i < 40; i++) {
+    int renovatePrice = 0;
+    //this->renderer->renderMessage("! Obliczam renovation cost");
+    
+    for (int i : player->getProperties()) {
+        //this->renderer->renderMessage("! Wszedłem do petli");
         Field* field = board->getField(i);
         if (field->getFieldType() == PROPERTY) {
+            //this->renderer->renderMessage("! sprawdzam czy pole jest propert");
             PropertyField* propertyField = static_cast<PropertyField*>(this->board->getField(i));
-            if (propertyField->getOwner()->getName() == player->getName()){
                 int fieldLv = propertyField->getHousingLevel();
                 if (fieldLv == 5) {
+                    //this->renderer->renderMessage("! zwiekszam koszt o hotel");
                     renovatePrice += 230;
                 }
                 else {
+                    //this->renderer->renderMessage("! zwiekszam koszt o dom");
                     renovatePrice += fieldLv * 80;
                 }
-            }
-            
         }
     }
+    //this->renderer->renderMessage("! koszt renowacji: "+renovatePrice);
     return renovatePrice;
 }
