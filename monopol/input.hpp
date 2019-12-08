@@ -7,6 +7,7 @@ class Input {
 
     public:
         static int getDigitKey();
+        static int getNumber();
 };
 
 #endif
