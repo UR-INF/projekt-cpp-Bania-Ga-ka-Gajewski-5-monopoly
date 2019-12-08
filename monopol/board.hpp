@@ -14,8 +14,8 @@ class Board {
         Field* fields[40];
 
 
-		    Card* redCards[16];
-		    Card* blueCards[15];
+		// Card* redCards[16];
+		// Card* blueCards[15];
 
         // Country* countries[8];
         map<string, Country*> countries;

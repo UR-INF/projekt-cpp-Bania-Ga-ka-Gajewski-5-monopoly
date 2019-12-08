@@ -272,8 +272,8 @@ Board::Board() {
 
 	
 
-	shuffleCards(blueCards, 15);
-	shuffleCards(redCards, 16);
+	// shuffleCards(blueCards, 15);
+	// shuffleCards(redCards, 16);
 
 	// ***************************************************************************************
 	// inicjalizacja panstw
