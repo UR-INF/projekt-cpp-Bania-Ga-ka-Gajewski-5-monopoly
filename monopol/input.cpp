@@ -1,5 +1,6 @@
 #include "input.hpp"
 #include <iostream>
+#include <string>
 
 using namespace std;
 
@@ -23,4 +24,32 @@ int Input::getDigitKey() {
     playerChose = playerChose - 48;
 
     return playerChose;
+}
+
+int Input::getNumber() {
+    // int playerChose = 0;
+    bool isGoodInput = true;
+    string playerChose = "";
+
+    cout << "Podawaj liczby wieksze od 9" << endl;
+
+    while (true) {
+        isGoodInput = true;
+
+        cin >> playerChose;
+
+        for (char const &c : playerChose) {
+            if (!isdigit(c)) {
+                cout << "Nie podano liczby" << endl;
+                isGoodInput = false;
+            }
+        }
+
+        if (isGoodInput) {
+            int result = stoi(playerChose);
+            cout << result << " - " << typeid(result).name() << endl;
+
+            return result;
+        }
+    }
 }

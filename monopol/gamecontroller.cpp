@@ -56,6 +56,30 @@ void GameController::start() {
     this->setPlayersMoveOrder();    
 	this->renderer->renderPlayersMoveOrder(this->orderOfMoves);
     this->setPlayersOnStart();
+    /*
+    static_cast<PropertyField*>(this->board->getField(1))->setOwner(this->currentPlayer);
+    static_cast<PropertyField*>(this->board->getField(3))->setOwner(this->currentPlayer);
+    static_cast<PropertyField*>(this->board->getField(6))->setOwner(this->currentPlayer);
+    static_cast<PropertyField*>(this->board->getField(8))->setOwner(this->currentPlayer);
+    static_cast<PropertyField*>(this->board->getField(9))->setOwner(this->currentPlayer);
+    static_cast<PropertyField*>(this->board->getField(16))->setOwner(this->currentPlayer);
+    static_cast<PropertyField*>(this->board->getField(18))->setOwner(this->currentPlayer);
+    static_cast<PropertyField*>(this->board->getField(19))->setOwner(this->currentPlayer);
+
+    this->currentPlayer->addProperty(1);
+    this->currentPlayer->addProperty(3);
+    this->currentPlayer->addProperty(6);
+    this->currentPlayer->addProperty(8);
+    this->currentPlayer->addProperty(9);
+    this->currentPlayer->addProperty(16);
+    this->currentPlayer->addProperty(18);
+    this->currentPlayer->addProperty(19);
+
+    this->currentPlayer->addCountry(this->board->getCountry("Grecja"));
+    this->currentPlayer->addCountry(this->board->getCountry("Wlochy"));
+    this->currentPlayer->addCountry(this->board->getCountry("Wielka Brytania"));
+    */
+    
     this->renderer->renderBoard(this->board);
 
     bool isPlaying = true;
@@ -96,10 +120,80 @@ void GameController::start() {
                 this->payLoan(this->currentPlayer);
                 continue;
             case BUY_HOUSE:
+                /*
+                    czy gracz posiada jakies panstwo:
+                        wyswietl pola z posiadanych panstw
+                        wybierz pole ktore chcesz ulepszyc
+                        czy pola maja ten sam poziom:
+                            czy gracza stac na kupno domku:
+                                property_upgrade
+                */
+                if (this->currentPlayer->hasAnyCountry()) {
+                    this->renderer->renderMessage("Posiadane kraje: ");
+                    for (auto country : this->currentPlayer->getOwnedCountries()) {
+                        this->renderer->renderMessage(country->getName() + ":");
+
+                        for(auto fieldIndex : country->getProperties()) {
+                            PropertyField* propertyField = static_cast<PropertyField*>(this->board->getField(fieldIndex));        
+                            this->renderer->renderMessage(propertyField->toString());
+                        }
+                    }  
+                    
+                    // wybor pola do zakupu domku 
+                    this->renderer->renderMessage("Podaj nr nieruchomosci ktora chcesz ulepszyc, podaj 0 aby anulowac");
+                    int playerChose = 0;
+                    bool isCorrectChose = true;
+
+                    while (true) {                        
+                        // playerChose = Input::getDigitKey();
+                        playerChose = Input::getNumber();
+
+                        for (auto country : this->currentPlayer->getOwnedCountries()) {
+                            set<int> properties = country->getProperties(); 
+                            isCorrectChose = properties.find(playerChose) != properties.end() || playerChose == 0;                       
+                            
+                            if (isCorrectChose) {
+                                break;
+                            }
+                        } 
+
+                        if (isCorrectChose) {
+                            break;
+                        }                    
+                    }
+
+                    // jesli wybral 0 - anuluj zakup
+                    if (playerChose == 0) {
+                        this->renderer->renderMessage("Anulowano zakup");
+                        continue;
+                    }
+
+                    PropertyField* propertyField = static_cast<PropertyField*>(this->board->getField(playerChose));
+
+                    if (propertyField->getHousingLevel() == 5) {
+                        this->renderer->renderMessage("To pole zostalo ulepszone na maxa");
+                        break;
+                    }
+
+                    int upgradeCost = propertyField->getUpgradeCost();
+
+                    if (this->currentPlayer->isSolvent(upgradeCost, true)) {
+                        this->currentPlayer->payMoney(upgradeCost);
+                        propertyField->upgrade();
+                    }
+                    else {
+                        this->renderer->renderMessage("Nie stac cie na zakup domku na tym polu");
+                        break;
+                    }
+
+                }   
+                else {
+                    this->renderer->renderMessage("Nie posiadasz zadnego panstwa");
+                    continue;
+                }            
+                
                 continue;
             case SELL_HOUSE:
-                continue;
-            case EXCHANGE:
                 continue;
             case OUT_OF_JAIL_ROLL_DICE:
                 this->getOutFromJailDiceRoll();
@@ -173,6 +267,11 @@ void GameController::performAction() {
             if(this->currentPlayer->isSolvent(100, true)) {
                 this->currentPlayer->payMoney(100);
             }
+            else if (!this->currentPlayer->hasActiveLoan()) {
+                this->renderer->renderMessage("Nie stac cie na zaplate podatku od luksusu. Bierzesz pozyczke");
+                this->currentPlayer->takeLoan();
+                this->currentPlayer->payMoney(100);
+            }
             else {
                 this->renderer->renderMessage("Nie jestes w stanie zaplacic podatku od luksusu - bankrutujesz");
                 this->bankruptPlayerWithoutAcquisition(this->currentPlayer);
@@ -180,6 +279,11 @@ void GameController::performAction() {
             break;
         case INCOME_TAX:
             if(this->currentPlayer->isSolvent(200, true)) {
+                this->currentPlayer->payMoney(200);
+            }
+            else if (!this->currentPlayer->hasActiveLoan()) {
+                this->renderer->renderMessage("Nie stac cie na zaplate podatku dochodowego. Bierzesz pozyczke");
+                this->currentPlayer->takeLoan();
                 this->currentPlayer->payMoney(200);
             }
             else
@@ -244,7 +348,12 @@ void GameController::performAction() {
                             case CONFIRM:
                                 this->currentPlayer->payMoney(purchasableField->getPrice());
                                 this->currentPlayer->addProperty(indexOfFieldContext);
-                                purchasableField->setOwner(this->currentPlayer);                                  
+                                purchasableField->setOwner(this->currentPlayer);       
+                                
+                                if (typeid(*contextField) == typeid(PropertyField)) {
+                                    this->checkCountryObtain(this->currentPlayer, purchasableField);
+                                }
+
                                 this->renderer->renderMessage("Nieruchomosc zakupiona");                              
                                 return;
                             case CANCEL:
@@ -282,8 +391,16 @@ void GameController::performAction() {
                         propertyOwner->earnMoney(rentToPay);
                         break;
                     }
+                    else if (!this->currentPlayer->hasActiveLoan() && this->currentPlayer->isSolvent(500 + rentToPay, true)) {
+                        this->renderer->renderMessage("Aby splacic czynsz bierzesz pozyczke");
+                        this->currentPlayer->takeLoan();
+                        this->currentPlayer->payMoney(rentToPay);
+                        propertyOwner->earnMoney(rentToPay);
+                        break;
+                    }
                     else {
-                        this->renderer->renderMessage("Brankrutujesz! Twoje nieruchomosci przejmuje: " + propertyOwner->getName());
+                        this->renderer->renderMessage("Nie jestes w stanie zaplacic czynszu w wysokosci: " + to_string(rentToPay));
+                        this->renderer->renderMessage("Bankrutujesz! Twoje nieruchomosci przejmuje: " + propertyOwner->getName());
                         this->propertiesAcquisition(this->currentPlayer, propertyOwner);
                         this->bankruptPlayer(this->currentPlayer);
                         break;
@@ -401,10 +518,21 @@ void GameController::bankruptPlayerWithoutAcquisition(Player* player) {
 
 void GameController::propertiesAcquisition(Player* bankrupt, Player* newOwner) {
     set<int> properties = bankrupt->getProperties();
+    vector<PurchasableField*> obtainedFields = vector<PurchasableField*>();
 
     for(auto propertyIndex : properties) {
-        PropertyField* propertyField = static_cast<PropertyField*>(this->board->getField(propertyIndex));
-        propertyField->setOwner(newOwner);
+        PurchasableField* purchasableField = static_cast<PurchasableField*>(this->board->getField(propertyIndex));
+        purchasableField->setOwner(newOwner);
+        obtainedFields.push_back(purchasableField);
+    }
+
+    for(auto obtainedField : obtainedFields) {
+        if (typeid(*obtainedField) == typeid(PropertyField)) {            
+            this->checkCountryObtain(newOwner, obtainedField);
+        }
+        else {
+            this->renderer->renderMessage("Pole inne niz PropertyField, nie sprawdzam zatem");
+        }
     }
 
     int bankruptMoney = bankrupt->getPlayerState().getMoney();
@@ -770,6 +898,7 @@ void GameController::pickRedCard(Player* player) {
 	}
 }
 
+
 int GameController::distanceTo(int curentPos, int destination) {
     if (curentPos < destination) {
         return destination - curentPos;
@@ -803,4 +932,41 @@ int GameController::renovationCost(Player* player) {
     }
     //this->renderer->renderMessage("! koszt renowacji: "+renovatePrice);
     return renovatePrice;
+}
+
+// metoda sprawdza czy po uzyskaniu nieruchomosci gracz posiadl cale panstwo
+void GameController::checkCountryObtain(Player* owner, PurchasableField* obtainedField) {
+    /*
+    int railwaysAndRentMultipierIndexes[] = {5, 12, 15, 25, 28, 35};
+    int indexToFind = obtainedField->getFieldNumber();
+
+    int* elem = find(begin(railwaysAndRentMultipierIndexes), end(railwaysAndRentMultipierIndexes), indexToFind);
+
+    if (elem != end(railwaysAndRentMultipierIndexes)) {
+        this->renderer->renderMessage("Pole kolei, elektrowni lub wodocaigow. Pomijam sprawdzanie");
+        return;
+    }
+    */
+    PropertyField* obtainedProperty = static_cast<PropertyField*>(obtainedField);
+
+    string countryName = obtainedProperty->getCountryName();
+
+    Country* countryToCheck = this->board->getCountry(countryName);
+    
+    bool hadObtainedCountry = true;
+
+    this->renderer->renderMessage("Sprawdzam czy gracz " + owner->getName() + " posiada pozostale miasta z panstwa " + countryName);
+    for(auto fieldIndex : countryToCheck->getProperties()) {
+        PurchasableField* purchasableField = static_cast<PurchasableField*>(this->board->getField(fieldIndex));        
+        this->renderer->renderMessage(purchasableField->toString());
+
+        if (purchasableField->getOwner() != owner) {
+            hadObtainedCountry = false;
+            break;
+        }
+    }
+
+    if (hadObtainedCountry) {
+        owner->addCountry(countryToCheck);
+    }
 }

@@ -25,6 +25,9 @@ class PropertyField : public PurchasableField {
         int getHousingLevel();
         string getPropertyInfo();
         string toString();
+        string getCountryName();
+        int getUpgradeCost();
+        int getHousingLevel();
 };
 
 #endif

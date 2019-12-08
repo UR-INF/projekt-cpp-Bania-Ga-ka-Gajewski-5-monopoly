@@ -1,4 +1,6 @@
 #include "field.hpp"
+#include "country.hpp"
+#include <map>
 #include "card.h"
 #include "deque"
 
@@ -11,7 +13,14 @@ class Board {
     private:
         Field* fields[40];
 
-	    deque<Card> redCards;
+
+		// Card* redCards[16];
+		// Card* blueCards[15];
+
+        // Country* countries[8];
+        map<string, Country*> countries;
+
+  	    deque<Card> redCards;
         deque<Card> blueCards;
     
     public:
@@ -25,6 +34,10 @@ class Board {
 
 		Card pickBlueCard();
 		Card pickRedCard();
+        map<string, Country*> getCountries();
+        void setCountries(map<string, Country*> countries);
+        Country* getCountry(string name);
+        void setCountry(string name, Country* country);
 };
 
 #endif
