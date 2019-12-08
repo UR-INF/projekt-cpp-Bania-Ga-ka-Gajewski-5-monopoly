@@ -83,7 +83,7 @@ void GameController::start() {
     this->renderer->renderBoard(this->board);
 
     bool isPlaying = true;
-	// pickBlueCard(currentPlayer);
+	pickBlueCard(currentPlayer);
     while(isPlaying && this->numberOfActivePlayers > 1) {
         
         this->renderer->renderCurrentPlayer(this->currentPlayer);
