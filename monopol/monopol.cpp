@@ -40,9 +40,11 @@ int main()
 
 	gameController->start();
 
+	system("pause");
+	
 	delete gameController;
 
-	cin >> numOfPlayersChar;
+	// cin >> numOfPlayersChar;
 	getchar();
 }
 

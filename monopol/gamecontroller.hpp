@@ -3,6 +3,7 @@
 #include "board.hpp"
 #include "menu.hpp"
 #include "renderer.hpp"
+#include "purchasablefield.hpp"
 #include <vector>
 
 #ifndef GAMECONTROLLER_H
@@ -41,6 +42,7 @@ class GameController {
         void bankruptPlayerWithoutAcquisition(Player* player);
 		void pickBlueCard(Player* player);
 		void pickRedCard(Player* player);
+        void checkCountryObtain(Player* player, PurchasableField* obtainedField);
 };
 
 #endif

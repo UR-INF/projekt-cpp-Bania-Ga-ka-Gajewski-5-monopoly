@@ -24,6 +24,9 @@ class PropertyField : public PurchasableField {
         int getRent(); // pobież wysokość aktualnego czynszu
         string getPropertyInfo();
         string toString();
+        string getCountryName();
+        int getUpgradeCost();
+        int getHousingLevel();
 };
 
 #endif

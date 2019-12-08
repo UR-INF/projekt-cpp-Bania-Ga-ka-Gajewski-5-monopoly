@@ -10,13 +10,14 @@ Player::Player(string name, bool isComputer, PlayerState *playerState, int posit
 	this->setPosition(position);
 	this->activeLoan = false;
 	this->canPayLoan = true;
-	this->cashGain = 100;
-
+	this->cashGain = 0;
+	this->playerProperties = set<int>();
+	this->ownedCountries = set<Country*>();
 };
 
 Player::~Player() {
 	// cout << "Usuwam obiekt Player" << endl;
-	//delete this->playerState;
+	// delete this->playerState;
 };
 
 string Player::getName() {
@@ -161,10 +162,23 @@ void Player::removeProperty(int fieldId) {
 
 void Player::clearProperties() {
 	this->playerProperties.clear();
+	this->ownedCountries.clear();
 }
 
 set<int> Player::getProperties() {
 	return this->playerProperties;
+}
+
+bool Player::hasAnyCountry() {
+	return (this->ownedCountries.size() > 0);
+}
+
+set<Country*> Player::getOwnedCountries() {
+	return this->ownedCountries;
+}
+
+void Player::addCountry(Country* country) {
+	this->ownedCountries.insert(country);
 }
 
 PlayerState Player::getPlayerState() {
