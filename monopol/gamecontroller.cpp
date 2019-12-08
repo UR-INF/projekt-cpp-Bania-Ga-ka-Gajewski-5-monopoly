@@ -56,7 +56,7 @@ void GameController::start() {
     this->setPlayersMoveOrder();    
 	this->renderer->renderPlayersMoveOrder(this->orderOfMoves);
     this->setPlayersOnStart();
-    
+    /*
     static_cast<PropertyField*>(this->board->getField(1))->setOwner(this->currentPlayer);
     static_cast<PropertyField*>(this->board->getField(3))->setOwner(this->currentPlayer);
     static_cast<PropertyField*>(this->board->getField(6))->setOwner(this->currentPlayer);
@@ -65,6 +65,8 @@ void GameController::start() {
     static_cast<PropertyField*>(this->board->getField(16))->setOwner(this->currentPlayer);
     static_cast<PropertyField*>(this->board->getField(18))->setOwner(this->currentPlayer);
     static_cast<PropertyField*>(this->board->getField(19))->setOwner(this->currentPlayer);
+    static_cast<PropertyField*>(this->board->getField(37))->setOwner(&this->orderOfMoves[2]);
+    static_cast<PropertyField*>(this->board->getField(39))->setOwner(&this->orderOfMoves[2]);
 
     this->currentPlayer->addProperty(1);
     this->currentPlayer->addProperty(3);
@@ -79,7 +81,13 @@ void GameController::start() {
     this->currentPlayer->addCountry(this->board->getCountry("Wlochy"));
     this->currentPlayer->addCountry(this->board->getCountry("Wielka Brytania"));
     
-    
+    this->currentPlayer += 2;
+    this->currentPlayer->addProperty(37);
+    this->currentPlayer->addProperty(39);
+    this->currentPlayer->addCountry(this->board->getCountry("Austria"));
+
+    this->currentPlayer = &this->orderOfMoves[0];
+    */
     this->renderer->renderBoard(this->board);
 
     bool isPlaying = true;
@@ -502,6 +510,11 @@ void GameController::normalDiceRoll() {
 
             // WYKONAJ AKCJE DLA POLA
             this->performAction();
+
+            // jesli w wyniku tego debla gracz zbankrutowal lub trafil do wiezienia to metoda sie konczy, nastepne rzuty nie sa wykonywane
+            if (this->currentPlayer->isBankrupt() || this->currentPlayer->isInJail()) {
+                return;
+            }
         }
         else {
             this->currentPlayer->moveBy(rolledNumber);
@@ -571,6 +584,7 @@ void GameController::propertiesAcquisition(Player* bankrupt, Player* newOwner) {
     for(auto propertyIndex : properties) {
         PurchasableField* purchasableField = static_cast<PurchasableField*>(this->board->getField(propertyIndex));
         purchasableField->setOwner(newOwner);
+        this->renderer->renderMessage("Nowy wlasciciel pola " + purchasableField->toString() + " - " + purchasableField->getOwner()->getName());
         obtainedFields.push_back(purchasableField);
     }
 
