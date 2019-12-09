@@ -331,11 +331,13 @@ void GameController::performAction() {
         case LUXURY_TAX:
             this->renderer->renderMessage("Stajesz na pole: Podatek od Luksusu");
             if(this->currentPlayer->isSolvent(100, true)) {
+                this->renderer->renderMessage("Placisz 100$");
                 this->currentPlayer->payMoney(100);
             }
             else if (!this->currentPlayer->hasActiveLoan()) {
                 this->renderer->renderMessage("Nie stac cie na zaplate podatku od luksusu. Bierzesz pozyczke");
                 this->currentPlayer->takeLoan();
+                this->renderer->renderMessage("Placisz 100$");
                 this->currentPlayer->payMoney(100);
             }
             else {
@@ -346,11 +348,13 @@ void GameController::performAction() {
         case INCOME_TAX:
             this->renderer->renderMessage("Stajesz na pole: Podatek dochodowy");
             if(this->currentPlayer->isSolvent(200, true)) {
+                this->renderer->renderMessage("Placisz 200$");
                 this->currentPlayer->payMoney(200);
             }
             else if (!this->currentPlayer->hasActiveLoan()) {
                 this->renderer->renderMessage("Nie stac cie na zaplate podatku dochodowego. Bierzesz pozyczke");
                 this->currentPlayer->takeLoan();
+                this->renderer->renderMessage("Placisz 200$");
                 this->currentPlayer->payMoney(200);
             }
             else
