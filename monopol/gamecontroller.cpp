@@ -732,7 +732,7 @@ void GameController::pickBlueCard(Player* player) {
 		break;
 	case 4:
 		//Idziesz do więzienia.Nie przechodzisz przez \"START\". Nie otrzymujesz 200$.
-		player->setPosition(10);
+        player->goToJail();
 		break;
 	case 5:
 		//Płacisz koszty leczenia w wysokości 20$.
