@@ -388,10 +388,10 @@ void GameController::performAction() {
             }
             break;
         case RED_CHANCE:
-            pickBlueCard(this->currentPlayer);
+            pickRedCard(this->currentPlayer);
             break;
         case BLUE_CHANCE:
-            pickRedCard(this->currentPlayer);
+            pickBlueCard(this->currentPlayer);
             break;
         /* 
                 czy nieruchomosc nie ma wlasciciela:
@@ -524,7 +524,7 @@ void GameController::performAction() {
 void GameController::takeLoan(Player* player) {
     player->takeLoan();
     this->renderer->renderMessage("WZIETO POZYCZKE");
-    this->renderer->renderMessage("BIORE POZYCZKE");
+    // this->renderer->renderMessage("BIORE POZYCZKE");
 }
 
 void GameController::payLoan(Player* player) {
@@ -603,27 +603,17 @@ void GameController::payAndGetOutFromJail() {
 void GameController::bankruptPlayer(Player* player) {
     player->setBankrupt(true);
     this->numberOfActivePlayers--;
-    // player->getPlayerState().setOutOfJailCards(0);    
-    /*            
-    for(int index = 0; index < this->orderOfMoves.size(); index++) {
-        if (player == &this->orderOfMoves[index]) {
-            this->nextPlayer();
-            this->orderOfMoves.erase(this->orderOfMoves.begin() + index);
-            break;
-        }
-    }
-    */
 }
 
 void GameController::bankruptPlayerWithoutAcquisition(Player* player) {
     set<int> properties = player->getProperties();
 
     for(auto propertyIndex : properties) {
-        cout << "Indeks usuwanej nieruchomosci: " << propertyIndex << endl;
+        // cout << "Indeks usuwanej nieruchomosci: " << propertyIndex << endl;
         PropertyField* propertyField = static_cast<PropertyField*>(this->board->getField(propertyIndex));
-        cout << "Ustawiam wlasciciela posiadlosci: " << propertyField->getFieldNumber() << " na NULL" << endl;
+        // cout << "Ustawiam wlasciciela posiadlosci: " << propertyField->getFieldNumber() << " na NULL" << endl;
         propertyField->setOwner(NULL);
-        cout << "Owner: " << propertyField->getOwner() << endl;
+        // cout << "Owner: " << propertyField->getOwner() << endl;
     }
 
     player->clearProperties();
@@ -637,7 +627,7 @@ void GameController::propertiesAcquisition(Player* bankrupt, Player* newOwner) {
     for(auto propertyIndex : properties) {
         PurchasableField* purchasableField = static_cast<PurchasableField*>(this->board->getField(propertyIndex));
         purchasableField->setOwner(newOwner);
-        this->renderer->renderMessage("Nowy wlasciciel pola " + purchasableField->toString() + " - " + purchasableField->getOwner()->getName());
+        // this->renderer->renderMessage("Nowy wlasciciel pola " + purchasableField->toString() + " - " + purchasableField->getOwner()->getName());
         obtainedFields.push_back(purchasableField);
     }
 
@@ -646,7 +636,7 @@ void GameController::propertiesAcquisition(Player* bankrupt, Player* newOwner) {
             this->checkCountryObtain(newOwner, obtainedField);
         }
         else {
-            this->renderer->renderMessage("Pole inne niz PropertyField, nie sprawdzam zatem");
+            // this->renderer->renderMessage("Pole inne niz PropertyField, nie sprawdzam zatem");
         }
     }
 
@@ -688,7 +678,7 @@ void GameController::setPlayersMoveOrder() {
 void GameController::pickBlueCard(Player* player) {
 	//wylosowanie karty niebieskiej
 	Card card = board->pickBlueCard();
-    this->renderer->renderMessage("Pole: " + to_string(player->getPosition()) + " Niebieska Szansa " + card.getDescription());
+    this->renderer->renderMessage("Pole: " + to_string(player->getPosition()) + " - Niebieska Szansa " + card.getDescription());
 	switch (card.getCardId())
 	{
 	case 0:
@@ -706,7 +696,17 @@ void GameController::pickBlueCard(Player* player) {
 	case 2:
 		//Płacisz za karę 20$ lub ciągniesz \"SZANSĘ\" z drugiego zestawu (czerwonego)
 		//jeśli niezdolny zapłacić automatycznie ciągnie karte
-		if (player->isSolvent(20)) {
+		if (player->isComputer()) {
+            if (player->isSolvent(20, true)) {
+                player->payMoney(20);
+            }
+            else {
+                pickRedCard(player);
+            }
+            break;
+        }
+        
+        if (player->isSolvent(20)) {
             this->renderer->renderMessage("0 By zaplacic kare");
             this->renderer->renderMessage("1 By pobrac karte z zestawu czerwonego");
             int playerChose = Input::getDigitKey();
@@ -844,7 +844,7 @@ void GameController::pickBlueCard(Player* player) {
 void GameController::pickRedCard(Player* player) {
 	//wylosowanie kartty czerwonej
 	Card card = board->pickRedCard();
-    this->renderer->renderMessage("Pole: "+to_string(player->getPosition())+" Czerwona Szansa: " + card.getDescription());
+    this->renderer->renderMessage("Pole: "+to_string(player->getPosition())+" - Czerwona Szansa: " + card.getDescription());
 
 
 
@@ -1056,17 +1056,6 @@ int GameController::renovationCost(Player* player) {
 
 // metoda sprawdza czy po uzyskaniu nieruchomosci gracz posiadl cale panstwo
 void GameController::checkCountryObtain(Player* owner, PurchasableField* obtainedField) {
-    /*
-    int railwaysAndRentMultipierIndexes[] = {5, 12, 15, 25, 28, 35};
-    int indexToFind = obtainedField->getFieldNumber();
-
-    int* elem = find(begin(railwaysAndRentMultipierIndexes), end(railwaysAndRentMultipierIndexes), indexToFind);
-
-    if (elem != end(railwaysAndRentMultipierIndexes)) {
-        this->renderer->renderMessage("Pole kolei, elektrowni lub wodocaigow. Pomijam sprawdzanie");
-        return;
-    }
-    */
     PropertyField* obtainedProperty = static_cast<PropertyField*>(obtainedField);
 
     string countryName = obtainedProperty->getCountryName();
@@ -1075,10 +1064,10 @@ void GameController::checkCountryObtain(Player* owner, PurchasableField* obtaine
     
     bool hadObtainedCountry = true;
 
-    this->renderer->renderMessage("Sprawdzam czy gracz " + owner->getName() + " posiada pozostale miasta z panstwa " + countryName);
+    // this->renderer->renderMessage("Sprawdzam czy gracz " + owner->getName() + " posiada pozostale miasta z panstwa " + countryName);
     for(auto fieldIndex : countryToCheck->getProperties()) {
         PurchasableField* purchasableField = static_cast<PurchasableField*>(this->board->getField(fieldIndex));        
-        this->renderer->renderMessage(purchasableField->toString());
+        // this->renderer->renderMessage(purchasableField->toString());
 
         if (purchasableField->getOwner() != owner) {
             hadObtainedCountry = false;
@@ -1131,7 +1120,7 @@ void GameController::computerMove() {
             return;           
         }
         else if (this->currentPlayer->isSolvent(200, true)) {
-            this->renderer->renderMessage("Komputer-Gracz: " + this->currentPlayer->getName() + " placi 50$ i rzuca kostka i wychodzi z wiezienia");
+            this->renderer->renderMessage("Komputer-Gracz: " + this->currentPlayer->getName() + " placi 50$, rzuca kostkami i wychodzi z wiezienia");
             this->payAndGetOutFromJail();
             return;
         }
@@ -1159,7 +1148,6 @@ void GameController::computerMove() {
             set<Country*> computerCountries = this->currentPlayer->getOwnedCountries();           
 
             if (this->currentPlayer->getPlayerState().getMoney() < 100) {
-                this->renderer->renderMessage("Komputer-Gracz: " + this->currentPlayer->getName() + " bedzie sprzedawal domki ");
                 bool isSearchingForHouseToSell = true;
 
                 for (auto country : computerCountries) {
@@ -1190,7 +1178,6 @@ void GameController::computerMove() {
             }
             else {
                 for (auto country : computerCountries) {
-                    this->renderer->renderMessage("Komputer-Gracz: " + this->currentPlayer->getName() + " bedzie kupowal domki");
                     set<int> computerCountryProperties = country->getProperties();
 
                     for (auto computerPropertyIndex : computerCountryProperties) {                        
