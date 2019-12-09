@@ -57,57 +57,57 @@ void GameController::start() {
 	this->renderer->renderPlayersMoveOrder(this->orderOfMoves);
     this->setPlayersOnStart();
     /*
-    static_cast<PropertyField*>(this->board->getField(1))->setOwner(this->currentPlayer);
-    static_cast<PropertyField*>(this->board->getField(3))->setOwner(this->currentPlayer);
-    static_cast<PropertyField*>(this->board->getField(6))->setOwner(this->currentPlayer);
-    static_cast<PropertyField*>(this->board->getField(8))->setOwner(this->currentPlayer);
-    static_cast<PropertyField*>(this->board->getField(9))->setOwner(this->currentPlayer);
-    static_cast<PropertyField*>(this->board->getField(12))->setOwner(this->currentPlayer);
-    static_cast<PropertyField*>(this->board->getField(16))->setOwner(this->currentPlayer);
-    static_cast<PropertyField*>(this->board->getField(18))->setOwner(this->currentPlayer);
-    static_cast<PropertyField*>(this->board->getField(19))->setOwner(this->currentPlayer);
-    static_cast<PropertyField*>(this->board->getField(35))->setOwner(this->currentPlayer);
-    static_cast<PropertyField*>(this->board->getField(37))->setOwner(&this->orderOfMoves[2]);
-    static_cast<PropertyField*>(this->board->getField(39))->setOwner(&this->orderOfMoves[2]);
+        static_cast<PropertyField*>(this->board->getField(1))->setOwner(this->currentPlayer);
+        static_cast<PropertyField*>(this->board->getField(3))->setOwner(this->currentPlayer);
+        static_cast<PropertyField*>(this->board->getField(6))->setOwner(this->currentPlayer);
+        static_cast<PropertyField*>(this->board->getField(8))->setOwner(this->currentPlayer);
+        static_cast<PropertyField*>(this->board->getField(9))->setOwner(this->currentPlayer);
+        static_cast<PropertyField*>(this->board->getField(12))->setOwner(this->currentPlayer);
+        static_cast<PropertyField*>(this->board->getField(16))->setOwner(this->currentPlayer);
+        static_cast<PropertyField*>(this->board->getField(18))->setOwner(this->currentPlayer);
+        static_cast<PropertyField*>(this->board->getField(19))->setOwner(this->currentPlayer);
+        static_cast<PropertyField*>(this->board->getField(35))->setOwner(this->currentPlayer);
+        static_cast<PropertyField*>(this->board->getField(37))->setOwner(&this->orderOfMoves[2]);
+        static_cast<PropertyField*>(this->board->getField(39))->setOwner(&this->orderOfMoves[2]);
 
-    this->currentPlayer->addProperty(1);
-    this->currentPlayer->addProperty(3);
-    this->currentPlayer->addProperty(6);
-    this->currentPlayer->addProperty(8);
-    this->currentPlayer->addProperty(9);
-    this->currentPlayer->addProperty(12);
-    this->currentPlayer->addProperty(16);
-    this->currentPlayer->addProperty(18);
-    this->currentPlayer->addProperty(19);
-    this->currentPlayer->addProperty(35);
+        this->currentPlayer->addProperty(1);
+        this->currentPlayer->addProperty(3);
+        this->currentPlayer->addProperty(6);
+        this->currentPlayer->addProperty(8);
+        this->currentPlayer->addProperty(9);
+        this->currentPlayer->addProperty(12);
+        this->currentPlayer->addProperty(16);
+        this->currentPlayer->addProperty(18);
+        this->currentPlayer->addProperty(19);
+        this->currentPlayer->addProperty(35);
 
-    this->currentPlayer->addCountry(this->board->getCountry("Grecja"));
-    this->currentPlayer->addCountry(this->board->getCountry("Wlochy"));
-    this->currentPlayer->addCountry(this->board->getCountry("Wielka Brytania"));
-    
-    this->currentPlayer += 2;
-    this->currentPlayer->addProperty(37);
-    this->currentPlayer->addProperty(39);
-    this->currentPlayer->addCountry(this->board->getCountry("Austria"));
-    
-    Player* own = this->currentPlayer;
+        this->currentPlayer->addCountry(this->board->getCountry("Grecja"));
+        this->currentPlayer->addCountry(this->board->getCountry("Wlochy"));
+        this->currentPlayer->addCountry(this->board->getCountry("Wielka Brytania"));
+        
+        this->currentPlayer += 2;
+        this->currentPlayer->addProperty(37);
+        this->currentPlayer->addProperty(39);
+        this->currentPlayer->addCountry(this->board->getCountry("Austria"));
+        
+        Player* own = this->currentPlayer;
 
-    this->currentPlayer = &this->orderOfMoves[0];
-    
-    
-    this->renderer->renderBoard(this->board);
+        this->currentPlayer = &this->orderOfMoves[0];
+        
+        
+        this->renderer->renderBoard(this->board);
 
-    this->renderer->renderMessage("Bede przepisywal posiadlosci: ");
-    this->propertiesAcquisition(this->currentPlayer, own);
-    this->bankruptPlayer(this->currentPlayer);
-    this->nextPlayer();
+        this->renderer->renderMessage("Bede przepisywal posiadlosci: ");
+        this->propertiesAcquisition(this->currentPlayer, own);
+        this->bankruptPlayer(this->currentPlayer);
+        this->nextPlayer();
 
-    this->renderer->renderBoard(this->board);
+        this->renderer->renderBoard(this->board);
 
-    this->renderer->renderMessage("Bede przepisywal posiadlosci: ");
-    this->propertiesAcquisition(this->currentPlayer, own);
-    this->bankruptPlayer(this->currentPlayer);
-    this->nextPlayer();
+        this->renderer->renderMessage("Bede przepisywal posiadlosci: ");
+        this->propertiesAcquisition(this->currentPlayer, own);
+        this->bankruptPlayer(this->currentPlayer);
+        this->nextPlayer();
     */
 
     this->renderer->renderBoard(this->board);
@@ -352,12 +352,13 @@ void GameController::performAction() {
         case FREE_PARKING:
             this->renderer->renderMessage("Odpoczywasz na darmowym parkingu");
             break;
-        case LUXURY_TAX:
+        case LUXURY_TAX:            
             if(this->currentPlayer->isSolvent(100, true)) {
+                this->renderer->renderMessage("Musisz zaplacic podatek od luksusu - placisz 100");
                 this->currentPlayer->payMoney(100);
             }
             else if (!this->currentPlayer->hasActiveLoan()) {
-                this->renderer->renderMessage("Nie stac cie na zaplate podatku od luksusu. Bierzesz pozyczke");
+                this->renderer->renderMessage("Nie stac cie na zaplate podatku od luksusu. Bierzesz pozyczke i placisz 100");
                 this->currentPlayer->takeLoan();
                 this->currentPlayer->payMoney(100);
             }
@@ -368,10 +369,11 @@ void GameController::performAction() {
             break;
         case INCOME_TAX:
             if(this->currentPlayer->isSolvent(200, true)) {
+                this->renderer->renderMessage("Musisz zaplacic podatek dochodowy - placisz 200");
                 this->currentPlayer->payMoney(200);
             }
             else if (!this->currentPlayer->hasActiveLoan()) {
-                this->renderer->renderMessage("Nie stac cie na zaplate podatku dochodowego. Bierzesz pozyczke");
+                this->renderer->renderMessage("Nie stac cie na zaplate podatku dochodowego. Bierzesz pozyczke i placisz 200");
                 this->currentPlayer->takeLoan();
                 this->currentPlayer->payMoney(200);
             }
@@ -414,10 +416,24 @@ void GameController::performAction() {
             PurchasableField* purchasableField = static_cast<PurchasableField*>(contextField);
             this->renderer->renderMessage("Stajesz na polu: " + purchasableField->toString());
 
-            Player* propertyOwner = purchasableField->getOwner();
+            Player* propertyOwner = purchasableField->getOwner();       
 
             if (!propertyOwner) {
                 if (this->currentPlayer->isSolvent(purchasableField->getPrice(), true)) {
+                    // JESLI JEST RUCH KOMPUTERA
+                    if (this->currentPlayer->isComputer()) {
+                        this->renderer->renderMessage("Komputer-Gracz " + this->currentPlayer->getName() + " kupuje pole nr: " + to_string(purchasableField->getFieldNumber()));
+                        this->currentPlayer->payMoney(purchasableField->getPrice());
+                        this->currentPlayer->addProperty(indexOfFieldContext);
+                        purchasableField->setOwner(this->currentPlayer);       
+                                
+                        if (typeid(*contextField) == typeid(PropertyField)) {
+                            this->checkCountryObtain(this->currentPlayer, purchasableField);
+                        }
+
+                        return;
+                    }
+
                     this->menu->constructConfirm();                    
                     this->renderer->renderMessage("Cena: " + to_string(purchasableField->getPrice()));
                     this->renderer->renderMessage("Czy chcesz kupic te nieruchomosc?");
@@ -1134,6 +1150,7 @@ void GameController::computerMove() {
             set<Country*> computerCountries = this->currentPlayer->getOwnedCountries();           
 
             if (this->currentPlayer->getPlayerState().getMoney() < 100) {
+                this->renderer->renderMessage("Komputer-Gracz: " + this->currentPlayer->getName() + " bedzie sprzedawal domki ");
                 bool isSearchingForHouseToSell = true;
 
                 for (auto country : computerCountries) {
@@ -1150,6 +1167,8 @@ void GameController::computerMove() {
                         computerPropertyField->degrade();
                         this->currentPlayer->earnMoney(moneyToAdd);
 
+                        this->renderer->renderMessage("Komputer-Gracz: " + this->currentPlayer->getName() + " sprzedal domek na polu " + computerPropertyField->getPropertyInfo());
+                        
                         if (this->currentPlayer->getPlayerState().getMoney() > 100) {
                             isSearchingForHouseToSell = false;
                         }
@@ -1162,6 +1181,7 @@ void GameController::computerMove() {
             }
             else {
                 for (auto country : computerCountries) {
+                    this->renderer->renderMessage("Komputer-Gracz: " + this->currentPlayer->getName() + " bedzie kupowal domki");
                     set<int> computerCountryProperties = country->getProperties();
 
                     for (auto computerPropertyIndex : computerCountryProperties) {                        
@@ -1174,7 +1194,7 @@ void GameController::computerMove() {
                         int upgradeCost = computerPropertyField->getUpgradeCost();
 
                         if (this->currentPlayer->isSolvent(upgradeCost + 200, true)) {
-                            this->renderer->renderMessage("Komputer-Gracz: " + this->currentPlayer->getName() + " ulepsza pole " + computerPropertyField->getPropertyInfo);
+                            this->renderer->renderMessage("Komputer-Gracz: " + this->currentPlayer->getName() + " ulepsza pole " + computerPropertyField->getPropertyInfo());
                             this->currentPlayer->payMoney(upgradeCost);
                             computerPropertyField->upgrade();
                         }
@@ -1187,5 +1207,6 @@ void GameController::computerMove() {
         }
 
         this->normalDiceRoll();
+        this->nextPlayer();
     }
 }
