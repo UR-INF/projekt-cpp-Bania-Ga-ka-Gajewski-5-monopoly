@@ -151,6 +151,7 @@ void Player::useOutOfJailCard() {
 		return;
 	}
 	playerState->setOutOfJailCards(numOfCards);
+	this->getOutOfJail();
 }
 
 void Player::addProperty(int fieldId) {

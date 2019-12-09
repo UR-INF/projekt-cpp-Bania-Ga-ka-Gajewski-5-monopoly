@@ -262,6 +262,9 @@ void GameController::start() {
                 this->nextPlayer();
                 break;
             case USE_CARD_TO_GET_FREE:
+                this->currentPlayer->useOutOfJailCard();
+                this->simpleDiceRoll();
+                this->nextPlayer();
                 continue;
             case PAY_AND_GET_FREE:
                 this->payAndGetOutFromJail();
@@ -326,6 +329,7 @@ void GameController::performAction() {
             this->renderer->renderMessage("Odpoczywasz na darmowym parkingu");
             break;
         case LUXURY_TAX:
+            this->renderer->renderMessage("Stajesz na pole: Podatek od Luksusu");
             if(this->currentPlayer->isSolvent(100, true)) {
                 this->currentPlayer->payMoney(100);
             }
@@ -340,6 +344,7 @@ void GameController::performAction() {
             }
             break;
         case INCOME_TAX:
+            this->renderer->renderMessage("Stajesz na pole: Podatek dochodowy");
             if(this->currentPlayer->isSolvent(200, true)) {
                 this->currentPlayer->payMoney(200);
             }
@@ -833,9 +838,9 @@ void GameController::pickRedCard(Player* player) {
         //Remontujesz swoje domy. Placisz do banku za kazdy dom 50$, za kazdy hotel 200$.
         {
         int renovatePrice = renovationCost(player);
-        this->renderer->renderMessage("Calkowity koszt remontu wynosi: " + renovatePrice);
+        this->renderer->renderMessage("Calkowity koszt remontu wynosi: " + to_string(renovatePrice));
         if (player->isSolvent(renovatePrice)) {
-            this->renderer->renderMessage("Zaplaciles za remont: " + renovatePrice);
+            this->renderer->renderMessage("Zaplaciles za remont: " + to_string(renovatePrice));
             player->payMoney(renovatePrice);
         }
         else
@@ -847,7 +852,7 @@ void GameController::pickRedCard(Player* player) {
             else {
                 player->takeLoan();
                 if (player->isSolvent(renovatePrice)) {
-                    this->renderer->renderMessage("Zaplaciles za remont: " + renovatePrice);
+                    this->renderer->renderMessage("Zaplaciles za remont: " + to_string(renovatePrice));
                     player->payMoney(renovatePrice);
                 }
                 else
@@ -882,9 +887,9 @@ void GameController::pickRedCard(Player* player) {
         //Zobowiazany jestes zmodernizowac swoje miasto, placisz do banku za kazdy dom 80$, za kazdy hotel 230$.
         {
         int renovatePrice = renovationCost(player);
-        this->renderer->renderMessage("Calkowity koszt remontu wynosi: " + renovatePrice);
+        this->renderer->renderMessage("Calkowity koszt remontu wynosi: " + to_string(renovatePrice));
         if (player->isSolvent(renovatePrice)) {
-            this->renderer->renderMessage("Zaplaciles za remont: " + renovatePrice);
+            this->renderer->renderMessage("Zaplaciles za remont: " + to_string(renovatePrice));
             player->payMoney(renovatePrice);
         }
         else
@@ -896,7 +901,7 @@ void GameController::pickRedCard(Player* player) {
             else {
                 player->takeLoan();
                 if (player->isSolvent(renovatePrice)) {
-                    this->renderer->renderMessage("Zaplaciles za remont: " + renovatePrice);
+                    this->renderer->renderMessage("Zaplaciles za remont: " + to_string(renovatePrice));
                     player->payMoney(renovatePrice);
                 }
                 else
