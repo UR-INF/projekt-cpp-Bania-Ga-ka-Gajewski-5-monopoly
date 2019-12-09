@@ -166,7 +166,7 @@ void GameController::start() {
 
                         for(auto fieldIndex : country->getProperties()) {
                             PropertyField* propertyField = static_cast<PropertyField*>(this->board->getField(fieldIndex));        
-                            this->renderer->renderMessage(propertyField->toString());
+                            this->renderer->renderMessage(propertyField->toString()+"koszt rozbudowy: "+to_string(propertyField->getUpgradeCost()));
                         }
                     }  
                     
@@ -815,7 +815,7 @@ void GameController::pickBlueCard(Player* player) {
 	case 14:
         //Masz urodziny - otrzymujesz od kazdego gracza po 20$.
         for (Player otherplayer : orderOfMoves) {
-            if (otherplayer.getName() != player->getName()) {
+            if (otherplayer.getName() != player->getName()&& !otherplayer.isBankrupt()) {
                 if (otherplayer.isSolvent(20)) {
                     otherplayer.payMoney(20);
                     player->earnMoney(20);
