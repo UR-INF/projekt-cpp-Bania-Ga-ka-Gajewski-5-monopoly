@@ -352,14 +352,16 @@ void GameController::performAction() {
         case FREE_PARKING:
             this->renderer->renderMessage("Odpoczywasz na darmowym parkingu");
             break;
-        case LUXURY_TAX:            
+        case LUXURY_TAX:
+            this->renderer->renderMessage("Stajesz na pole: Podatek od Luksusu");
             if(this->currentPlayer->isSolvent(100, true)) {
-                this->renderer->renderMessage("Musisz zaplacic podatek od luksusu - placisz 100");
+                this->renderer->renderMessage("Placisz 100$");
                 this->currentPlayer->payMoney(100);
             }
             else if (!this->currentPlayer->hasActiveLoan()) {
                 this->renderer->renderMessage("Nie stac cie na zaplate podatku od luksusu. Bierzesz pozyczke i placisz 100");
                 this->currentPlayer->takeLoan();
+                this->renderer->renderMessage("Placisz 100$");
                 this->currentPlayer->payMoney(100);
             }
             else {
@@ -368,6 +370,7 @@ void GameController::performAction() {
             }
             break;
         case INCOME_TAX:
+            this->renderer->renderMessage("Stajesz na pole: Podatek dochodowy");
             if(this->currentPlayer->isSolvent(200, true)) {
                 this->renderer->renderMessage("Musisz zaplacic podatek dochodowy - placisz 200");
                 this->currentPlayer->payMoney(200);
@@ -375,6 +378,7 @@ void GameController::performAction() {
             else if (!this->currentPlayer->hasActiveLoan()) {
                 this->renderer->renderMessage("Nie stac cie na zaplate podatku dochodowego. Bierzesz pozyczke i placisz 200");
                 this->currentPlayer->takeLoan();
+                this->renderer->renderMessage("Placisz 200$");
                 this->currentPlayer->payMoney(200);
             }
             else
@@ -684,7 +688,7 @@ void GameController::setPlayersMoveOrder() {
 void GameController::pickBlueCard(Player* player) {
 	//wylosowanie karty niebieskiej
 	Card card = board->pickBlueCard();
-    this->renderer->renderMessage("BLUE CARD: " + card.getDescription());
+    this->renderer->renderMessage("Pole: " + to_string(player->getPosition()) + " Niebieska Szansa " + card.getDescription());
 	switch (card.getCardId())
 	{
 	case 0:
@@ -704,7 +708,7 @@ void GameController::pickBlueCard(Player* player) {
 		//jeśli niezdolny zapłacić automatycznie ciągnie karte
 		if (player->isSolvent(20)) {
             this->renderer->renderMessage("0 By zaplacic kare");
-            this->renderer->renderMessage("1 By pobrać partę z zestawu czerwonego");
+            this->renderer->renderMessage("1 By pobrac karte z zestawu czerwonego");
             int playerChose = Input::getDigitKey();
             switch (playerChose)
             {
@@ -820,11 +824,11 @@ void GameController::pickBlueCard(Player* player) {
                 {
                     if (otherplayer.hasActiveLoan()) {
                         this->renderer->renderMessage(otherplayer.getName()+" ma aktywna pozyczke nie moze wziac kolejnej wiec bankrutuje.");
-                        //bankruptPlayerWithoutAcquisition(otherplayer);
+                        bankruptPlayerWithoutAcquisition(&otherplayer);
                     }
                     else {
                         this->renderer->renderMessage(otherplayer.getName() + " musial wziac pozyczke by kupic prezent.");
-                        //takeLoan(otherplayer);
+                        takeLoan(&otherplayer);
                         player->earnMoney(20);
                     }
                 }
@@ -840,7 +844,7 @@ void GameController::pickBlueCard(Player* player) {
 void GameController::pickRedCard(Player* player) {
 	//wylosowanie kartty czerwonej
 	Card card = board->pickRedCard();
-    this->renderer->renderMessage("RED CARD: " + card.getDescription());
+    this->renderer->renderMessage("Pole: "+to_string(player->getPosition())+" Czerwona Szansa: " + card.getDescription());
 
 
 
@@ -876,9 +880,9 @@ void GameController::pickRedCard(Player* player) {
         //Remontujesz swoje domy. Placisz do banku za kazdy dom 50$, za kazdy hotel 200$.
         {
         int renovatePrice = renovationCost(player);
-        this->renderer->renderMessage("Calkowity koszt remontu wynosi: " + renovatePrice);
+        this->renderer->renderMessage("Calkowity koszt remontu wynosi: " + to_string(renovatePrice));
         if (player->isSolvent(renovatePrice)) {
-            this->renderer->renderMessage("Zaplaciles za remont: " + renovatePrice);
+            this->renderer->renderMessage("Zaplaciles za remont: " + to_string(renovatePrice));
             player->payMoney(renovatePrice);
         }
         else
@@ -890,7 +894,7 @@ void GameController::pickRedCard(Player* player) {
             else {
                 player->takeLoan();
                 if (player->isSolvent(renovatePrice)) {
-                    this->renderer->renderMessage("Zaplaciles za remont: " + renovatePrice);
+                    this->renderer->renderMessage("Zaplaciles za remont: " + to_string(renovatePrice));
                     player->payMoney(renovatePrice);
                 }
                 else
@@ -905,6 +909,7 @@ void GameController::pickRedCard(Player* player) {
 	case 4:
 		//Cofasz się o 3 pola.
 		player->setPosition(player->getPosition() - 3);
+        performAction();
 		break;
 	case 5:
 		//Wcyhodzisz wolny z więzienia. Kartę należy zachować do wykorzystania lub sprzedania.
@@ -912,19 +917,21 @@ void GameController::pickRedCard(Player* player) {
 		break;
 	case 6:
         //Idziesz do \"NEAPOLU\". Jezeli przechodzisz przez \"START\" otrzymasz 200$. Neapol(6)
-        player->setPosition(distanceTo(player->getPosition(),6));
+        player->moveBy(distanceTo(player->getPosition(),6));
+        performAction();
 		break;
 	case 7:
         //Wracasz do \"Madrytu\"
         player->setPosition(14);
+        performAction();
 		break;
 	case 8:
         //Zobowiazany jestes zmodernizowac swoje miasto, placisz do banku za kazdy dom 80$, za kazdy hotel 230$.
         {
         int renovatePrice = renovationCost(player);
-        this->renderer->renderMessage("Calkowity koszt remontu wynosi: " + renovatePrice);
+        this->renderer->renderMessage("Calkowity koszt remontu wynosi: " + to_string(renovatePrice));
         if (player->isSolvent(renovatePrice)) {
-            this->renderer->renderMessage("Zaplaciles za remont: " + renovatePrice);
+            this->renderer->renderMessage("Zaplaciles za remont: " + to_string(renovatePrice));
             player->payMoney(renovatePrice);
         }
         else
@@ -936,7 +943,7 @@ void GameController::pickRedCard(Player* player) {
             else {
                 player->takeLoan();
                 if (player->isSolvent(renovatePrice)) {
-                    this->renderer->renderMessage("Zaplaciles za remont: " + renovatePrice);
+                    this->renderer->renderMessage("Zaplaciles za remont: " + to_string(renovatePrice));
                     player->payMoney(renovatePrice);
                 }
                 else
@@ -951,10 +958,12 @@ void GameController::pickRedCard(Player* player) {
 	case 9:
         //Idziesz do \"KOLEI WSCHODNICH\". Jezeli przechodzisz przez \"START\" otrzymasz 200$. Koleje wschodnie(35)
         player->moveBy(distanceTo(player->getPosition(), 35));
+        performAction();
 		break;
 	case 10:
         //Wracasz do \"Brukseli\". Jezeli przechodzisz przez \"START\" otrzymujesz 200$. Bruksela(23)
         player->moveBy(distanceTo(player->getPosition(), 23));
+        performAction();
 		break;
 	case 11:
 		//Bank wpłaca Ci należne odsetkiw  wysokości 300$.
