@@ -661,7 +661,7 @@ void GameController::pickBlueCard(Player* player) {
 		//jeśli niezdolny zapłacić automatycznie ciągnie karte
 		if (player->isSolvent(20)) {
             this->renderer->renderMessage("0 By zaplacic kare");
-            this->renderer->renderMessage("1 By pobrać partę z zestawu czerwonego");
+            this->renderer->renderMessage("1 By pobrac karte z zestawu czerwonego");
             int playerChose = Input::getDigitKey();
             switch (playerChose)
             {
@@ -777,11 +777,11 @@ void GameController::pickBlueCard(Player* player) {
                 {
                     if (otherplayer.hasActiveLoan()) {
                         this->renderer->renderMessage(otherplayer.getName()+" ma aktywna pozyczke nie moze wziac kolejnej wiec bankrutuje.");
-                        //bankruptPlayerWithoutAcquisition(otherplayer);
+                        bankruptPlayerWithoutAcquisition(&otherplayer);
                     }
                     else {
                         this->renderer->renderMessage(otherplayer.getName() + " musial wziac pozyczke by kupic prezent.");
-                        //takeLoan(otherplayer);
+                        takeLoan(&otherplayer);
                         player->earnMoney(20);
                     }
                 }
@@ -870,7 +870,7 @@ void GameController::pickRedCard(Player* player) {
 		break;
 	case 6:
         //Idziesz do \"NEAPOLU\". Jezeli przechodzisz przez \"START\" otrzymasz 200$. Neapol(6)
-        player->setPosition(distanceTo(player->getPosition(),6));
+        player->moveBy(distanceTo(player->getPosition(),6));
         performAction();
 		break;
 	case 7:
