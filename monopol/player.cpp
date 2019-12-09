@@ -44,11 +44,11 @@ void Player::moveBy(int distance) {
 	if (this->position + distance > 39) {
 		this->setPosition((this->position + distance) % 40);
 		
-		cout << "Przechodze przez pole START" << endl;
+		// cout << "Przechodze przez pole START" << endl;
 
 		this->earMoneyFromStart();
 
-		cout << "Zarabiam " << this->cashGain << endl;
+		// cout << "Zarabiam " << this->cashGain << endl;
 
 		this->canPayLoan = true;		
 	}
@@ -147,7 +147,7 @@ void Player::useOutOfJailCard() {
 	int numOfCards = playerState->getOutOfJailCards();
 	numOfCards--;
 	if (numOfCards < 0) {
-		throw "Probojesz uzyć karty ktorej nie masz !";
+		// throw "Probojesz uzyć karty ktorej nie masz !";
 		return;
 	}
 	playerState->setOutOfJailCards(numOfCards);

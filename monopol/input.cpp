@@ -27,11 +27,8 @@ int Input::getDigitKey() {
 }
 
 int Input::getNumber() {
-    // int playerChose = 0;
     bool isGoodInput = true;
     string playerChose = "";
-
-    cout << "Podawaj liczby wieksze od 9" << endl;
 
     while (true) {
         isGoodInput = true;
@@ -47,7 +44,7 @@ int Input::getNumber() {
 
         if (isGoodInput) {
             int result = stoi(playerChose);
-            cout << result << " - " << typeid(result).name() << endl;
+            // cout << result << " - " << typeid(result).name() << endl;
 
             return result;
         }

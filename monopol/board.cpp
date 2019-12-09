@@ -295,6 +295,7 @@ Board::Board() {
 	this->countries.insert(pair<string, Country*>("Niemcy", country7));
 	this->countries.insert(pair<string, Country*>("Austria", country8));
 
+	/*
 	for (map<string, Country*>::iterator it = this->countries.begin();
 		 it != this->countries.end(); ++it) {
 			 cout << it->first << endl;
@@ -302,6 +303,7 @@ Board::Board() {
 				cout << this->fields[elem]->toString() << endl;
 			}
 		 }
+		 */
 }
 
 Board::~Board() {
