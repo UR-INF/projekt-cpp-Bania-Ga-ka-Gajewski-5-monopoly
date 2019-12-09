@@ -46,11 +46,11 @@ void Menu::construct(Player* player) {
             this->currentMenu.push_back(this->allMenuItems[8]);
         }
 
-        if(player->hasActiveLoan() && player->isSolvent(500, true)) {
-            if (player->getCanPayLoan()) {
+        if(player->hasActiveLoan()) {
+            if (player->isSolvent(500, true)  && player->getCanPayLoan()) {
                 this->currentMenu.push_back(this->allMenuItems[2]);
-            }            
-        }        
+            }
+        }      
     }
     else {
         this->currentMenu.push_back(this->allMenuItems[0]);
@@ -61,8 +61,8 @@ void Menu::construct(Player* player) {
             this->currentMenu.push_back(this->allMenuItems[4]);
         }              
 
-        if(player->hasActiveLoan() && player->isSolvent(500, true)) {
-            if (player->getCanPayLoan()) {
+        if(player->hasActiveLoan()) {
+            if (player->isSolvent(500, true)  && player->getCanPayLoan()) {
                 this->currentMenu.push_back(this->allMenuItems[2]);
             }
         }
