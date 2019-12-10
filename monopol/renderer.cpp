@@ -29,6 +29,7 @@ void Renderer::renderPlayersInfo(vector<Player> playersToRender, Board* board) {
     playerAccountHeader.resize(15, ' ');
     playerPropertiesHeader.resize(20, ' ');
 
+    this->renderMessage("");
     this->renderMessage(playerNameHeader + playerPositionHeader + playerAccountHeader + playerPropertiesHeader);
 
     for (auto player : playersToRender) {
@@ -55,7 +56,7 @@ void Renderer::renderPlayersInfo(vector<Player> playersToRender, Board* board) {
             playerPropertiesStrings += static_cast<PurchasableField*>(board->getField(propertyIndex))->getShortName();
             playerPropertiesStrings += ", ";
         }
-
+        
         this->renderMessage(playerName + playerPosition + playerAccount + playerPropertiesStrings);
     }
 }
@@ -66,7 +67,6 @@ void Renderer::renderMessage(string message) {
 
 void Renderer::renderCurrentPlayer(Player* playerToRender) {
     this->renderMessage("Ruch gracza: " + playerToRender->getName());
-    cout << "Stan konta: " << playerToRender->getPlayerState().getMoney() << endl;
     cout << endl;
 }
 

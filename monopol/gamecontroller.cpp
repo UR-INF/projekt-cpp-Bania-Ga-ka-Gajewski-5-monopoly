@@ -114,9 +114,9 @@ void GameController::start() {
 
     bool isPlaying = true;
 	//pickBlueCard(currentPlayer);
-    while(isPlaying && this->numberOfActivePlayers > 1) {    
+    while (!doesSomeoneWin()) {    
         this->renderer->renderPlayersInfo(this->orderOfMoves, this->board);
-            
+
         this->renderer->renderCurrentPlayer(this->currentPlayer);
 
         if (this->currentPlayer->isComputer()) {
@@ -304,11 +304,19 @@ void GameController::start() {
                 continue;
         }
 
-        this->renderer->renderMessage("Aktualne pozycje na planszy: ");
-        this->renderer->renderPlayerPositions(this->orderOfMoves);
+        // this->renderer->renderMessage("Aktualne pozycje na planszy: ");
+        // this->renderer->renderPlayerPositions(this->orderOfMoves);
 
-        this->renderer->renderMessage("Aktualny stan planszy");
+        // this->renderer->renderMessage("Aktualny stan planszy");
         // this->renderer->renderBoard(this->board);
+    }
+    
+    for (auto player : this->orderOfMoves) {
+        if (!player.isBankrupt()) {
+            this->renderer->renderMessage("Gracz " + player.getName() + " wygral te rozgrywke!");
+            this->renderer->renderMessage("Dziekujemy za rozegrana partie");
+            break;
+        }
     }
 }
 
@@ -333,8 +341,11 @@ void GameController::nextPlayer() {
 }
 
 bool GameController::doesSomeoneWin() {
-    // tymczasowe implementacja
-    return false;
+    if (this->numberOfActivePlayers > 1) {
+        return false;
+    }
+
+    return true;
 }
 
 void GameController::performAction() {
@@ -632,6 +643,7 @@ void GameController::propertiesAcquisition(Player* bankrupt, Player* newOwner) {
     for(auto propertyIndex : properties) {
         PurchasableField* purchasableField = static_cast<PurchasableField*>(this->board->getField(propertyIndex));
         purchasableField->setOwner(newOwner);
+        newOwner->addProperty(propertyIndex);
         // this->renderer->renderMessage("Nowy wlasciciel pola " + purchasableField->toString() + " - " + purchasableField->getOwner()->getName());
         obtainedFields.push_back(purchasableField);
     }
