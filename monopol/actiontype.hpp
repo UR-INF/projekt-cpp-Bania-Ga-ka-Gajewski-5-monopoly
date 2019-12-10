@@ -11,6 +11,7 @@ enum ActionType {
     OUT_OF_JAIL_ROLL_DICE,
     USE_CARD_TO_GET_FREE,
     PAY_AND_GET_FREE,
+    SHOW_BOARD,
     CONFIRM,
     CANCEL    
 };

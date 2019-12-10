@@ -81,3 +81,7 @@ int PropertyField::getUpgradeCost() {
 int PropertyField::getHousingLevel() {
     return this->housingLevel;
 }
+
+string PropertyField::getShortName() {
+    return this->getPropertyInfo();
+}

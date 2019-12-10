@@ -16,6 +16,7 @@ class RentMultipierField : public PurchasableField {
         void setName(string name);
         int getRent() override;
         string toString();
+        string getShortName();
 };
 
 #endif

@@ -110,11 +110,13 @@ void GameController::start() {
         this->nextPlayer();
     */
 
-    this->renderer->renderBoard(this->board);
+    // this->renderer->renderBoard(this->board);
 
     bool isPlaying = true;
 	//pickBlueCard(currentPlayer);
-    while(isPlaying && this->numberOfActivePlayers > 1) {        
+    while(isPlaying && this->numberOfActivePlayers > 1) {    
+        this->renderer->renderPlayersInfo(this->orderOfMoves, this->board);
+            
         this->renderer->renderCurrentPlayer(this->currentPlayer);
 
         if (this->currentPlayer->isComputer()) {
@@ -294,6 +296,9 @@ void GameController::start() {
                 this->payAndGetOutFromJail();
                 this->nextPlayer();
                 break;
+            case SHOW_BOARD:
+                this->renderer->renderBoard(this->board);
+                continue;
             default:
                 this->renderer->renderMessage("Niepoprawny symbol");
                 continue;
@@ -303,7 +308,7 @@ void GameController::start() {
         this->renderer->renderPlayerPositions(this->orderOfMoves);
 
         this->renderer->renderMessage("Aktualny stan planszy");
-        this->renderer->renderBoard(this->board);
+        // this->renderer->renderBoard(this->board);
     }
 }
 
@@ -705,7 +710,7 @@ void GameController::pickBlueCard(Player* player) {
             }
             break;
         }
-        
+
         if (player->isSolvent(20)) {
             this->renderer->renderMessage("0 By zaplacic kare");
             this->renderer->renderMessage("1 By pobrac karte z zestawu czerwonego");

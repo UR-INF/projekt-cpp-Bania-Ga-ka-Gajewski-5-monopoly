@@ -66,3 +66,7 @@ string RailwayField::toString() {
 
     return fieldString;
 }
+
+string RailwayField::getShortName() {
+    return this->getName();
+}
