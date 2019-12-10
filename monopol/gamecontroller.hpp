@@ -20,6 +20,7 @@ class GameController {
         Player* currentPlayer;
         std::vector<Player> orderOfMoves;
         Menu* menu;
+        int rentMultipier; // pole odpowiada za zwiekszenie czynszu aby nie pozwolic na ciagle bogacenie sie graczy
 
     public:
         GameController(Board* board, Renderer* renderer, DiceRoller* diceRoller, int numberOfPlayers, Menu* menu);

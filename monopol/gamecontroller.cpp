@@ -27,6 +27,7 @@ GameController::GameController(Board* board, Renderer* renderer, DiceRoller* dic
     this->numberOfPlayers = numberOfPlayers;
     this->numberOfActivePlayers = numberOfPlayers;
     this->menu = menu;
+    this->rentMultipier = 1;
 
     string names[] = {"Kamil", "Wojciech", "Adrian", "Pawel"};
 
@@ -42,14 +43,14 @@ GameController::GameController(Board* board, Renderer* renderer, DiceRoller* dic
 }
 
 GameController::~GameController() {
-    this->renderer->renderMessage("Usuwam obiekt GameController");
+    // this->renderer->renderMessage("Usuwam obiekt GameController");
     this->players.clear();
     this->orderOfMoves.clear();
 
     delete this->board;
     delete this->diceRoller;  
-    delete this->currentPlayer;  
     delete this->menu;
+    delete this->renderer;
 }
 
 void GameController::start() {
@@ -113,8 +114,17 @@ void GameController::start() {
     // this->renderer->renderBoard(this->board);
 
     bool isPlaying = true;
-	//pickBlueCard(currentPlayer);
-    while (!doesSomeoneWin()) {    
+	int iterationCount = 0;
+
+    while (!doesSomeoneWin()) {
+        this->renderer->renderMessage("Multipier: " + to_string(this->rentMultipier));
+
+        iterationCount++;
+
+        if (iterationCount % 100 == 0) {
+            this->rentMultipier++;
+        }    
+
         this->renderer->renderPlayersInfo(this->orderOfMoves, this->board);
 
         this->renderer->renderCurrentPlayer(this->currentPlayer);
@@ -304,11 +314,6 @@ void GameController::start() {
                 continue;
         }
 
-        // this->renderer->renderMessage("Aktualne pozycje na planszy: ");
-        // this->renderer->renderPlayerPositions(this->orderOfMoves);
-
-        // this->renderer->renderMessage("Aktualny stan planszy");
-        // this->renderer->renderBoard(this->board);
     }
     
     for (auto player : this->orderOfMoves) {
@@ -508,13 +513,13 @@ void GameController::performAction() {
                     int rentToPay = 0;
 
                     if (typeid(purchasableField) == typeid(RailwayField)) {
-                        rentToPay = static_cast<RailwayField*>(purchasableField)->getRent(propertyOwner->getProperties());
+                        rentToPay = static_cast<RailwayField*>(purchasableField)->getRent(propertyOwner->getProperties()) * this->rentMultipier;
                     }
                     else if (typeid(purchasableField) == typeid(RentMultipierField)) {
-                        rentToPay = purchasableField->getRent() * this->diceRoller->getRolledNumber();
+                        rentToPay = purchasableField->getRent() * this->diceRoller->getRolledNumber() * this->rentMultipier;
                     }
                     else {
-                        rentToPay = purchasableField->getRent();
+                        rentToPay = purchasableField->getRent() * this->rentMultipier;
                     }
 
                     if(this->currentPlayer->isSolvent(rentToPay, true)) {
