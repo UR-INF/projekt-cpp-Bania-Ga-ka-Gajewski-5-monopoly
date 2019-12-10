@@ -118,14 +118,14 @@ Jeżeli gracz wyrzuci Debel ale nie ma pieniędzy na wykonanie akcji kupna, kole
 
 
 ### Diagramy
-5.1 Pętla główna aplikacji
+1. Pętla główna aplikacji
 ![Main activity](/images/diagrammonopoly1.png)
-5.2 Wybór akcji gracza zależny od stanu w jakim się znajduje
+2. Wybór akcji gracza zależny od stanu w jakim się znajduje
 ![Player action](/images/diagrammonopoly2.png)
-5.3 Pole nieruchomości
+3. Pole nieruchomości
 ![Property field](/images/diagrammonopoly3.png)
-5.4 Jesteś w więzieniu
+4. Jesteś w więzieniu
 ![Player in jail](/images/diagrammonopoly4.png)
-5.5 Pole szansy
+5. Pole szansy
 ![Chance field](/images/diagrammonopoly5.png)
 
