@@ -103,39 +103,47 @@ Po uruchomieniu gry, pyta nas ona o liczbę graczy która bierze udział w rozgr
 
    ![Main activity](/images/Przechwytywanie1.PNG)
 
-Następnie zostają wypisane wszystkie pola nieruchomości posortowane według kraju do którego należą, oraz kolejność ruchu graczy.
+Kolejnym krokiem jest automatyczne wylosowanie kolejnosci oraz wypisanie początkowego stanu każdego gracza.
 
    ![Main activity](/images/Przechwytywanie2.PNG)
 
-Wypisana zostaje też plansza z obecnymi statusami pól. Jest ona aktualizowana po każym ruchu gracza.
+Menu gracza. Wraz z przebiegiem rozgrywki jest wzbogacane o nowe opcje.
 
    ![Main activity](/images/Przechwytywanie3.PNG)
 
-Menu opcji gracza. W pierwszej turze gracz może tylko rzucić kostką lub wziąć pożyczkę.
+Ruchy graczy AI.
 
    ![Main activity](/images/Przechwytywanie4AI.PNG)
 
-Po wykonaniu ruchu wypisywane jest pole na które staną gracz, pozycje pozostałch graczy oraz cała plansza z zaktualizowanymi statusami pól.
+Wypisanie aktualnego stanu planszy przez gracza.
 
    ![Main activity](/images/Przechwytywanie5board.PNG)
 
-Menu aktualizuje się po każdej akcji. Po wzięciu pożyczki dostępna będzie tylko opcja rzutu kośćmi.
+Pożyczka 500$ z banku.
 
    ![Main activity](/images/Przechwytywanie6pozyczka.PNG)
 
-Jeżeli po rzucie kośćmi gracz znajdzie się na polu nieruchomości, wyświetli się stosowne menu.
+Spłata pożyczki.
 
    ![Main activity](/images/Przechwytywanie7splata.PNG)
 
-Jeżeli gracz wyrzuci Debel ale nie ma pieniędzy na wykonanie akcji kupna, kolejka automatycznie przechodzi na kolejnego gracza.
+Menu gdy gracz jest w więzieniu.
 
    ![Main activity](/images/Przechwytywanie8Jail.PNG)
    
+Rozbudowane menu.
+   
    ![Main activity](/images/Przechwytywanie9buyhouse.PNG)
+   
+Kupno domku na polu.
    
    ![Main activity](/images/Przechwytywanie10buyhouse2.PNG)
    
+Sprzedaż domku.
+   
    ![Main activity](/images/Przechwytywanie11sellhouse.PNG)
+   
+Gracz staną na polu szansa.
    
    ![Main activity](/images/PPrzechwytywanie12card.PNG)
 
