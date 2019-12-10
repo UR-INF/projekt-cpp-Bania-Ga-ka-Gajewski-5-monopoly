@@ -16,10 +16,10 @@ Uniwersytet Rzeszowski
 
 _Prowadzący: mgr inż. Dawid Kosior_
 Rzeszów 2019
-### Temat projektu i nazwa aplikacji
+## Temat projektu i nazwa aplikacji
 Temat projektu: Stworzenie gry w języku C++ na podstawie gry planszowej monopoly
 Nazwa aplikacji: **Monopoli**
-### Cel i opis projektu
+## Cel i opis projektu
 Celem projektu jest praktyczne zastosowanie języka C++ poprzez stworzenie gry. Gra będzie oparta 
 o zasady monopoly. 
 * Plansza składa się z 40 pól
@@ -96,9 +96,9 @@ Cele szczegółowe
 * Zmiana stanów pól i graczy
 * Wyświetlanie planszy
 * Prosty gracz AI
-### Technologie
+## Technologie
 C++
-### GUI
+## GUI
 Po uruchomieniu gry, pyta nas ona o liczbę graczy która bierze udział w rozgrywce.
 
 Następnie zostają wypisane wszystkie pola nieruchomości posortowane według kraju do którego należą, oraz kolejność ruchu graczy.
@@ -117,7 +117,7 @@ Jeżeli gracz wyrzuci Debel ale nie ma pieniędzy na wykonanie akcji kupna, kole
 
 
 
-### Diagramy
+## Diagramy
 1. Pętla główna aplikacji
 ![Main activity](/images/diagrammonopoly1.png)
 2. Wybór akcji gracza zależny od stanu w jakim się znajduje
