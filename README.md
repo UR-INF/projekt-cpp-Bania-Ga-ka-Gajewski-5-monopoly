@@ -41,7 +41,7 @@ o zasady monopoly.
 * Na planszy znajdują się 2 zestawy kart szans (niebieski i czerwony)
 
 1. Uruchomienie:
-    * Uruchomienie programu odbywa się poprzez plik monopoly/monopol.exe. Żadne dodatkowe biblioteki nie są wymagane.
+    * Uruchomienie programu odbywa się poprzez plik monopol/monopol.exe. Żadne dodatkowe biblioteki nie są wymagane.
     
 2.  Przygotowanie:
     * Najpierw użytkownik wybiera ilość graczy biorącej w rozgrywce (łącznie z użytkownikiem). Liczba graczy musi być między 2 a 4.
