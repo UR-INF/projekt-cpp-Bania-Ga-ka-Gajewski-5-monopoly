@@ -168,7 +168,7 @@ void GameController::start() {
 
                         for(auto fieldIndex : country->getProperties()) {
                             PropertyField* propertyField = static_cast<PropertyField*>(this->board->getField(fieldIndex));        
-                            this->renderer->renderMessage(propertyField->toString()+"koszt rozbudowy: "+to_string(propertyField->getUpgradeCost()));
+                            this->renderer->renderMessage(propertyField->toString()+" - Koszt rozbudowy: "+to_string(propertyField->getUpgradeCost()));
                         }
                     }  
                     
@@ -313,7 +313,14 @@ void GameController::start() {
     
     for (auto player : this->orderOfMoves) {
         if (!player.isBankrupt()) {
+            this->renderer->renderMessage("");
             this->renderer->renderMessage("Gracz " + player.getName() + " wygral te rozgrywke!");
+            this->renderer->renderMessage("");
+            this->renderer->renderMessage("Koncowy stan graczy: ");
+            this->renderer->renderPlayersInfo(this->orderOfMoves, this->board);
+            this->renderer->renderMessage("");
+            this->renderer->renderMessage("Koncowy stan planszy: ");
+            this->renderer->renderBoard(this->board);
             this->renderer->renderMessage("Dziekujemy za rozegrana partie");
             break;
         }
