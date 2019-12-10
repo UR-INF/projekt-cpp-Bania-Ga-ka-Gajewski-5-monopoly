@@ -124,8 +124,8 @@ Board::Board() {
 	//Field* field40 = new Field(PROPERTY, 39);
 	PropertyField* field40 = new PropertyField("Austria", "Wieden", new int[6]{100, 400, 1200, 2800, 3400, 4000}, 0, 400, NULL, 800, 100, 400, PROPERTY, 39);
 	fields[39] = field40;
-	bool test = testFields();
-	cout << "Test Planszy: " << test << endl;
+	// bool test = testFields();
+	// cout << "Test Planszy: " << test << endl;
 
 
 	// **************************************************************************************************************
@@ -307,7 +307,14 @@ Board::Board() {
 }
 
 Board::~Board() {
-    std::cout << "Usuwam obiekt Board" << endl;
+    // std::cout << "Usuwam obiekt Board" << endl;
+	this->countries.clear();
+	this->redCards.clear();
+	this->blueCards.clear();
+	
+	for (Field* f : this->fields) {
+		delete f;
+	}
 }
 
 Field* Board::getField(int index) {
