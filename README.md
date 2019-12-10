@@ -145,7 +145,7 @@ Sprzedaż domku.
    
 Gracz staną na polu szansa.
    
-   ![Main activity](/images/PPrzechwytywanie12card.PNG)
+   ![Main activity](/images/Przechwytywanie12card.PNG)
 
 
 
