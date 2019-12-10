@@ -151,7 +151,47 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="actiontype.cpp" />
+    <ClCompile Include="board.cpp" />
+    <ClCompile Include="Card.cpp" />
+    <ClCompile Include="country.cpp" />
+    <ClCompile Include="diceroller.cpp" />
+    <ClCompile Include="dicethrowresult.cpp" />
+    <ClCompile Include="field.cpp" />
+    <ClCompile Include="fieldtype.cpp" />
+    <ClCompile Include="gamecontroller.cpp" />
+    <ClCompile Include="input.cpp" />
+    <ClCompile Include="menu.cpp" />
+    <ClCompile Include="menuitem.cpp" />
     <ClCompile Include="monopol.cpp" />
+    <ClCompile Include="player.cpp" />
+    <ClCompile Include="playerstate.cpp" />
+    <ClCompile Include="propertyfield.cpp" />
+    <ClCompile Include="purchasablefield.cpp" />
+    <ClCompile Include="railwayfield.cpp" />
+    <ClCompile Include="renderer.cpp" />
+    <ClCompile Include="rentmultipierfield.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="actiontype.hpp" />
+    <ClInclude Include="board.hpp" />
+    <ClInclude Include="Card.h" />
+    <ClInclude Include="country.hpp" />
+    <ClInclude Include="diceroller.hpp" />
+    <ClInclude Include="dicethrowresult.hpp" />
+    <ClInclude Include="field.hpp" />
+    <ClInclude Include="fieldtype.hpp" />
+    <ClInclude Include="gamecontroller.hpp" />
+    <ClInclude Include="input.hpp" />
+    <ClInclude Include="menu.hpp" />
+    <ClInclude Include="menuitem.hpp" />
+    <ClInclude Include="player.hpp" />
+    <ClInclude Include="playerstate.hpp" />
+    <ClInclude Include="propertyfield.hpp" />
+    <ClInclude Include="purchasablefield.hpp" />
+    <ClInclude Include="railwayfield.hpp" />
+    <ClInclude Include="renderer.hpp" />
+    <ClInclude Include="rentmultipierfield.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
