@@ -14,6 +14,7 @@ class Renderer {
     public:
         Renderer();
         ~Renderer();
+        void renderPlayersInfo(vector<Player> playersToRender, Board* board);
         void renderPlayersMoveOrder(vector<Player> moveOrderToRender);
         void renderPlayerPositions(vector<Player> playersToRender);
         void renderCurrentPlayer(Player* playerToRender);

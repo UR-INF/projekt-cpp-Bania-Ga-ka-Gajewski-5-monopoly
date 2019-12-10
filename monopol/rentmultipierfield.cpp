@@ -44,3 +44,7 @@ string RentMultipierField::toString() {
 
     return fieldString;
 }
+
+string RentMultipierField::getShortName() {
+    return this->name;
+}

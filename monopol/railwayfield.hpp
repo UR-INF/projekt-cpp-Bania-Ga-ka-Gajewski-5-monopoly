@@ -18,6 +18,7 @@ class RailwayField : public PurchasableField {
         void setName(string name);
         int getRent(set<int> properties);
         string toString();
+        string getShortName();
 
 };
 

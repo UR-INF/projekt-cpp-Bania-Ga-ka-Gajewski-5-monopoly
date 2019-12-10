@@ -21,6 +21,10 @@ Player::~Player() {
 };
 
 string Player::getName() {
+	if (this->isComputer()) {
+		return this->name + " - AI";
+	}
+	
 	return this->name;
 };
 

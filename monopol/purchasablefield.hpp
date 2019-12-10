@@ -34,6 +34,7 @@ class PurchasableField : public Field {
         void setIsMortgaged(bool isMortgaged);
         
         string toString();
+        virtual string getShortName();
 
 };
 

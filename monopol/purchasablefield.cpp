@@ -70,3 +70,7 @@ string PurchasableField::toString() {
 
     return fieldString;
 }
+
+string PurchasableField::getShortName() {
+    return "Krotka nazwa pola";
+}

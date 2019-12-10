@@ -18,13 +18,55 @@ Renderer::~Renderer() {
 
 }
 
+void Renderer::renderPlayersInfo(vector<Player> playersToRender, Board* board) {
+    string playerNameHeader = "Gracz";
+    string playerPositionHeader = "Pozycja";
+    string playerAccountHeader = "Stan konta";
+    string playerPropertiesHeader = "Nieruchomosci";
+
+    playerNameHeader.resize(15, ' ');
+    playerPositionHeader.resize(10, ' ');
+    playerAccountHeader.resize(15, ' ');
+    playerPropertiesHeader.resize(20, ' ');
+
+    this->renderMessage("");
+    this->renderMessage(playerNameHeader + playerPositionHeader + playerAccountHeader + playerPropertiesHeader);
+
+    for (auto player : playersToRender) {
+        if (player.isBankrupt()) {
+            string playerName = player.getName();
+            playerName.resize(15, ' ');
+            playerName += " BANKRUT";
+
+            this->renderMessage(playerName);
+            continue;
+        }
+
+        string playerName = player.getName();
+        string playerPosition = to_string(player.getPosition());
+        string playerAccount = to_string(player.getPlayerState().getMoney());
+        string playerPropertiesStrings = "";
+        set<int> playerProperties = player.getProperties();
+
+        playerName.resize(15, ' ');
+        playerPosition.resize(10, ' ');
+        playerAccount.resize(15, ' ');
+
+        for (auto propertyIndex : playerProperties) {
+            playerPropertiesStrings += static_cast<PurchasableField*>(board->getField(propertyIndex))->getShortName();
+            playerPropertiesStrings += ", ";
+        }
+        
+        this->renderMessage(playerName + playerPosition + playerAccount + playerPropertiesStrings);
+    }
+}
+
 void Renderer::renderMessage(string message) {
     cout << message << endl;
 }
 
 void Renderer::renderCurrentPlayer(Player* playerToRender) {
     this->renderMessage("Ruch gracza: " + playerToRender->getName());
-    cout << "Stan konta: " << playerToRender->getPlayerState().getMoney() << endl;
     cout << endl;
 }
 

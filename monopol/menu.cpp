@@ -21,6 +21,7 @@ Menu::Menu() {
     this->allMenuItems.push_back(new MenuItem("Zaplac 50$ i rzuc kostkami", PAY_AND_GET_FREE)); // 8
     this->allMenuItems.push_back(new MenuItem("Tak", CONFIRM)); // 9
     this->allMenuItems.push_back(new MenuItem("Anuluj", CANCEL)); // 10
+    this->allMenuItems.push_back(new MenuItem("Wyswietl plansze", SHOW_BOARD)); // 11
 }
 
 Menu::~Menu() {
@@ -70,6 +71,9 @@ void Menu::construct(Player* player) {
             this->currentMenu.push_back(this->allMenuItems[1]);
         }
     }
+
+    this->currentMenu.push_back(this->allMenuItems[11]);
+    
     cout << endl;
 }
 
