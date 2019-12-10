@@ -40,12 +40,18 @@ o zasady monopoly.
 * Każda nieruchomość posiada akt własności
 * Na planszy znajdują się 2 zestawy kart szans (niebieski i czerwony)
 
-1.  Przygotowanie:
+1. Uruchomienie:
+    * Uruchomienie programu odbywa się poprzez plik monopoly/monopol.exe. Żadne dodatkowe biblioteki nie są wymagane.
+    
+2.  Przygotowanie:
+    * Najpierw użytkownik wybiera ilość graczy biorącej w rozgrywce (łącznie z użytkownikiem). Liczba graczy musi być między 2 a 4.
+    * Gracze komputerowi są oznaczeni dopiskiem "AI", np. "Wojciech - AI".
+    * Użytkownik jest oznaczony jako "Kamil".
     * Wszyscy gracze rozpoczynają rozgrywkę na polu start
     * Każdy z graczy otrzymuje na start 1500$
     * Kolejność ustalana jest przez rzut kośćmi -  gracz z największą ilością zaczyna pierwszy.
 
-2. Rozgrywka:
+3. Rozgrywka:
     * W trakcie swojej tury gracz rzuca kostkami i porusza się do przodu liczbę pól wyrzuconą w kostkach
     * Jeżeli gracz stanie na nieruchomości bez właściciela to może ją kupić, za co otrzyma kartę własności
     * Jeżeli gracz stanie na nieruchomości innego gracza, płaci mu czynsz 
@@ -65,7 +71,7 @@ o zasady monopoly.
     * W przypadku pożyczki 500$ od banku, gracz po przejściu przez pole start otrzymuje jedynie 100$, i musi przynajmniej raz przejść przez pole start przed oddaniem pożyczki
     * Gracz może mieć “aktywną” tylko 1 pożyczkę
 
-3. Debel:
+4. Debel:
     * Gdy gracz wyrzuci debla, wykonuje ruch normalnie, po czym wykonuje jeszcze jeden, dodatkowy rzut
     * Jeżeli gracz wyrzuci 3 deble pod rząd, nie może kupić nieruchomości i idzie do więzienia
     * Aby wyjść z więzienia:
@@ -73,12 +79,12 @@ o zasady monopoly.
         * gracz może użyć karty “wyjście z więzienia”
         * zapłacić 50$, rzucić kostkami i przesunąć się o wyrzuconą ilość
 
-4. Nieruchomości, domki, hotele:
+5. Nieruchomości, domki, hotele:
     * Gdy gracz posiada wszystkie nieruchomości danego koloru, może kupować domki lub hotele za cenę odpowiednią dla danej nieruchomości
     * Każdy domek zwiększa wartość kwoty jaką płacą gracze stając na to pole
     * Po wybudowaniu hotelu pole osiąga wartość maksymalną a dalszy rozwój nie jest możliwy.
 
-5. Bankructwo:
+6. Bankructwo:
     * Gracz który nie może zapłacić należności zostaje bankrutem i jest wyeliminowany 
     z gry
     * Jeżeli gracz posiada długi w banku to oddaje mu wszystkie swoje nieruchomości (Nieruchomości gracza są niczyje i można je znów kupić).
