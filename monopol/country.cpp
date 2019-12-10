@@ -11,7 +11,7 @@ Country::Country(string name, set<int> properties) {
 }
 
 Country::~Country() {
-
+    this->properties.clear();
 }
 
 string Country::getName() {

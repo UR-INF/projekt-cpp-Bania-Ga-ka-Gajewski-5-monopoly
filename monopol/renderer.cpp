@@ -15,7 +15,7 @@ Renderer::Renderer() {
 }
 
 Renderer::~Renderer() {
-
+    // cout << "Usuwam obiekt renderer";
 }
 
 void Renderer::renderPlayersInfo(vector<Player> playersToRender, Board* board) {
@@ -59,6 +59,8 @@ void Renderer::renderPlayersInfo(vector<Player> playersToRender, Board* board) {
         
         this->renderMessage(playerName + playerPosition + playerAccount + playerPropertiesStrings);
     }
+
+    this->renderMessage("");
 }
 
 void Renderer::renderMessage(string message) {

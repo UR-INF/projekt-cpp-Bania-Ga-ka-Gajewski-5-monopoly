@@ -25,8 +25,9 @@ Menu::Menu() {
 }
 
 Menu::~Menu() {
-    std::cout << "Usuwam obiekt Menu" << endl;
+    // std::cout << "Usuwam obiekt Menu" << endl;
     this->allMenuItems.clear();
+    this->currentMenu.clear();
 }
 
 vector<MenuItem*> Menu::getCurrentMenu() {
